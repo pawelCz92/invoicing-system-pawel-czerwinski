@@ -7,6 +7,9 @@
  */
 
 plugins {
+
+    id 'java'
+
     // Apply the groovy plugin to also add support for Groovy (needed for Spock)
     id 'groovy'
 
@@ -36,6 +39,12 @@ dependencies {
 application {
     // Define the main class for the application.
     mainClass = 'pl.futurecollars.invoicing.App'
+}
+
+//problem with test after delete this
+tasks.named('test') {
+    // Use junit platform for unit tests.
+    useJUnitPlatform()
 }
 
 checkstyle {
