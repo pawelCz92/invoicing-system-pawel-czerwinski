@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ task-2-continue-config-and-write-code ]
   pull_request:
-    branches: [ master ]
+    branches: [ task-2-continue-config-and-write-code ]
 workflow_dispatch:
 
 jobs:
