@@ -59,7 +59,7 @@ jacocoTestReport {
     reports {
         xml.enabled false
         csv.enabled false
-        html.destination layout.buildDirectory.dir('/reports/jacoco').get().asFile
+        html.destination layout.buildDirectory.dir('reports/jacoco').get().asFile
     }
 
 }
