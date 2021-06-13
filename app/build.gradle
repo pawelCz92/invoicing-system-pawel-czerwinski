@@ -27,6 +27,11 @@ dependencies {
 
     testCompileOnly 'org.projectlombok:lombok:1.18.20'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.1'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.1'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.1'
 }
 
 application {
@@ -54,30 +59,50 @@ jacocoTestReport {
         csv.enabled false
         html.destination layout.buildDirectory.dir('reports/jacoco').get().asFile
     }
-
 }
 
 jacoco {
     toolVersion = "0.8.6"
 }
 
+var jacocoExcludeList = [
+        'pl/futurecollars/invoicing/App.class',
+        'pl/futurecollars/invoicing/model/*',
+        'pl/futurecollars/invoicing/service/InvoiceService.class',
+        'pl/futurecollars/invoicing/service/JsonService.class'
+]
+
 jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
                 counter = 'BRANCH'
-                minimum = 0.9
+                minimum = 0.8
             }
         }
 
         rule {
             limit {
                 counter = 'LINE'
-                minimum = 0.9
+                minimum = 0.8
             }
         }
     }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: jacocoExcludeList)
+        }))
+    }
 }
+
+jacocoTestReport {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: jacocoExcludeList)
+        }))
+    }
+}
+
 tasks.register('applicationCodeCoverageReport', JacocoReport) {
     executionData run
     sourceSets sourceSets.main
