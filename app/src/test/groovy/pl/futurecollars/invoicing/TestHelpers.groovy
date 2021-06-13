@@ -41,8 +41,8 @@ class TestHelpers extends Specification {
 
         where:
         taxIdentificationNumber | address                | name        | toStringResult
-        "654654654"             | "ul Jakaś Tam, Poznan" | "Biedronka" | "Company{TIN='654654654', address='ul Jakaś Tam, Poznan', name='Biedronka'}"
-        "856565545"             | "ul Inna, Poznan"      | "Lidl"      | "Company{TIN='856565545', address='ul Inna, Poznan', name='Lidl'}"
+        "654654654"             | "ul Jakaś Tam, Poznan" | "Biedronka" | "Company(taxIdentificationNumber=654654654, address=ul Jakaś Tam, Poznan, name=Biedronka)"
+        "856565545"             | "ul Inna, Poznan"      | "Lidl"      | "Company(taxIdentificationNumber=856565545, address=ul Inna, Poznan, name=Lidl)"
     }
 
 }
