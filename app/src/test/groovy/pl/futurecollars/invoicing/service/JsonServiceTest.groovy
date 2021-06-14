@@ -88,7 +88,12 @@ class JsonServiceTest extends Specification {
     }
 
     def "should return empty string if serialization from object to string fail"() {
+        setup:
+        List<?> list = new LinkedList<>()
 
+
+        expect:
+        jsonService.objectToString(new Object()) == ""
     }
 
     def "should return null if serialization to object fail"() {
