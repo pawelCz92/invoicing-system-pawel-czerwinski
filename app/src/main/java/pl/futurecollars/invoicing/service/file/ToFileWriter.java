@@ -7,17 +7,17 @@ import java.nio.file.StandardOpenOption;
 
 public class ToFileWriter {
 
-    private final String FILE_NAME;
+    private final String fileName;
 
-    public ToFileWriter(String FILE_NAME) {
-        this.FILE_NAME = FILE_NAME;
+    public ToFileWriter(String fileName) {
+        this.fileName = fileName;
         createFileIfNotExists();
     }
 
     private void createFileIfNotExists() {
-        if (Files.notExists(Path.of(FILE_NAME))) {
+        if (Files.notExists(Path.of(fileName))) {
             try {
-                Files.createFile(Path.of(FILE_NAME));
+                Files.createFile(Path.of(fileName));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -25,6 +25,6 @@ public class ToFileWriter {
     }
 
     public void writeLineToFile(String line) throws IOException {
-        Files.writeString(Path.of(FILE_NAME), line.concat(System.lineSeparator()), StandardOpenOption.APPEND);
+        Files.writeString(Path.of(fileName), line.concat(System.lineSeparator()), StandardOpenOption.APPEND);
     }
 }

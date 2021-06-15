@@ -4,6 +4,7 @@ import spock.lang.Specification
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.StandardOpenOption
 
 class FileServiceTest extends Specification {
 
@@ -43,5 +44,26 @@ class FileServiceTest extends Specification {
 
         cleanup:
         file.delete()
+    }
+
+    def "should read lines from file"() {
+        setup:
+        String textToFile = "Test line 1" + System.lineSeparator() + "Test line 2"
+        Files.writeString(filePath, textToFile, StandardOpenOption.CREATE)
+
+        expect:
+        fileService.readLines() == List.of("Test line 1", "Test line 2")
+    }
+
+    def "should throw IllegalStateException if there is problem to read from file"() {
+        setup:
+        File file = new File(filePath.toString())
+        file.delete()
+
+        when:
+        fileService.readLines()
+
+        then:
+        thrown(IllegalStateException.class)
     }
 }
