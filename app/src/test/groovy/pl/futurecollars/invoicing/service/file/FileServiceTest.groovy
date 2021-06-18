@@ -12,7 +12,7 @@ class FileServiceTest extends Specification {
     private static Path filePath = Path.of("fileServiceTest.json")
 
     def setup() {
-        fileService = new FileService(filePath.toString())
+        fileService = new FileService(filePath.toString(), true)
     }
 
     def cleanup() {
@@ -52,7 +52,7 @@ class FileServiceTest extends Specification {
         Files.writeString(filePath, textToFile, StandardOpenOption.CREATE)
 
         expect:
-        fileService.readLines() == List.of("Test line 1", "Test line 2")
+        fileService.readLinesToList() == List.of("Test line 1", "Test line 2")
     }
 
     def "should throw IllegalStateException if there is problem to read from file"() {
@@ -61,7 +61,7 @@ class FileServiceTest extends Specification {
         file.delete()
 
         when:
-        fileService.readLines()
+        fileService.readLinesToList()
 
         then:
         thrown(IllegalStateException.class)

@@ -23,4 +23,20 @@ class FromFileReaderTest extends Specification {
         cleanup:
         Files.deleteIfExists(Path.of(filePath))
     }
+
+    def "should read empty file as empty list"() {
+        setup:
+        String filePath = "readingFileTest.json"
+        FromFileReader fromFileReader = new FromFileReader(filePath)
+        Files.createFile(Path.of(filePath))
+
+        when:
+        List<String> lines = fromFileReader.readLinesFromFile()
+
+        then:
+        lines.size() == 0
+
+        cleanup:
+        Files.deleteIfExists(Path.of(filePath))
+    }
 }

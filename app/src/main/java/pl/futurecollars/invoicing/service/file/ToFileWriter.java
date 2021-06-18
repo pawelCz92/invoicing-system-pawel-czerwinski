@@ -8,9 +8,11 @@ import java.nio.file.StandardOpenOption;
 public class ToFileWriter {
 
     private final String fileName;
+    private final boolean appendToFile;
 
-    public ToFileWriter(String fileName) {
+    public ToFileWriter(String fileName, boolean appendToFile) {
         this.fileName = fileName;
+        this.appendToFile = appendToFile;
         createFileIfNotExists();
     }
 
@@ -24,7 +26,11 @@ public class ToFileWriter {
         }
     }
 
-    public void writeLineToFile(String line) throws IOException {
-        Files.writeString(Path.of(fileName), line.concat(System.lineSeparator()), StandardOpenOption.APPEND);
+    void writeLineToFile(String line) throws IOException {
+        if (appendToFile) {
+            Files.writeString(Path.of(fileName), line.concat(System.lineSeparator()), StandardOpenOption.APPEND);
+        } else {
+            Files.writeString(Path.of(fileName), line.concat(System.lineSeparator()), StandardOpenOption.TRUNCATE_EXISTING);
+        }
     }
 }

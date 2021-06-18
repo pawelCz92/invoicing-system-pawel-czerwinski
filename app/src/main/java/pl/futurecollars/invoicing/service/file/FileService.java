@@ -9,10 +9,10 @@ public class FileService {
     private final FromFileReader fromFileReader;
     private final ToFileWriter toFileWriter;
 
-    public FileService(String fileName) {
+    public FileService(String fileName, boolean appendToFile) {
         this.fileName = fileName;
         this.fromFileReader = new FromFileReader(this.fileName);
-        this.toFileWriter = new ToFileWriter(this.fileName);
+        this.toFileWriter = new ToFileWriter(this.fileName, appendToFile);
     }
 
     public void writeLine(String line) {
@@ -23,7 +23,7 @@ public class FileService {
         }
     }
 
-    public List<String> readLines() {
+    public List<String> readLinesToList() {
         try {
             return fromFileReader.readLinesFromFile();
         } catch (IOException e) {

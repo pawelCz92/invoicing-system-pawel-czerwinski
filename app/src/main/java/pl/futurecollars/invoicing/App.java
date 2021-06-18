@@ -3,6 +3,7 @@ package pl.futurecollars.invoicing;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import org.checkerframework.checker.units.qual.C;
 import pl.futurecollars.invoicing.db.Database;
 import pl.futurecollars.invoicing.db.InMemoryDataBase;
 import pl.futurecollars.invoicing.model.Company;
@@ -21,17 +22,9 @@ public class App {
         Database database = new InMemoryDataBase();
         InvoiceService invoiceService = new InvoiceService(database);
 
-        Company buyer = Company.builder()
-            .taxIdentificationNumber("645455465")
-            .address("ul Błotna, nr zachlapany")
-            .name("Biedronka")
-            .build();
+        Company buyer = new Company("645455465", "ul Błotna, nr zachlapany", "Biedronka");
 
-        Company seller = Company.builder()
-            .taxIdentificationNumber("43534534534")
-            .address("ul Jakas, Poznan")
-            .name("Wiesław Paleta")
-            .build();
+        Company seller = new Company("43534534534", "ul Jakas, Poznan", "Wiesław Paleta");
 
         List<InvoiceEntry> products = List.of(
             new InvoiceEntry("Programming course", BigDecimal.valueOf(10000),
