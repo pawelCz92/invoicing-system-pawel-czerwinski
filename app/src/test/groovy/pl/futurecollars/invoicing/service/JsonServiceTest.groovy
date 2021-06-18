@@ -19,16 +19,8 @@ class JsonServiceTest extends Specification {
 
     def "should convert object to string"() {
         given:
-        Company buyer = Company.builder()
-                .name("RTVG S A")
-                .taxIdentificationNumber("445656")
-                .address("ul. Inna, Warszawa")
-                .build()
-        Company seller = Company.builder()
-                .name("Avgm-com S A")
-                .taxIdentificationNumber("964849")
-                .address("ul. Obok, Warszawa")
-                .build()
+        Company buyer = new Company ("445656", "ul. Inna, Warszawa", "RTVG S A")
+        Company seller = new Company ("964849","ul. Obok, Warszawa", "Avgm-com S A")
         List<InvoiceEntry> invoiceEntries = List.of(
                 new InvoiceEntry("TV", BigDecimal.valueOf(500), BigDecimal.ZERO, Vat.VAT_0),
                 new InvoiceEntry("Radio", BigDecimal.valueOf(1000), BigDecimal.ZERO, Vat.VAT_0))
@@ -54,16 +46,9 @@ class JsonServiceTest extends Specification {
     }
 
     def "should convert string to object"() {
-        Company buyer = Company.builder()
-                .name("RTVG S A")
-                .taxIdentificationNumber("445656")
-                .address("ul. Inna, Warszawa")
-                .build()
-        Company seller = Company.builder()
-                .name("Avgm-com S A")
-                .taxIdentificationNumber("964849")
-                .address("ul. Obok, Warszawa")
-                .build()
+        Company buyer = new Company("445656", "ul. Inna, Warszawa", "RTVG S A")
+        Company seller = new Company("964849", "ul. Obok, Warszawa", "Avgm-com S A")
+
         List<InvoiceEntry> invoiceEntries = List.of(
                 new InvoiceEntry("TV", BigDecimal.valueOf(500), BigDecimal.ZERO, Vat.VAT_0),
                 new InvoiceEntry("Radio", BigDecimal.valueOf(1000), BigDecimal.ZERO, Vat.VAT_0))

@@ -7,15 +7,13 @@ import java.util.List;
 
 public class FromFileReader {
 
-    private final String fileName;
     private final File file;
 
     public FromFileReader(String fileName) {
-        this.fileName = fileName;
-        this.file = new File(this.fileName);
+        this.file = new File(fileName);
     }
 
-    public List<String> readLinesFromFile() throws IOException {
+    List<String> readLinesFromFile() throws IOException {
         return Files.readAllLines(file.toPath());
     }
 }
