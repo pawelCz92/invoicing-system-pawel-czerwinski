@@ -1,6 +1,5 @@
 package pl.futurecollars.invoicing.service
 
-
 import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.model.InvoiceEntry

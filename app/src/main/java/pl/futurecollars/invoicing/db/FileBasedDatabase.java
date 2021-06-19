@@ -1,11 +1,7 @@
 package pl.futurecollars.invoicing.db;
 
-import static pl.futurecollars.invoicing.Configuration.DB_DATA_FILE_NAME_PATH;
-import static pl.futurecollars.invoicing.Configuration.DB_ID_FILE_NAME_PATH;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.service.JsonService;
@@ -17,23 +13,17 @@ public class FileBasedDatabase implements Database {
     private final FileService fileServiceForData;
     private final FileService fileServiceForId;
     private final JsonService jsonService = new JsonService();
-    private int id = 1;
+    private int id;
 
-    public FileBasedDatabase() {
-        this.fileServiceForData = new FileService(DB_DATA_FILE_NAME_PATH, true);
-        this.fileServiceForId = new FileService(DB_ID_FILE_NAME_PATH, false);
-        id = getLastId();
-
+    public FileBasedDatabase(String fileNameForData, String fileNameForIds) {
+        this.fileServiceForData = new FileService(fileNameForData);
+        this.fileServiceForId = new FileService(fileNameForIds);
+        //id = getLastId() + 1;
     }
-
-    public FileBasedDatabase(String path) {
-        fileServiceForData = new FileService(path, true);
-        this.fileServiceForId = new FileService(DB_ID_FILE_NAME_PATH, false);
-    }
-
 
     @Override
     public int save(Invoice invoice) {
+        id = getLastId() + 1;
         invoice.setId(id);
         fileServiceForData.writeLine(jsonService.objectToString(invoice));
         updateLastId(id);
@@ -42,20 +32,8 @@ public class FileBasedDatabase implements Database {
 
     @Override
     public Optional<Invoice> getById(int id) {
-        //"{\"id\":0,"
-
-        Pattern pattern = Pattern.compile("^[{\"]id[\":](\\d+)");
-        List<String> searchResult = fileServiceForData.readLinesToList().stream()
-            .filter(line -> pattern.matcher(line).group().equals(String.valueOf(id)))
-            .collect(Collectors.toList());
-
-        if (searchResult.size() > 1) {
-            throw new IllegalArgumentException("There is " + searchResult.size() + "id's: " + id + " in base...");
-        }
-        if (searchResult.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(jsonService.stringToObject(searchResult.get(0), Invoice.class));
+        Optional<String> founded = fileServiceForData.findLineById(id);
+        return founded.map(line -> jsonService.stringToObject(line, Invoice.class));
     }
 
     @Override
@@ -77,11 +55,13 @@ public class FileBasedDatabase implements Database {
 
     private int getLastId() {
         List<String> idFileLines = fileServiceForId.readLinesToList();
-        if (idFileLines.isEmpty()) {
-            System.out.println("ID file content emppty - id starting from 1");
-            return 1;
+        int lastId = 0;
+        try {
+            lastId = Integer.parseInt(idFileLines.get(idFileLines.size() - 1));
+        } catch (NumberFormatException e) {
+            System.err.println("There was problem to read last id or there is no id yet");
         }
-        return Integer.parseInt(idFileLines.get(0));
+        return lastId;
     }
 
     private void updateLastId(int id) {

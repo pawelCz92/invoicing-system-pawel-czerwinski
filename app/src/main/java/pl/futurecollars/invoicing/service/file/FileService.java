@@ -1,7 +1,10 @@
 package pl.futurecollars.invoicing.service.file;
 
+import static pl.futurecollars.invoicing.Configuration.DEFAULT_LINE_SEPARATOR;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class FileService {
 
@@ -9,10 +12,10 @@ public class FileService {
     private final FromFileReader fromFileReader;
     private final ToFileWriter toFileWriter;
 
-    public FileService(String fileName, boolean appendToFile) {
+    public FileService(String fileName) {
         this.fileName = fileName;
-        this.fromFileReader = new FromFileReader(this.fileName);
-        this.toFileWriter = new ToFileWriter(this.fileName, appendToFile);
+        this.fromFileReader = new FromFileReader(this.fileName, DEFAULT_LINE_SEPARATOR);
+        this.toFileWriter = new ToFileWriter(this.fileName, DEFAULT_LINE_SEPARATOR);
     }
 
     public void writeLine(String line) {
@@ -28,6 +31,15 @@ public class FileService {
             return fromFileReader.readLinesFromFile();
         } catch (IOException e) {
             throw new IllegalStateException("There was problem to read file: " + fileName);
+        }
+    }
+
+    public Optional<String> findLineById(int id){
+        try {
+            return fromFileReader.findLineById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
         }
     }
 }
