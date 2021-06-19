@@ -7,19 +7,19 @@ import java.nio.file.StandardOpenOption;
 
 public class ToFileWriter {
 
-    private final String fileName;
-    private final boolean appendToFile;
+    private final Path filePath;
+    private final String lineSeparator;
 
-    public ToFileWriter(String fileName, boolean appendToFile) {
-        this.fileName = fileName;
-        this.appendToFile = appendToFile;
+    public ToFileWriter(String fileName, String lineSeparator) {
+        this.filePath = Path.of(fileName);
+        this.lineSeparator = lineSeparator;
         createFileIfNotExists();
     }
 
     private void createFileIfNotExists() {
-        if (Files.notExists(Path.of(fileName))) {
+        if (Files.notExists(filePath)) {
             try {
-                Files.createFile(Path.of(fileName));
+                Files.createFile(filePath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -27,10 +27,6 @@ public class ToFileWriter {
     }
 
     void writeLineToFile(String line) throws IOException {
-        if (appendToFile) {
-            Files.writeString(Path.of(fileName), line.concat(System.lineSeparator()), StandardOpenOption.APPEND);
-        } else {
-            Files.writeString(Path.of(fileName), line.concat(System.lineSeparator()), StandardOpenOption.TRUNCATE_EXISTING);
-        }
+            Files.writeString(filePath, line.concat(lineSeparator), StandardOpenOption.APPEND);
     }
 }

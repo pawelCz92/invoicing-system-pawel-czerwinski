@@ -12,7 +12,7 @@ class FileServiceTest extends Specification {
     private static Path filePath = Path.of("fileServiceTest.json")
 
     def setup() {
-        fileService = new FileService(filePath.toString(), true)
+        fileService = new FileService(filePath.toString())
     }
 
     def cleanup() {
@@ -66,4 +66,5 @@ class FileServiceTest extends Specification {
         then:
         thrown(IllegalStateException.class)
     }
+
 }
