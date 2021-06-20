@@ -18,7 +18,6 @@ public class FileBasedDatabase implements Database {
     public FileBasedDatabase(String fileNameForData, String fileNameForIds) {
         this.fileServiceForData = new FileService(fileNameForData);
         this.fileServiceForId = new FileService(fileNameForIds);
-        //id = getLastId() + 1;
     }
 
     @Override
@@ -45,12 +44,27 @@ public class FileBasedDatabase implements Database {
 
     @Override
     public void update(int id, Invoice updatedInvoice) {
-
+        int lineNumber = fileServiceForData.getLineNumberById(id);
+        List<Invoice> allInvoices = getAll();
+        updatedInvoice.setId(id);
+        allInvoices.set(lineNumber, updatedInvoice);
+        fileServiceForData.updateBaseFile(
+            allInvoices.stream()
+                .map(jsonService::objectToString)
+                .collect(Collectors.toList())
+        );
     }
 
     @Override
     public void delete(int id) {
-
+        int lineNumber = fileServiceForData.getLineNumberById(id);
+        List<Invoice> allInvoices = getAll();
+        allInvoices.remove(lineNumber);
+        fileServiceForData.updateBaseFile(
+            allInvoices.stream()
+                .map(jsonService::objectToString)
+                .collect(Collectors.toList())
+        );
     }
 
     private int getLastId() {

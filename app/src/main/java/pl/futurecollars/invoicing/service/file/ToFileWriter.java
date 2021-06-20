@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 
 public class ToFileWriter {
 
@@ -27,6 +28,10 @@ public class ToFileWriter {
     }
 
     void writeLineToFile(String line) throws IOException {
-            Files.writeString(filePath, line.concat(lineSeparator), StandardOpenOption.APPEND);
+        Files.writeString(filePath, line.concat(lineSeparator), StandardOpenOption.APPEND);
+    }
+
+    public void rewriteFile(List<String> lines) throws IOException {
+        Files.write(filePath, lines, StandardOpenOption.TRUNCATE_EXISTING);
     }
 }

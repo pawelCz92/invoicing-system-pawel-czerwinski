@@ -67,4 +67,71 @@ class FileServiceTest extends Specification {
         thrown(IllegalStateException.class)
     }
 
+    def "should return empty Optional if searched ID is not unique in base"() {
+        setup:
+        fileService.writeLine("{\"id\":1,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
+        fileService.writeLine("{\"id\":2,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
+        fileService.writeLine("{\"id\":1,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
+        fileService.writeLine("{\"id\":4,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
+        fileService.writeLine("{\"id\":6,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
+
+        expect:
+        fileService.findLineById(1) == Optional.empty()
+
+    }
+
+    def "should return line number for existing and unique ID"() {
+        setup:
+        fileService.writeLine("{\"id\":1,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
+        fileService.writeLine("{\"id\":2,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
+        fileService.writeLine("{\"id\":3,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
+        fileService.writeLine("{\"id\":4,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
+        fileService.writeLine("{\"id\":6,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
+
+        expect:
+        fileService.getLineNumberById(1) == 0
+        fileService.getLineNumberById(4) == 3
+    }
+
+    def "should return null for not existing or not unique ID"() {
+        setup:
+        fileService.writeLine("{\"id\":1,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
+        fileService.writeLine("{\"id\":2,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
+        fileService.writeLine("{\"id\":3,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
+        fileService.writeLine("{\"id\":1,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
+        fileService.writeLine("{\"id\":6,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
+
+        expect:
+        fileService.getLineNumberById(1) == null
+        fileService.getLineNumberById(400) == null
+    }
+
+    def "should rewrite file"() {
+        setup:
+        fileService.writeLine("line one")
+        fileService.writeLine("line two")
+        List<String> linesToRewriteFile = List.of("Other line one", "Other line two")
+
+        when:
+        fileService.updateBaseFile(linesToRewriteFile)
+
+        then:
+        fileService.readLinesToList() == linesToRewriteFile
+    }
+
+    def "should throw IllegalStateException if there is problem to update file"() {
+        setup:
+        File file = new File(filePath.toString())
+        file.setWritable(false)
+
+        when:
+        fileService.updateBaseFile(List.of("line 1", "line 2"))
+
+        then:
+        thrown(IllegalStateException)
+
+        cleanup:
+        file.delete()
+    }
+
 }
