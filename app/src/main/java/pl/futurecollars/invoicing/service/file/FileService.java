@@ -34,12 +34,29 @@ public class FileService {
         }
     }
 
-    public Optional<String> findLineById(int id){
+    public Optional<String> findLineById(int id) {
         try {
             return fromFileReader.findLineById(id);
         } catch (Exception e) {
             e.printStackTrace();
             return Optional.empty();
+        }
+    }
+
+    public Integer getLineNumberById(int id) {
+        try {
+            return fromFileReader.getLineNumberById(id);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public void updateBaseFile(List<String> lines) {
+        try {
+            toFileWriter.rewriteFile(lines);
+        } catch (IOException e) {
+            throw new IllegalStateException("There is problem to update base file");
         }
     }
 }

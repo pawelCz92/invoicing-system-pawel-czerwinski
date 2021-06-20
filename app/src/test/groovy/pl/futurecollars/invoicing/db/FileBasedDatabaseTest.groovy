@@ -87,7 +87,6 @@ class FileBasedDatabaseTest extends Specification {
 
         expect:
         lastSavedInvoice.getId() == 104
-
     }
 
     def "should find invoice by id"() {
@@ -112,20 +111,6 @@ class FileBasedDatabaseTest extends Specification {
 
         expect:
         fileBasedDatabase.getAll() == sampleInvoices
-
-    }
-
-    def "should return empty Optional if searched ID is not unique in base"() {
-        setup:
-        FileService fileService = new FileService(fileNameForDataBaseTest)
-        fileService.writeLine("{\"id\":1,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
-        fileService.writeLine("{\"id\":2,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
-        fileService.writeLine("{\"id\":1,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
-        fileService.writeLine("{\"id\":4,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
-        fileService.writeLine("{\"id\":6,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
-
-        expect:
-        fileService.findLineById(1) == Optional.empty()
     }
 
     def "should return empty Optional if there is no such ID"() {
@@ -141,9 +126,29 @@ class FileBasedDatabaseTest extends Specification {
         fileService.findLineById(10000) == Optional.empty()
     }
 
-    def "Update"() {
+    def "should update invoice by id"() {
+        setup:
+        saveSampleInvoicesToBase()
+        Invoice updatedInvoice = sampleInvoices.get(2)
+        updatedInvoice.setDate(LocalDate.of(1999, 1, 1))
+
+        when:
+        fileBasedDatabase.update(4, updatedInvoice)
+
+        then:
+        fileBasedDatabase.getAll().size() == sampleInvoices.size()
+        fileBasedDatabase.getById(4).get() == updatedInvoice
     }
 
-    def "Delete"() {
+    def "should delete invoice by id"() {
+        setup:
+        saveSampleInvoicesToBase()
+
+        when:
+        fileBasedDatabase.delete(1)
+
+        then:
+        fileBasedDatabase.getAll().size() == sampleInvoices.size() - 1
+        fileBasedDatabase.getById(1).isEmpty()
     }
 }
