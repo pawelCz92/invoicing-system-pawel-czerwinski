@@ -22,9 +22,7 @@ public class FromFileReader {
     }
 
     List<String> readLinesFromFile() throws IOException {
-        String fileContent = Files.readString(filePath);
-        fileContent = fileContent.trim();
-        return Arrays.asList(fileContent.split(lineSeparator));
+        return Files.readAllLines(filePath);
     }
 
     Optional<String> findLineById(int id) throws IOException, IllegalStateException {

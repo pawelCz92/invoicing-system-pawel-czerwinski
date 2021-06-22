@@ -3,10 +3,12 @@ package pl.futurecollars.invoicing.db;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.service.JsonService;
 import pl.futurecollars.invoicing.service.file.FileService;
 
+@Slf4j
 public class FileBasedDatabase implements Database {
 
     private final FileService fileServiceForData;
@@ -25,7 +27,7 @@ public class FileBasedDatabase implements Database {
         invoice.setId(id);
         fileServiceForData.writeLine(jsonService.objectToString(invoice));
         updateLastId(id);
-        return id++;
+        return id;
     }
 
     @Override
@@ -69,10 +71,13 @@ public class FileBasedDatabase implements Database {
     private int getLastId() {
         List<String> idFileLines = fileServiceForId.readLinesToList();
         int lastId = 0;
+        if (idFileLines.isEmpty()){
+            return 0;
+        }
         try {
             lastId = Integer.parseInt(idFileLines.get(idFileLines.size() - 1));
         } catch (NumberFormatException e) {
-            System.err.println("There was problem to read last id or there is no id yet");
+            log.error("There was problem to read last id or there is no id yet");
         }
         return lastId;
     }

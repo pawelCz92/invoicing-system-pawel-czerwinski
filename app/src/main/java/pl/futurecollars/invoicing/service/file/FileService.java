@@ -5,7 +5,9 @@ import static pl.futurecollars.invoicing.Configuration.DEFAULT_LINE_SEPARATOR;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class FileService {
 
     private final String fileName;
@@ -38,7 +40,7 @@ public class FileService {
         try {
             return fromFileReader.findLineById(id);
         } catch (Exception e) {
-            e.printStackTrace();
+           log.error(e.getMessage());
             return Optional.empty();
         }
     }
@@ -47,7 +49,7 @@ public class FileService {
         try {
             return fromFileReader.getLineNumberById(id);
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            log.error(e.getMessage());
             return null;
         }
     }
