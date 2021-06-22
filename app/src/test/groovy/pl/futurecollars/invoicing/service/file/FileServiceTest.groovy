@@ -134,4 +134,13 @@ class FileServiceTest extends Specification {
         file.delete()
     }
 
+    def "should return list of two text lines if fileService write two lines to file"(){
+        setup:
+        fileService.writeLine("Line One")
+        fileService.writeLine("Line two")
+
+        expect:
+        Files.readAllLines(filePath).size() == 2
+    }
+
 }

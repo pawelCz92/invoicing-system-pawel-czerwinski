@@ -5,7 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ToFileWriter {
 
     private final Path filePath;
@@ -22,7 +24,7 @@ public class ToFileWriter {
             try {
                 Files.createFile(filePath);
             } catch (IOException e) {
-                e.printStackTrace();
+               log.error(e.getMessage());
             }
         }
     }
