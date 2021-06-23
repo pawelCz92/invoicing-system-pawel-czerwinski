@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import pl.futurecollars.invoicing.model.Invoice;
+import pl.futurecollars.invoicing.service.IdProvider;
 import pl.futurecollars.invoicing.service.JsonService;
 import pl.futurecollars.invoicing.service.file.FileService;
 
@@ -12,21 +13,20 @@ import pl.futurecollars.invoicing.service.file.FileService;
 public class FileBasedDatabase implements Database {
 
     private final FileService fileServiceForData;
-    private final FileService fileServiceForId;
-    private final JsonService jsonService = new JsonService();
-    private int id;
+    private final IdProvider idProvider;
+    private final JsonService jsonService;
 
     public FileBasedDatabase(String fileNameForData, String fileNameForIds) {
         this.fileServiceForData = new FileService(fileNameForData);
-        this.fileServiceForId = new FileService(fileNameForIds);
+        this.idProvider = new IdProvider(fileNameForIds);
+        this.jsonService = new JsonService();
     }
 
     @Override
     public int save(Invoice invoice) {
-        id = getLastId() + 1;
+        int id = idProvider.getNextIdAndIncrement();
         invoice.setId(id);
-        fileServiceForData.writeLine(jsonService.objectToString(invoice));
-        updateLastId(id);
+        fileServiceForData.appendLine(jsonService.objectToString(invoice));
         return id;
     }
 
@@ -45,11 +45,12 @@ public class FileBasedDatabase implements Database {
 
     @Override
     public void update(int id, Invoice updatedInvoice) {
-        int lineNumber = fileServiceForData.getLineNumberById(id);
+        int lineNumber = fileServiceForData.getLineNumberById(id)
+            .orElseThrow(() -> new IllegalArgumentException("There is no id : " + id));
         List<Invoice> allInvoices = getAll();
         updatedInvoice.setId(id);
         allInvoices.set(lineNumber, updatedInvoice);
-        fileServiceForData.updateBaseFile(
+        fileServiceForData.rewriteFileByList(
             allInvoices.stream()
                 .map(jsonService::objectToString)
                 .collect(Collectors.toList())
@@ -58,31 +59,14 @@ public class FileBasedDatabase implements Database {
 
     @Override
     public void delete(int id) {
-        int lineNumber = fileServiceForData.getLineNumberById(id);
+        int lineNumber = fileServiceForData.getLineNumberById(id)
+            .orElseThrow(() -> new IllegalArgumentException("There is no id : " + id));
         List<Invoice> allInvoices = getAll();
         allInvoices.remove(lineNumber);
-        fileServiceForData.updateBaseFile(
+        fileServiceForData.rewriteFileByList(
             allInvoices.stream()
                 .map(jsonService::objectToString)
                 .collect(Collectors.toList())
         );
-    }
-
-    private int getLastId() {
-        List<String> idFileLines = fileServiceForId.readLinesToList();
-        int lastId = 0;
-        if (idFileLines.isEmpty()){
-            return 0;
-        }
-        try {
-            lastId = Integer.parseInt(idFileLines.get(idFileLines.size() - 1));
-        } catch (NumberFormatException e) {
-            log.error("There was problem to read last id or there is no id yet");
-        }
-        return lastId;
-    }
-
-    private void updateLastId(int id) {
-        fileServiceForId.writeLine(String.valueOf(id));
     }
 }

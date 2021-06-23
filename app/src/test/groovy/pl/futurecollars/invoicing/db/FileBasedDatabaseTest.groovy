@@ -15,10 +15,10 @@ import java.util.stream.Collectors
 
 class FileBasedDatabaseTest extends Specification {
 
-    String fileNameForDataBaseTest = "testDBfile.json"
-    String fileNameForIdsTest = "testIdsFile.json"
-    List<Invoice> sampleInvoices
-    FileBasedDatabase fileBasedDatabase
+    private String fileNameForDataBaseTest = "testDBfile.json"
+    private String fileNameForIdsTest = "testIdsFile.json"
+    private List<Invoice> sampleInvoices
+    private FileBasedDatabase fileBasedDatabase
 
     def setup() {
 
@@ -52,8 +52,8 @@ class FileBasedDatabaseTest extends Specification {
     }
 
     def cleanup() {
-        Files.deleteIfExists(Path.of(fileNameForDataBaseTest))
-        Files.deleteIfExists(Path.of(fileNameForIdsTest))
+            Files.deleteIfExists(Path.of(fileNameForDataBaseTest))
+            Files.deleteIfExists(Path.of(fileNameForIdsTest))
     }
 
     def saveSampleInvoicesToBase() {
@@ -80,7 +80,7 @@ class FileBasedDatabaseTest extends Specification {
         setup:
         saveSampleInvoicesToBase()
         FileService fileService = new FileService(fileNameForIdsTest)
-        fileService.writeLine("100")
+        fileService.rewriteFileByList(List.of("100"))
         saveSampleInvoicesToBase()
         List<Invoice> savedInvoices = fileBasedDatabase.getAll()
         Invoice lastSavedInvoice = savedInvoices.get(savedInvoices.size() - 1)
@@ -113,19 +113,6 @@ class FileBasedDatabaseTest extends Specification {
         fileBasedDatabase.getAll() == sampleInvoices
     }
 
-    def "should return empty Optional if there is no such ID"() {
-        setup:
-        FileService fileService = new FileService(fileNameForDataBaseTest)
-        fileService.writeLine("{\"id\":1,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
-        fileService.writeLine("{\"id\":2,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
-        fileService.writeLine("{\"id\":3,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
-        fileService.writeLine("{\"id\":4,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
-        fileService.writeLine("{\"id\":6,\"date\":\"2000-11-23\", AND REST TEXT NOT IMPORTANT FOR THIS TEST")
-
-        expect:
-        fileService.findLineById(10000) == Optional.empty()
-    }
-
     def "should update invoice by id"() {
         setup:
         saveSampleInvoicesToBase()
@@ -150,5 +137,33 @@ class FileBasedDatabaseTest extends Specification {
         then:
         fileBasedDatabase.getAll().size() == sampleInvoices.size() - 1
         fileBasedDatabase.getById(1).isEmpty()
+    }
+
+    def "should throw IllegalArgumentException if there is no such id using delete method"(int incorrectId){
+        setup:
+        saveSampleInvoicesToBase()
+
+        when:
+        fileBasedDatabase.delete(incorrectId)
+
+        then:
+        thrown(IllegalArgumentException)
+
+        where:
+        incorrectId << [5, 100]
+    }
+
+    def "should throw IllegalArgumentException if there is no such id using update method"(int incorrectId){
+        setup:
+        saveSampleInvoicesToBase()
+
+        when:
+        fileBasedDatabase.update(incorrectId, new Invoice())
+
+        then:
+        thrown(IllegalArgumentException)
+
+        where:
+        incorrectId << [5, 100]
     }
 }
