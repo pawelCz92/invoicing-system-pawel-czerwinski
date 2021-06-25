@@ -78,7 +78,8 @@ var jacocoExcludeList = [
         'pl/futurecollars/invoicing/App.class',
         'pl/futurecollars/invoicing/model/*',
         'pl/futurecollars/invoicing/service/InvoiceService.class',
-        'pl/futurecollars/invoicing/Configuration.class'
+        'pl/futurecollars/invoicing/Configuration.class',
+        'pl.futurecollars.invoicing.controller.InvoiceController.class'
 ]
 
 jacocoTestCoverageVerification {
