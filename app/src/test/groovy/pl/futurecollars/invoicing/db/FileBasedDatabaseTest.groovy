@@ -52,8 +52,8 @@ class FileBasedDatabaseTest extends Specification {
     }
 
     def cleanup() {
-            Files.deleteIfExists(Path.of(fileNameForDataBaseTest))
-            Files.deleteIfExists(Path.of(fileNameForIdsTest))
+        Files.deleteIfExists(Path.of(fileNameForDataBaseTest))
+        Files.deleteIfExists(Path.of(fileNameForIdsTest))
     }
 
     def saveSampleInvoicesToBase() {
@@ -139,7 +139,7 @@ class FileBasedDatabaseTest extends Specification {
         fileBasedDatabase.getById(1).isEmpty()
     }
 
-    def "should throw IllegalArgumentException if there is no such id using delete method"(int incorrectId){
+    def "should throw IllegalArgumentException if there is no such id using delete method"(int incorrectId) {
         setup:
         saveSampleInvoicesToBase()
 
@@ -153,7 +153,7 @@ class FileBasedDatabaseTest extends Specification {
         incorrectId << [5, 100]
     }
 
-    def "should throw IllegalArgumentException if there is no such id using update method"(int incorrectId){
+    def "should throw IllegalArgumentException if there is no such id using update method"(int incorrectId) {
         setup:
         saveSampleInvoicesToBase()
 
