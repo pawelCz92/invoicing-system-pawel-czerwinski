@@ -8,6 +8,10 @@ plugins {
 
     id 'jacoco'
 
+    id 'org.springframework.boot' version '2.5.1'
+
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+
 }
 
 repositories {
@@ -34,6 +38,9 @@ dependencies {
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.1'
 
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 application {
@@ -71,7 +78,8 @@ var jacocoExcludeList = [
         'pl/futurecollars/invoicing/App.class',
         'pl/futurecollars/invoicing/model/*',
         'pl/futurecollars/invoicing/service/InvoiceService.class',
-        'pl/futurecollars/invoicing/Configuration.class'
+        'pl/futurecollars/invoicing/Configuration.class',
+        'pl.futurecollars.invoicing.controller.InvoiceController.class'
 ]
 
 jacocoTestCoverageVerification {
