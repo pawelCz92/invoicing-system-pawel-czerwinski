@@ -4,6 +4,7 @@ import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.model.InvoiceEntry
 import pl.futurecollars.invoicing.model.Vat
+import pl.futurecollars.invoicing.service.IdProvider
 import pl.futurecollars.invoicing.service.JsonService
 import pl.futurecollars.invoicing.service.file.FileService
 import spock.lang.Specification
@@ -19,10 +20,12 @@ class FileBasedDatabaseTest extends Specification {
     private String fileNameForIdsTest = "testIdsFile.json"
     private List<Invoice> sampleInvoices
     private FileBasedDatabase fileBasedDatabase
+    private IdProvider idProvider = new IdProvider(fileNameForIdsTest)
+    private FileService fileServiceForData = new FileService(fileNameForDataBaseTest)
 
     def setup() {
 
-        fileBasedDatabase = new FileBasedDatabase(fileNameForDataBaseTest, fileNameForIdsTest)
+        fileBasedDatabase = new FileBasedDatabase(fileServiceForData, idProvider, new JsonService())
 
         Company buyer1 =
                 new Company("382-22-1584", "377 Ohio Road Pulo", "Microsoft")
