@@ -28,6 +28,6 @@ hs_err_pid*
 
 # Ignore Gradle build output directory
 build
-/ZZZZ checkout-MASTER.bat
 /db-data.json
 /db-ids.json
+/ZZ checkout------MASTER.bat
