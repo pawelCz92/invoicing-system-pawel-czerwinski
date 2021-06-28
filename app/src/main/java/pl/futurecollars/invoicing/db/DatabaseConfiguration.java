@@ -9,11 +9,11 @@ import pl.futurecollars.invoicing.service.file.FileService;
 @Configuration
 public class DatabaseConfiguration {
 
-    public static final String DB_DATA_FILE_NAME_PATH = "db-data.json";
-    public static final String DB_ID_FILE_NAME_PATH = "db-ids.json";
+    private static final String DB_DATA_FILE_NAME_PATH = "db-data.json";
+    private static final String DB_ID_FILE_NAME_PATH = "db-ids.json";
 
     @Bean
-    public IdProvider idProvider() {
+    IdProvider idProvider() {
         return new IdProvider(DB_ID_FILE_NAME_PATH);
     }
 
