@@ -1,6 +1,7 @@
 package pl.futurecollars.invoicing.controller;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,9 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import pl.futurecollars.invoicing.Configuration;
-import pl.futurecollars.invoicing.db.Database;
-import pl.futurecollars.invoicing.db.FileBasedDatabase;
 import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.service.InvoiceService;
 import pl.futurecollars.invoicing.service.JsonService;
@@ -19,9 +17,14 @@ import pl.futurecollars.invoicing.service.JsonService;
 @RestController()
 public class InvoiceController {
 
-    private final Database database = new FileBasedDatabase(Configuration.DB_DATA_FILE_NAME_PATH, Configuration.DB_ID_FILE_NAME_PATH);
-    private final InvoiceService invoiceService = new InvoiceService(database);
-    private final JsonService jsonService = new JsonService();
+    private final InvoiceService invoiceService;
+    private final JsonService jsonService;
+
+    @Autowired
+    public InvoiceController(InvoiceService invoiceService, JsonService jsonService) {
+        this.invoiceService = invoiceService;
+        this.jsonService = jsonService;
+    }
 
     @PostMapping("invoices/add")
     private void saveInvoice(@RequestBody String invoiceInJson) {
