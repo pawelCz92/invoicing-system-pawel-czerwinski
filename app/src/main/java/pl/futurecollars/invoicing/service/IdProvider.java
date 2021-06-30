@@ -11,10 +11,11 @@ import pl.futurecollars.invoicing.service.file.FileService;
 public class IdProvider {
 
     private final FileService fileService;
+    private final String fileName;
 
     public IdProvider(String fileName) {
         this.fileService = new FileService(fileName);
-        createFileIfNotExists(fileName);
+        this.fileName = fileName;
     }
 
     public int getNextIdAndIncrement() {
@@ -24,6 +25,7 @@ public class IdProvider {
     }
 
     private int readLastId() {
+        createFileIfNotExists(fileName);
         List<String> idFileLines = fileService.readLinesToList();
         String message;
         if (idFileLines.isEmpty()) {

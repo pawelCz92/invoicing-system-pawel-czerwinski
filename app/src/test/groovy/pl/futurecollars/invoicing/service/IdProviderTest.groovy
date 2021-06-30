@@ -12,6 +12,7 @@ class IdProviderTest extends Specification {
         setup:
         String fileName = "idProviderTestFile.txt"
         IdProvider idProvider = new IdProvider(fileName)
+        idProvider.getNextIdAndIncrement()
         Files.writeString(Path.of(fileName), "next line1".concat(System.lineSeparator()), StandardOpenOption.APPEND)
         Files.writeString(Path.of(fileName), "next line2".concat(System.lineSeparator()), StandardOpenOption.APPEND)
 
@@ -29,6 +30,7 @@ class IdProviderTest extends Specification {
         setup:
         String fileName = "idProviderTestFile.txt"
         IdProvider idProvider = new IdProvider(fileName)
+        idProvider.getNextIdAndIncrement()
         Files.writeString(Path.of(fileName), "next line1".concat(System.lineSeparator()), StandardOpenOption.APPEND)
 
         when:

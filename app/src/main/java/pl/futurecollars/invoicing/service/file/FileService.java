@@ -25,6 +25,7 @@ public class FileService {
         try {
             if (Files.notExists(filePath)) {
                 Files.createFile(filePath);
+                log.warn("File not exists: " + filePath + " - it will be created");
             }
             Files.writeString(filePath, line.concat(System.lineSeparator()), StandardOpenOption.APPEND);
         } catch (IOException e) {
@@ -53,7 +54,6 @@ public class FileService {
     }
 
     public Optional<String> findLineById(int id) {
-
         List<String> searchResult = readLinesToList().stream()
             .filter(line -> checkMatching(line, id))
             .collect(Collectors.toList());
