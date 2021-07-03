@@ -42,4 +42,21 @@ class IdProviderTest extends Specification {
         cleanup:
         Files.deleteIfExists(Path.of(fileName))
     }
+
+    def "should throw IllegalStateException if there is problem to convert id file content to id"(){
+        setup:
+        String fileName = "idProviderTestFile.txt"
+        IdProvider idProvider = new IdProvider(fileName)
+        idProvider.getNextIdAndIncrement()
+        Files.writeString(Path.of(fileName), "text - not be able to convert to id (integer)", StandardOpenOption.TRUNCATE_EXISTING)
+
+        when:
+        idProvider.getNextIdAndIncrement()
+
+        then:
+        thrown(IllegalStateException.class)
+
+        cleanup:
+        Files.deleteIfExists(Path.of(fileName))
+    }
 }

@@ -28,24 +28,24 @@ public class InvoiceController {
         this.jsonService = jsonService;
     }
 
-    @PostMapping("/add")
-    private void saveInvoice(@RequestBody String invoiceInJson) {
-        invoiceService.save(jsonService.stringToObject(invoiceInJson, Invoice.class));
-    }
-
-    @GetMapping("/get-all")
+    @GetMapping()
     private List<Invoice> getAllInvoices() {
         return invoiceService.getAll();
     }
 
-    @GetMapping("/get-by-id/{id}")
+    @PostMapping()
+    private int saveInvoice(@RequestBody String invoiceInJson) {
+        return invoiceService.save(jsonService.stringToObject(invoiceInJson, Invoice.class));
+    }
+
+    @GetMapping("/{id}")
     private ResponseEntity<Invoice> getInvoiceById(@PathVariable int id) {
         return invoiceService.getById(id)
             .map(invoice -> ResponseEntity.ok().body(invoice))
             .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/update-by-id/{id}")
+    @PutMapping("/{id}")
     private ResponseEntity<?> updateById(@PathVariable int id, @RequestBody String invoiceString) {
         try {
             invoiceService.update(id, jsonService.stringToObject(invoiceString, Invoice.class));
@@ -55,7 +55,7 @@ public class InvoiceController {
         }
     }
 
-    @DeleteMapping("/delete-by-id/{id}")
+    @DeleteMapping("/{id}")
     private ResponseEntity<?> deleteById(@PathVariable int id) {
         try {
             invoiceService.delete(id);

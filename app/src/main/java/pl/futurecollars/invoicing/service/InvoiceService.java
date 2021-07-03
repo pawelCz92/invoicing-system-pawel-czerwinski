@@ -28,7 +28,7 @@ public class InvoiceService {
         return database.getAll();
     }
 
-    public void update(int id, Invoice updatedInvoice) {
+    public void update(int id, Invoice updatedInvoice) throws IllegalArgumentException {
         database.update(id, updatedInvoice);
     }
 

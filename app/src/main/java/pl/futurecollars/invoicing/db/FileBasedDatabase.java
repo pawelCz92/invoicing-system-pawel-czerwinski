@@ -1,5 +1,6 @@
 package pl.futurecollars.invoicing.db;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,9 +41,14 @@ public class FileBasedDatabase implements Database {
 
     @Override
     public List<Invoice> getAll() {
-        return fileServiceForData.readLinesToList().stream()
-            .map(line -> jsonService.stringToObject(line, Invoice.class))
-            .collect(Collectors.toList());
+        try {
+            return fileServiceForData.readLinesToList().stream()
+                .map(line -> jsonService.stringToObject(line, Invoice.class))
+                .collect(Collectors.toList());
+        } catch (IllegalStateException e) {
+            log.error(e.getMessage());
+            return Collections.emptyList();
+        }
     }
 
     @Override

@@ -54,10 +54,14 @@ public class FileService {
     }
 
     public Optional<String> findLineById(int id) {
-        List<String> searchResult = readLinesToList().stream()
-            .filter(line -> checkMatching(line, id))
-            .collect(Collectors.toList());
-
+        List<String> searchResult = null;
+        try {
+            searchResult = readLinesToList().stream()
+                .filter(line -> checkMatching(line, id))
+                .collect(Collectors.toList());
+        } catch (Exception e) {
+            return Optional.empty();
+        }
         if (searchResult.size() > 1) {
             throw new IllegalStateException("Error - There is " + searchResult.size() + " id's: " + id + " in base...");
         }
