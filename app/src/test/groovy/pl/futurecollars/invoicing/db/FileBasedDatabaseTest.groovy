@@ -14,11 +14,11 @@ import java.util.stream.Collectors
 
 class FileBasedDatabaseTest extends Specification {
 
-    private String fileNameForDataBaseTest = "testDBfile.json"
-    private String fileNameForIdsTest = "testIdsFile.json"
+    private Path filePathForDataBaseTest = Path.of("testDBfile.json")
+    private Path filePathForIdsTest = Path.of("testIdsFile.json")
     private FileBasedDatabase fileBasedDatabase
-    private IdProvider idProvider = new IdProvider(fileNameForIdsTest)
-    private FileService fileServiceForData = new FileService(fileNameForDataBaseTest)
+    private IdProvider idProvider = new IdProvider(filePathForIdsTest)
+    private FileService fileServiceForData = new FileService(filePathForDataBaseTest)
     private List<Invoice> sampleInvoices
 
     def setup() {
@@ -27,8 +27,8 @@ class FileBasedDatabaseTest extends Specification {
     }
 
     def cleanup() {
-        Files.deleteIfExists(Path.of(fileNameForDataBaseTest))
-        Files.deleteIfExists(Path.of(fileNameForIdsTest))
+        Files.deleteIfExists(filePathForDataBaseTest)
+        Files.deleteIfExists(filePathForIdsTest)
     }
 
     def saveSampleInvoicesToBase() {
@@ -43,7 +43,7 @@ class FileBasedDatabaseTest extends Specification {
         saveSampleInvoicesToBase()
 
         then:
-        List<Invoice> invoicesFromFile = Files.readAllLines(Path.of(fileNameForDataBaseTest)).stream()
+        List<Invoice> invoicesFromFile = Files.readAllLines(filePathForDataBaseTest).stream()
                 .map(line -> jsonService.stringToObject(line, Invoice.class))
                 .collect(Collectors.toList())
 
@@ -54,7 +54,7 @@ class FileBasedDatabaseTest extends Specification {
     def "should read last id from file and start generate id from this number"() {
         setup:
         saveSampleInvoicesToBase()
-        FileService fileService = new FileService(fileNameForIdsTest)
+        FileService fileService = new FileService(filePathForIdsTest)
         fileService.rewriteFileByList(List.of("100"))
         saveSampleInvoicesToBase()
         List<Invoice> savedInvoices = fileBasedDatabase.getAll()

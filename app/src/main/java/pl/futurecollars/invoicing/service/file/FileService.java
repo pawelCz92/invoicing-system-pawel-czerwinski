@@ -17,8 +17,8 @@ public class FileService {
     private static final Pattern PATTERN_FOR_SEARCH_BY_ID = Pattern.compile("^\\{\"id\":(\\d+).+");
     private final Path filePath;
 
-    public FileService(String filePath) {
-        this.filePath = Path.of(filePath);
+    public FileService(Path filePath) {
+        this.filePath = filePath;
     }
 
     public void appendLine(String line) {

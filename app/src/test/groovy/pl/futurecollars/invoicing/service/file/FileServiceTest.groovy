@@ -12,7 +12,7 @@ class FileServiceTest extends Specification {
     private static Path filePath = Path.of("fileServiceTest.json")
 
     def setup() {
-        fileService = new FileService(filePath.toString())
+        fileService = new FileService(filePath)
     }
 
     def cleanup() {

@@ -2,6 +2,13 @@ server:
   port: 7777
 
 invoicing-system:
-  database: memory
-  database.idFilePath: db-id.json
-  database.dataFilePath: db-data.json
+  database: file
+  database.directory: db
+  database.idFileName: db-ids.json
+  database.dataFileName: db-data.json
+
+logging:
+  level:
+    pl:
+      futurecollars:
+        invoicing:

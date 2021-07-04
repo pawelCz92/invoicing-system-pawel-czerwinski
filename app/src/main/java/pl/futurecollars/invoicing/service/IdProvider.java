@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import pl.futurecollars.invoicing.service.file.FileService;
 
@@ -11,11 +12,12 @@ import pl.futurecollars.invoicing.service.file.FileService;
 public class IdProvider {
 
     private final FileService fileService;
-    private final String fileName;
+    private final Path filePath;
 
-    public IdProvider(String fileName) {
-        this.fileService = new FileService(fileName);
-        this.fileName = fileName;
+    public IdProvider(Path filePath) {
+        this.fileService = new FileService(filePath);
+        this.filePath = filePath;
+
     }
 
     public int getNextIdAndIncrement() {
@@ -25,7 +27,7 @@ public class IdProvider {
     }
 
     private int readLastId() {
-        createFileIfNotExists(fileName);
+        createFileIfNotExists();
         List<String> idFileLines = fileService.readLinesToList();
         String message;
         if (idFileLines.isEmpty()) {
@@ -50,13 +52,18 @@ public class IdProvider {
         fileService.rewriteFileByList(List.of(String.valueOf(id)));
     }
 
-    private void createFileIfNotExists(String fileName) {
-        if (Files.notExists(Path.of(fileName))) {
+    private void createFileIfNotExists() {
+        if (Files.notExists(filePath)) {
             try {
-                Files.createFile(Path.of(fileName));
+                if (!Objects.isNull(filePath.getParent())) {
+                    Files.createDirectories(filePath.getParent());
+                }
+                Files.createFile(filePath);
+                log.info("IdProvider file was created");
             } catch (IOException e) {
-                String message = "There was problem to create file for idProvider";
+                String message = "There was problem to create file for idProvider: '" + filePath + "'";
                 log.error(message);
+                e.printStackTrace();
                 throw new IllegalStateException(message);
             }
         }

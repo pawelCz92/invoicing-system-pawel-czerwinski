@@ -32,3 +32,7 @@ build
 /db-ids.json
 /ZZ checkout------MASTER.bat
 /app/db-ids.json
+/app/db/db-data.json
+/app/db/db-ids.json
+/db/db-data.json
+/db/db-ids.json

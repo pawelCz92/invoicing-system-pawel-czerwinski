@@ -28,8 +28,8 @@ class InvoiceControllerTest extends Specification {
     private String collection = "/invoices/"
 
     def cleanupSpec() {
-        Files.deleteIfExists(Path.of("db-data.json"))
-        Files.deleteIfExists(Path.of("db-ids.json"))
+        //Files.deleteIfExists("db-data.json")
+       // Files.deleteIfExists("db-ids.json")
     }
 
     def "should return not found status when try to get all invoices and db file was not created yet"() {
