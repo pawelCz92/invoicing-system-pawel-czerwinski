@@ -1,6 +1,7 @@
 package pl.futurecollars.invoicing.controller;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,16 +18,11 @@ import pl.futurecollars.invoicing.service.JsonService;
 
 @RestController
 @RequestMapping("invoices")
+@AllArgsConstructor
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
     private final JsonService jsonService;
-
-    @Autowired
-    public InvoiceController(InvoiceService invoiceService, JsonService jsonService) {
-        this.invoiceService = invoiceService;
-        this.jsonService = jsonService;
-    }
 
     @GetMapping
     private ResponseEntity<List<Invoice>> getAllInvoices() {
