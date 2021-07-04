@@ -1,11 +1,9 @@
 package pl.futurecollars.invoicing.db;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.service.IdProvider;
 import pl.futurecollars.invoicing.service.JsonService;
@@ -18,7 +16,6 @@ public class FileBasedDatabase implements Database {
     private final IdProvider idProvider;
     private final JsonService jsonService;
 
-    @Autowired
     public FileBasedDatabase(FileService fileServiceForData, IdProvider idProvider, JsonService jsonService) {
         this.fileServiceForData = fileServiceForData;
         this.idProvider = idProvider;
@@ -41,14 +38,9 @@ public class FileBasedDatabase implements Database {
 
     @Override
     public List<Invoice> getAll() {
-        try {
-            return fileServiceForData.readLinesToList().stream()
-                .map(line -> jsonService.stringToObject(line, Invoice.class))
-                .collect(Collectors.toList());
-        } catch (IllegalStateException e) {
-            log.error(e.getMessage());
-            return Collections.emptyList();
-        }
+        return fileServiceForData.readLinesToList().stream()
+            .map(line -> jsonService.stringToObject(line, Invoice.class))
+            .collect(Collectors.toList());
     }
 
     @Override
