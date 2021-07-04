@@ -15,7 +15,7 @@ import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.service.InvoiceService;
 import pl.futurecollars.invoicing.service.JsonService;
 
-@RestController()
+@RestController
 @RequestMapping("invoices")
 public class InvoiceController {
 
@@ -28,21 +28,33 @@ public class InvoiceController {
         this.jsonService = jsonService;
     }
 
-    @GetMapping()
-    private List<Invoice> getAllInvoices() {
-        return invoiceService.getAll();
+    @GetMapping
+    private ResponseEntity<List<Invoice>> getAllInvoices() {
+        try {
+            return ResponseEntity.ok().body(invoiceService.getAll());
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PostMapping()
-    private int saveInvoice(@RequestBody String invoiceInJson) {
-        return invoiceService.save(jsonService.stringToObject(invoiceInJson, Invoice.class));
+    @PostMapping
+    private ResponseEntity<Integer> saveInvoice(@RequestBody String invoiceInJson) {
+        try {
+            return ResponseEntity.ok(invoiceService.save(jsonService.stringToObject(invoiceInJson, Invoice.class)));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/{id}")
     private ResponseEntity<Invoice> getInvoiceById(@PathVariable int id) {
-        return invoiceService.getById(id)
-            .map(invoice -> ResponseEntity.ok().body(invoice))
-            .orElse(ResponseEntity.notFound().build());
+        try {
+            return invoiceService.getById(id)
+                .map(invoice -> ResponseEntity.ok().body(invoice))
+                .orElse(ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/{id}")

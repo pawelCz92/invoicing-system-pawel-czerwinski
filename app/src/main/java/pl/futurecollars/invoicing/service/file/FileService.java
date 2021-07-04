@@ -29,7 +29,9 @@ public class FileService {
             }
             Files.writeString(filePath, line.concat(System.lineSeparator()), StandardOpenOption.APPEND);
         } catch (IOException e) {
-            throw new IllegalStateException("There was problem to read file: " + filePath);
+            String message = "There was problem to read file: " + filePath;
+            log.error(message);
+            throw new IllegalStateException(message);
         }
     }
 
@@ -40,7 +42,9 @@ public class FileService {
             }
             Files.write(filePath, lines, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
-            throw new IllegalStateException("There is problem to update base file");
+            String message = "There is problem to update base file";
+            log.error(message);
+            throw new IllegalStateException(message);
         }
     }
 
@@ -48,22 +52,21 @@ public class FileService {
         try {
             return Files.readAllLines(filePath);
         } catch (IOException e) {
-            log.error("There was problem to read from file");
-            throw new IllegalStateException("There was problem to read file: " + filePath);
+            String message = "There was problem to read from file " + filePath;
+            log.error(message);
+            throw new IllegalStateException(message);
         }
     }
 
     public Optional<String> findLineById(int id) {
-        List<String> searchResult = null;
-        try {
-            searchResult = readLinesToList().stream()
-                .filter(line -> checkMatching(line, id))
-                .collect(Collectors.toList());
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+        List<String> searchResult;
+        searchResult = readLinesToList().stream()
+            .filter(line -> checkMatching(line, id))
+            .collect(Collectors.toList());
         if (searchResult.size() > 1) {
-            throw new IllegalStateException("Error - There is " + searchResult.size() + " id's: " + id + " in base...");
+            String message = "Error - There is " + searchResult.size() + " id's: " + id + " in base...";
+            log.error(message);
+            throw new IllegalStateException(message);
         }
         if (searchResult.isEmpty()) {
             return Optional.empty();
