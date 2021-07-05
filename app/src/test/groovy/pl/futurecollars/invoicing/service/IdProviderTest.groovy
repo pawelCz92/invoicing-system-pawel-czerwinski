@@ -7,7 +7,7 @@ import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 
 class IdProviderTest extends Specification {
-
+  
     private Path testFilePath
     private IdProvider idProvider
 
