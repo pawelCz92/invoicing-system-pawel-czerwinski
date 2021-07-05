@@ -23,6 +23,8 @@ dependencies {
     testImplementation 'org.codehaus.groovy:groovy:3.0.7'
 
     testImplementation 'org.spockframework:spock-core:2.0-M4-groovy-3.0'
+    testImplementation 'org.spockframework:spock-spring:2.0-M4-groovy-3.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     implementation 'com.google.guava:guava:30.0-jre'
 
@@ -75,11 +77,7 @@ jacoco {
 }
 
 var jacocoExcludeList = [
-        'pl/futurecollars/invoicing/App.class',
-        'pl/futurecollars/invoicing/model/*',
-        'pl/futurecollars/invoicing/service/InvoiceService.class',
-        'pl/futurecollars/invoicing/Configuration.class',
-        'pl/futurecollars/invoicing/controller/InvoiceController.class'
+        'pl/futurecollars/invoicing/App.class'
 ]
 
 jacocoTestCoverageVerification {

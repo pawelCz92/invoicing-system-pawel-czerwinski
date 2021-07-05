@@ -1,5 +1,7 @@
 package pl.futurecollars.invoicing.service
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.model.InvoiceEntry
@@ -8,13 +10,11 @@ import spock.lang.Specification
 
 import java.time.LocalDate
 
+@SpringBootTest
 class JsonServiceTest extends Specification {
 
+    @Autowired
     private JsonService jsonService
-
-    def setup() {
-        jsonService = new JsonService()
-    }
 
     def "should convert object to string"() {
         given:

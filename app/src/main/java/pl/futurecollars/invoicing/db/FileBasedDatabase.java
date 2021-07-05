@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.service.IdProvider;
 import pl.futurecollars.invoicing.service.JsonService;
@@ -17,7 +16,6 @@ public class FileBasedDatabase implements Database {
     private final IdProvider idProvider;
     private final JsonService jsonService;
 
-    @Autowired
     public FileBasedDatabase(FileService fileServiceForData, IdProvider idProvider, JsonService jsonService) {
         this.fileServiceForData = fileServiceForData;
         this.idProvider = idProvider;
