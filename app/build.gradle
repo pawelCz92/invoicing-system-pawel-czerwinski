@@ -14,7 +14,7 @@ plugins {
     id 'checkstyle'
     id 'jacoco'
     id 'org.springframework.boot' version "${springBootVersion}"
-    id 'io.spring.dependency-management' version "$springDependencyManagementVersion"
+    id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
 }
 
 repositories {

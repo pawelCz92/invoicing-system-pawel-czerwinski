@@ -124,9 +124,6 @@ class InvoiceControllerTest extends Specification {
     }
 
     def "should delete invoice by id"() {
-        setup:
-        //DODAC JESZCZE PARE INVOICES DO BAZY POTEM WSZYSTKIE USUNAC
-
         when:
         mockMvc.perform(delete(COLLECTION + "1"))
                 .andExpect(status().isNoContent())
