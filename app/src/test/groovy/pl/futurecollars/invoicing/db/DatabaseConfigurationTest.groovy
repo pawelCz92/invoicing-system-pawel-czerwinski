@@ -21,7 +21,6 @@ class DatabaseConfigurationTest extends Specification {
     def "should provide new IdProvider"() {
         expect:
         idProvider != null
-
     }
 
     def "should provide fileBasedDatabase "() {

@@ -17,7 +17,6 @@ public class IdProvider {
     public IdProvider(Path filePath) {
         this.fileService = new FileService(filePath);
         this.filePath = filePath;
-
     }
 
     public int getNextIdAndIncrement() {
@@ -28,6 +27,7 @@ public class IdProvider {
 
     private int readLastId() {
         createFileIfNotExists();
+
         List<String> idFileLines = fileService.readLinesToList();
         String message;
         if (idFileLines.isEmpty()) {
