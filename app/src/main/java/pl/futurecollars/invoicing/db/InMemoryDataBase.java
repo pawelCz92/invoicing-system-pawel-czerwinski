@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.stereotype.Repository;
 import pl.futurecollars.invoicing.model.Invoice;
 
-@Repository
 public class InMemoryDataBase implements Database {
 
     private final HashMap<Integer, Invoice> invoiceInMemoryDatabase = new HashMap<>();

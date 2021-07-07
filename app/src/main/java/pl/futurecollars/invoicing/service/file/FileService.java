@@ -17,8 +17,8 @@ public class FileService {
     private static final Pattern PATTERN_FOR_SEARCH_BY_ID = Pattern.compile("^\\{\"id\":(\\d+).+");
     private final Path filePath;
 
-    public FileService(String filePath) {
-        this.filePath = Path.of(filePath);
+    public FileService(Path filePath) {
+        this.filePath = filePath;
     }
 
     public void appendLine(String line) {
@@ -64,7 +64,7 @@ public class FileService {
             .filter(line -> checkMatching(line, id))
             .collect(Collectors.toList());
         if (searchResult.size() > 1) {
-            String message = "Error - There is " + searchResult.size() + " id's: " + id + " in base...";
+            String message = String.format("Error - There is %d id's %d in base.", searchResult.size(), id);
             log.error(message);
             throw new IllegalStateException(message);
         }

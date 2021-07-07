@@ -12,6 +12,7 @@ import spock.lang.Stepwise
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -28,8 +29,13 @@ class InvoiceControllerTest extends Specification {
     private static String COLLECTION = "/invoices/"
 
     def cleanupSpec() {
-        Files.deleteIfExists(Path.of("db-data.json"))
-        Files.deleteIfExists(Path.of("db-ids.json"))
+        String currentDir = Paths.get("").toAbsolutePath().toString()
+        Path idFilePath = Path.of(currentDir, "db", "db-ids.json")
+        Path dataFilePath = Path.of(currentDir, "db", "db-data.json")
+
+        Files.deleteIfExists(idFilePath)
+        Files.deleteIfExists(dataFilePath)
+        Files.delete(idFilePath.getParent())
     }
 
     def "should return not found status when try to get all invoices and db file was not created yet"() {
@@ -118,9 +124,6 @@ class InvoiceControllerTest extends Specification {
     }
 
     def "should delete invoice by id"() {
-        setup:
-        //DODAC JESZCZE PARE INVOICES DO BAZY POTEM WSZYSTKIE USUNAC
-
         when:
         mockMvc.perform(delete(COLLECTION + "1"))
                 .andExpect(status().isNoContent())

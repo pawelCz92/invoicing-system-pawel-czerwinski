@@ -2,6 +2,7 @@ package pl.futurecollars.invoicing.db
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import pl.futurecollars.invoicing.service.IdProvider
 import pl.futurecollars.invoicing.service.JsonService
 import spock.lang.Specification
 
@@ -9,19 +10,21 @@ import spock.lang.Specification
 class DatabaseConfigurationTest extends Specification {
 
     @Autowired
-    DatabaseConfiguration databaseConfiguration
+    FileBasedDatabase fileBasedDatabase
+
+    @Autowired
+    IdProvider idProvider
 
     @Autowired
     JsonService jsonService
 
     def "should provide new IdProvider"() {
         expect:
-        databaseConfiguration.idProvider() != null
-
+        idProvider != null
     }
 
     def "should provide fileBasedDatabase "() {
         expect:
-        databaseConfiguration.fileBasedDatabase(jsonService, databaseConfiguration.idProvider()) != null
+       fileBasedDatabase != null
     }
 }

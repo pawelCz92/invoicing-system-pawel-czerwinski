@@ -9,14 +9,14 @@ import java.nio.file.StandardOpenOption
 class FileServiceTest extends Specification {
 
     private FileService fileService
-    private static Path filePath = Path.of("fileServiceTest.json")
+    private static Path FILE_PATH = Path.of("fileServiceTest.json")
 
     def setup() {
-        fileService = new FileService(filePath.toString())
+        fileService = new FileService(FILE_PATH)
     }
 
     def cleanup() {
-        Files.deleteIfExists(filePath)
+        Files.deleteIfExists(FILE_PATH)
     }
 
     def writeSampleDataToFileForSearchOperations() {
@@ -37,12 +37,12 @@ class FileServiceTest extends Specification {
         lines.forEach(line -> fileService.appendLine(line))
 
         then:
-        Files.readAllLines(filePath) == lines
+        Files.readAllLines(FILE_PATH) == lines
     }
 
     def "should throw IllegalStateException if there is problem to write to file"() {
         setup:
-        File file = new File(filePath.toString())
+        File file = new File(FILE_PATH.toString())
         file.createNewFile()
         file.setWritable(false)
 
@@ -59,7 +59,7 @@ class FileServiceTest extends Specification {
     def "should read lines from file"() {
         setup:
         String textToFile = "Test line 1" + System.lineSeparator() + "Test line 2"
-        Files.writeString(filePath, textToFile, StandardOpenOption.CREATE)
+        Files.writeString(FILE_PATH, textToFile, StandardOpenOption.CREATE)
 
         expect:
         fileService.readLinesToList() == List.of("Test line 1", "Test line 2")
@@ -67,7 +67,7 @@ class FileServiceTest extends Specification {
 
     def "should throw IllegalStateException if there is problem to read from file"() {
         setup:
-        File file = new File(filePath.toString())
+        File file = new File(FILE_PATH.toString())
         file.delete()
 
         when:
@@ -124,7 +124,7 @@ class FileServiceTest extends Specification {
 
     def "should throw IllegalStateException if there is problem to update file"() {
         setup:
-        File file = new File(filePath.toString())
+        File file = new File(FILE_PATH.toString())
         file.createNewFile()
         file.setWritable(false)
 
@@ -144,7 +144,7 @@ class FileServiceTest extends Specification {
         fileService.appendLine("Line two")
 
         expect:
-        Files.readAllLines(filePath).size() == 2
+        Files.readAllLines(FILE_PATH).size() == 2
     }
 
     def "should throw IllegalStateException if founded more than one line with same id"() {
@@ -164,7 +164,7 @@ class FileServiceTest extends Specification {
         fileService.rewriteFileByList(List.of("Line"))
 
         then:
-        Files.exists(filePath)
+        Files.exists(FILE_PATH)
     }
 
 }
