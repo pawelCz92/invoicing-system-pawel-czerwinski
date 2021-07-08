@@ -33,9 +33,9 @@ public class InvoiceController implements InvoiceApi {
 
     @Override
     @PostMapping
-    public ResponseEntity<Integer> saveInvoice(@RequestBody String invoiceInJson) {
+    public ResponseEntity<Integer> saveInvoice(@RequestBody Invoice invoice) {
         try {
-            return ResponseEntity.ok(invoiceService.save(jsonService.stringToObject(invoiceInJson, Invoice.class)));
+            return ResponseEntity.ok(invoiceService.save(invoice));
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
@@ -55,9 +55,9 @@ public class InvoiceController implements InvoiceApi {
 
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateById(@PathVariable int id, @RequestBody String invoiceString) {
+    public ResponseEntity<?> updateById(@PathVariable int id, @RequestBody Invoice invoice) {
         try {
-            invoiceService.update(id, jsonService.stringToObject(invoiceString, Invoice.class));
+            invoiceService.update(id, invoice);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

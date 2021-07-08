@@ -23,7 +23,7 @@ public interface InvoiceApi {
 
     @ApiOperation(value = "Add new invoice to system")
     @PostMapping
-    ResponseEntity<Integer> saveInvoice(@RequestBody String invoiceInJson);
+    ResponseEntity<Integer> saveInvoice(@RequestBody Invoice invoice);
 
     @ApiOperation(value = "Get invoice by id")
     @GetMapping("/{id}")
@@ -31,7 +31,7 @@ public interface InvoiceApi {
 
     @ApiOperation(value = "Update invoice with given id")
     @PutMapping("/{id}")
-    ResponseEntity<?> updateById(@PathVariable int id, @RequestBody String invoiceString);
+    ResponseEntity<?> updateById(@PathVariable int id, @RequestBody Invoice invoice);
 
     @ApiOperation(value = "Delete invoice with given id")
     @DeleteMapping("/{id}")

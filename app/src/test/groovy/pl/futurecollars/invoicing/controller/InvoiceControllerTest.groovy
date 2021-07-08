@@ -3,6 +3,7 @@ package pl.futurecollars.invoicing.controller
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.TestHelpers
 import pl.futurecollars.invoicing.model.Invoice
@@ -56,7 +57,8 @@ class InvoiceControllerTest extends Specification {
 
         when:
         def invoiceId = mockMvc.perform(
-                post(COLLECTION).content(jsonService.objectToString(invoice)))
+                post(COLLECTION).content(jsonService.objectToString(invoice))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
                 .response
@@ -90,7 +92,8 @@ class InvoiceControllerTest extends Specification {
         String invoiceAsJson = jsonService.objectToString(invoice)
 
         expect:
-        mockMvc.perform(put(COLLECTION + "99999").content(invoiceAsJson))
+        mockMvc.perform(put(COLLECTION + "99999").content(invoiceAsJson)
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
     }
 
@@ -109,7 +112,8 @@ class InvoiceControllerTest extends Specification {
         invoicesNotEquals
 
         when:
-        mockMvc.perform(put(COLLECTION + "1").content(updatedInvoiceAsString))
+        mockMvc.perform(put(COLLECTION + "1").content(updatedInvoiceAsString)
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
 
         and:
@@ -153,19 +157,22 @@ class InvoiceControllerTest extends Specification {
 
         and: "saving sample three invoices to base"
         mockMvc.perform(post(COLLECTION)
-                .content(jsonService.objectToString(invoiceA)))
+                .content(jsonService.objectToString(invoiceA))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
                 .response
                 .contentAsString
         String idInvoiceB = mockMvc.perform(post(COLLECTION)
-                .content(jsonService.objectToString(invoiceB)))
+                .content(jsonService.objectToString(invoiceB))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
                 .response
                 .contentAsString
         mockMvc.perform(post(COLLECTION)
-                .content(jsonService.objectToString(invoiceC)))
+                .content(jsonService.objectToString(invoiceC))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
                 .response
