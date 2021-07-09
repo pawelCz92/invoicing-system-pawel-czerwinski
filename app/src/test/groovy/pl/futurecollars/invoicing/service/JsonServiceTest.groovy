@@ -18,11 +18,11 @@ class JsonServiceTest extends Specification {
 
     def "should convert object to string"() {
         given:
-        Company buyer = new Company ("445656", "ul. Inna, Warszawa", "RTVG S A")
-        Company seller = new Company ("964849","ul. Obok, Warszawa", "Avgm-com S A")
+        Company buyer = new Company("445656", "ul. Inna, Warszawa", "RTVG S A")
+        Company seller = new Company("964849", "ul. Obok, Warszawa", "Avgm-com S A")
         List<InvoiceEntry> invoiceEntries = List.of(
-                new InvoiceEntry("TV", BigDecimal.valueOf(500), BigDecimal.ZERO, Vat.VAT_0),
-                new InvoiceEntry("Radio", BigDecimal.valueOf(1000), BigDecimal.ZERO, Vat.VAT_0))
+                new InvoiceEntry("TV", 5, BigDecimal.valueOf(500), BigDecimal.ZERO, Vat.VAT_0),
+                new InvoiceEntry("Radio", 4, BigDecimal.valueOf(1000), BigDecimal.ZERO, Vat.VAT_0))
 
         Invoice invoice = new Invoice(LocalDate.of(2020, 1, 20), buyer, seller, invoiceEntries)
 
@@ -32,12 +32,12 @@ class JsonServiceTest extends Specification {
 
         then:
         verifyAll {
-            resultForInvoice == "{\"id\":0,\"date\":\"2020-01-20\",\"buyer\":{\"" +
-                    "taxIdentificationNumber\":\"445656\",\"address\":\"ul. Inna, Warszawa\",\"" +
-                    "name\":\"RTVG S A\"},\"seller\":{\"taxIdentificationNumber\":\"964849\",\"" +
-                    "address\":\"ul. Obok, Warszawa\",\"name\":\"Avgm-com S A\"},\"" +
-                    "invoiceEntries\":[{\"description\":\"TV\",\"price\":500,\"vatValue\":0,\"vatRate\":\"VAT_0\"}," +
-                    "{\"description\":\"Radio\",\"price\":1000,\"vatValue\":0,\"vatRate\":\"VAT_0\"}]}"
+            resultForInvoice == "{\"id\":0,\"date\":\"2020-01-20\",\"buyer\":{\"taxIdentificationNumber\":\"" +
+                    "445656\",\"address\":\"ul. Inna, Warszawa\",\"name\":\"RTVG S A\"},\"seller\":{\"" +
+                    "taxIdentificationNumber\":\"964849\",\"address\":\"ul. Obok, Warszawa\",\"name\":\"" +
+                    "Avgm-com S A\"},\"invoiceEntries\":[{\"description\":\"TV\",\"quantity\":5,\"price\":500,\"" +
+                    "vatValue\":0,\"vatRate\":\"VAT_0\"},{\"description\":\"Radio\",\"quantity\":4,\"price\":1000,\"" +
+                    "vatValue\":0,\"vatRate\":\"VAT_0\"}]}"
             resultForBuyer == "{\"taxIdentificationNumber\":\"445656\",\"" +
                     "address\":\"ul. Inna, Warszawa\",\"name\":\"RTVG S A\"}"
         }
@@ -49,8 +49,8 @@ class JsonServiceTest extends Specification {
         Company seller = new Company("964849", "ul. Obok, Warszawa", "Avgm-com S A")
 
         List<InvoiceEntry> invoiceEntries = List.of(
-                new InvoiceEntry("TV", BigDecimal.valueOf(500), BigDecimal.ZERO, Vat.VAT_0),
-                new InvoiceEntry("Radio", BigDecimal.valueOf(1000), BigDecimal.ZERO, Vat.VAT_0))
+                new InvoiceEntry("TV", 5, BigDecimal.valueOf(500), BigDecimal.ZERO, Vat.VAT_0),
+                new InvoiceEntry("Radio", 5, BigDecimal.valueOf(1000), BigDecimal.ZERO, Vat.VAT_0))
 
         Invoice invoice = new Invoice(LocalDate.of(2020, 1, 20), buyer, seller, invoiceEntries)
 
@@ -61,8 +61,10 @@ class JsonServiceTest extends Specification {
                 "taxIdentificationNumber\":\"445656\",\"address\":\"ul. Inna, Warszawa\",\"" +
                 "name\":\"RTVG S A\"},\"seller\":{\"taxIdentificationNumber\":\"964849\",\"" +
                 "address\":\"ul. Obok, Warszawa\",\"name\":\"Avgm-com S A\"},\"" +
-                "invoiceEntries\":[{\"description\":\"TV\",\"price\":500,\"vatValue\":0,\"vatRate\":\"VAT_0\"}," +
-                "{\"description\":\"Radio\",\"price\":1000,\"vatValue\":0,\"vatRate\":\"VAT_0\"}]}"), Invoice.class)
+                "invoiceEntries\":[{\"description\":\"TV\",\"quantity\":5,\"" +
+                "price\":500,\"vatValue\":0,\"vatRate\":\"VAT_0\"}," +
+                "{\"description\":\"Radio\",\"quantity\":5,\"price\":1000,\"" +
+                "vatValue\":0,\"vatRate\":\"VAT_0\"}]}"), Invoice.class)
 
         then:
         verifyAll {
