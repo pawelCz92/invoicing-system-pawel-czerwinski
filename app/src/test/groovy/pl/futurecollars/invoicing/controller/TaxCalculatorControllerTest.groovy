@@ -85,10 +85,11 @@ class TaxCalculatorControllerTest extends Specification {
         TaxCalculatorResult expectedResult = TaxCalculatorResult.builder()
                 .income(income)
                 .costs(costs)
+                .earnings(earnings)
                 .incomingVat(incomingVat)
                 .outgoingVat(outgoingVat)
-                .earnings(earnings)
                 .vatToReturn(vatToReturn)
+        .earningsMinusPensionInsurance(earningsMinusPensionInsurance)
                 .build()
 
         String expectedResultAsJson = jsonService.objectToString(expectedResult)
@@ -104,9 +105,9 @@ class TaxCalculatorControllerTest extends Specification {
         actual == expectedResultAsJson
 
         where:
-        taxIdentificationNumber | income | costs  | incomingVat | outgoingVat | earnings | vatToReturn
-        "382-22-1584"           | 4620.0 | 4790.0 | 109.0       | 178.0       | -170.0   | -69.0
-        "677-31-4788"           | 9410.0 | 4620.0 | 287.0       | 109.0       | 4790.0   | 178.0
-        "161-65-1354"           | 0      | 4620.0 | 0           | 109.0       | -4620.0  | -109.0
+        taxIdentificationNumber | income | costs    | incomingVat | outgoingVat | earnings  | vatToReturn
+        "382-22-1584"           | 10548  | 4514.00  | 1906.14     | 970.32      | 6034.00   | 935.82
+        "677-31-4788"           | 10548  | 4514.00  | 1906.14     | 970.32      | 6034.00   | 935.82
+        "100-16-1976"           | 0      | 23583.56 | 0           | 980.81      | -23583.56 | -980.81
     }
 }

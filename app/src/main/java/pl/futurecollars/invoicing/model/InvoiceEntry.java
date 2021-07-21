@@ -3,12 +3,13 @@ package pl.futurecollars.invoicing.model;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
-@Getter
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode
 public class InvoiceEntry {
@@ -28,10 +29,13 @@ public class InvoiceEntry {
     @ApiModelProperty(value = "Tax rate", required = true)
     private Vat vatRate;
 
-    public InvoiceEntry(String description, double price, double vatValue, Vat vatRate) {
+    private Car car;
+
+    public InvoiceEntry(String description, int quantity, BigDecimal price, BigDecimal vatValue, Vat vatRate) {
         this.description = description;
-        this.price = BigDecimal.valueOf(price);
-        this.vatValue = BigDecimal.valueOf(vatValue);
+        this.quantity = quantity;
+        this.price = price;
+        this.vatValue = vatValue;
         this.vatRate = vatRate;
     }
 }

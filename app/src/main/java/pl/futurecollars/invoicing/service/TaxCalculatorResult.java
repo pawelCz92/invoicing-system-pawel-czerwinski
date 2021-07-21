@@ -17,4 +17,15 @@ public class TaxCalculatorResult {
     private final BigDecimal incomingVat;
     private final BigDecimal outgoingVat;
     private final BigDecimal vatToReturn;
+
+    private final BigDecimal earningsMinusPensionInsurance;
+    private final BigDecimal taxCalculationBase;
+    private final BigDecimal incomeTax;
+
+    private final BigDecimal pensionInsurance;
+    private final BigDecimal healthInsurance;
+
+    private final BigDecimal reducedHealthInsurance;
+    private final BigDecimal incomeTaxMinusHealthInsurance;
+    private final BigDecimal finalIncomeTax;
 }

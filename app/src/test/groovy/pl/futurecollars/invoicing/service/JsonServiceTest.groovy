@@ -1,7 +1,6 @@
 package pl.futurecollars.invoicing.service
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
+
 import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.model.InvoiceEntry
@@ -10,34 +9,41 @@ import spock.lang.Specification
 
 import java.time.LocalDate
 
-@SpringBootTest
 class JsonServiceTest extends Specification {
 
-    @Autowired
-    private JsonService jsonService
+    private JsonService jsonService = new JsonService()
+    private static String jsonSample
+    def static buyer
+    def static seller
+    def static invoiceEntries
+    def static invoice
+
+    def setupSpec() {
+        buyer = new Company("445656", "ul. Inna, Warszawa", "RTVG S A")
+        seller = new Company("964849", "ul. Obok, Warszawa", "Avgm-com S A")
+
+        invoiceEntries = List.of(
+                new InvoiceEntry("tv", 1, 1000, 230, Vat.VAT_23),
+                new InvoiceEntry("Radio", 1, 100, 23, Vat.VAT_23)
+        )
+
+        invoice = new Invoice(LocalDate.of(2020, 1, 20), buyer, seller, invoiceEntries)
+        jsonSample = "{\"id\":0,\"date\":\"2020-01-20\",\"buyer\":{\"taxIdentificationNumber\":\"445656\",\"add" +
+                "ress\":\"ul. Inna, Warszawa\",\"name\":\"RTVG S A\"},\"seller\":{\"taxIdentifica" +
+                "tionNumber\":\"964849\",\"address\":\"ul. Obok, Warszawa\",\"name\":\"Avgm-com S A\"},\"invoi" +
+                "ceEntries\":[{\"description\":\"tv\",\"quantity\":1,\"price\":1000,\"vatValue\":230,\"vatR" +
+                "ate\":\"VAT_23\",\"car\":null},{\"description\":\"Radio\",\"quantity\":1,\"price\":100,\"vatV" +
+                "alue\":23,\"vatRate\":\"VAT_23\",\"car\":null}]}"
+    }
 
     def "should convert object to string"() {
-        given:
-        Company buyer = new Company("445656", "ul. Inna, Warszawa", "RTVG S A")
-        Company seller = new Company("964849", "ul. Obok, Warszawa", "Avgm-com S A")
-        List<InvoiceEntry> invoiceEntries = List.of(
-                new InvoiceEntry("TV", 5, BigDecimal.valueOf(500), BigDecimal.ZERO, Vat.VAT_0),
-                new InvoiceEntry("Radio", 4, BigDecimal.valueOf(1000), BigDecimal.ZERO, Vat.VAT_0))
-
-        Invoice invoice = new Invoice(LocalDate.of(2020, 1, 20), buyer, seller, invoiceEntries)
-
         when:
         String resultForInvoice = jsonService.objectToString(invoice)
         String resultForBuyer = jsonService.objectToString(buyer)
 
         then:
         verifyAll {
-            resultForInvoice == "{\"id\":0,\"date\":\"2020-01-20\",\"buyer\":{\"taxIdentificationNumber\":\"" +
-                    "445656\",\"address\":\"ul. Inna, Warszawa\",\"name\":\"RTVG S A\"},\"seller\":{\"" +
-                    "taxIdentificationNumber\":\"964849\",\"address\":\"ul. Obok, Warszawa\",\"name\":\"" +
-                    "Avgm-com S A\"},\"invoiceEntries\":[{\"description\":\"TV\",\"quantity\":5,\"price\":500,\"" +
-                    "vatValue\":0,\"vatRate\":\"VAT_0\"},{\"description\":\"Radio\",\"quantity\":4,\"price\":1000,\"" +
-                    "vatValue\":0,\"vatRate\":\"VAT_0\"}]}"
+            resultForInvoice == jsonSample
             resultForBuyer == "{\"taxIdentificationNumber\":\"445656\",\"" +
                     "address\":\"ul. Inna, Warszawa\",\"name\":\"RTVG S A\"}"
         }
@@ -45,26 +51,10 @@ class JsonServiceTest extends Specification {
     }
 
     def "should convert string to object"() {
-        Company buyer = new Company("445656", "ul. Inna, Warszawa", "RTVG S A")
-        Company seller = new Company("964849", "ul. Obok, Warszawa", "Avgm-com S A")
-
-        List<InvoiceEntry> invoiceEntries = List.of(
-                new InvoiceEntry("TV", 5, BigDecimal.valueOf(500), BigDecimal.ZERO, Vat.VAT_0),
-                new InvoiceEntry("Radio", 5, BigDecimal.valueOf(1000), BigDecimal.ZERO, Vat.VAT_0))
-
-        Invoice invoice = new Invoice(LocalDate.of(2020, 1, 20), buyer, seller, invoiceEntries)
-
         when:
         Company resultCompany = jsonService.stringToObject(("{\"taxIdentificationNumber\":\"445656\",\"" +
                 "address\":\"ul. Inna, Warszawa\",\"name\":\"RTVG S A\"}"), Company.class)
-        Invoice resultInvoice = jsonService.stringToObject(("{\"id\":0,\"date\":\"2020-01-20\",\"buyer\":{\"" +
-                "taxIdentificationNumber\":\"445656\",\"address\":\"ul. Inna, Warszawa\",\"" +
-                "name\":\"RTVG S A\"},\"seller\":{\"taxIdentificationNumber\":\"964849\",\"" +
-                "address\":\"ul. Obok, Warszawa\",\"name\":\"Avgm-com S A\"},\"" +
-                "invoiceEntries\":[{\"description\":\"TV\",\"quantity\":5,\"" +
-                "price\":500,\"vatValue\":0,\"vatRate\":\"VAT_0\"}," +
-                "{\"description\":\"Radio\",\"quantity\":5,\"price\":1000,\"" +
-                "vatValue\":0,\"vatRate\":\"VAT_0\"}]}"), Invoice.class)
+        Invoice resultInvoice = jsonService.stringToObject(jsonSample, Invoice.class)
 
         then:
         verifyAll {
