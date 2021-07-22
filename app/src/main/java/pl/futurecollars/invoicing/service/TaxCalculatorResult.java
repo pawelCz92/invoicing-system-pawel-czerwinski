@@ -4,28 +4,30 @@ import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Data
 public class TaxCalculatorResult {
 
-    private final BigDecimal income;
-    private final BigDecimal costs;
-    private final BigDecimal earnings;
+    private BigDecimal income;
+    private BigDecimal costs;
+    private BigDecimal earnings;
 
-    private final BigDecimal incomingVat;
-    private final BigDecimal outgoingVat;
-    private final BigDecimal vatToReturn;
+    private BigDecimal incomingVat;
+    private BigDecimal outgoingVat;
+    private BigDecimal vatToReturn;
 
-    private final BigDecimal earningsMinusPensionInsurance;
-    private final BigDecimal taxCalculationBase;
-    private final BigDecimal incomeTax;
+    private BigDecimal earningsMinusPensionInsurance;
+    private BigDecimal taxCalculationBase;
+    private BigDecimal incomeTax;
 
-    private final BigDecimal pensionInsurance;
-    private final BigDecimal healthInsurance;
+    private BigDecimal pensionInsurance;
+    private BigDecimal healthInsurance;
 
-    private final BigDecimal reducedHealthInsurance;
-    private final BigDecimal incomeTaxMinusHealthInsurance;
-    private final BigDecimal finalIncomeTax;
+    private BigDecimal reducedHealthInsurance;
+    private BigDecimal incomeTaxMinusHealthInsurance;
+    private BigDecimal finalIncomeTax;
 }

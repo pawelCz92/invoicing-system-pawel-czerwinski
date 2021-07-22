@@ -2,7 +2,6 @@ package pl.futurecollars.invoicing
 
 import pl.futurecollars.invoicing.model.*
 import pl.futurecollars.invoicing.service.JsonService
-import spock.lang.Ignore
 import spock.lang.Specification
 
 import java.time.LocalDate
@@ -118,16 +117,5 @@ class TestHelpers extends Specification {
                         invoiceEntries.get(32)
                 ))
         )
-    }
-
-    @Ignore
-    def doSth() {
-        setup:
-        getSampleInvoicesList().forEach(invoice -> {
-            println(invoice.getDate())
-            println("  Buyer: " + invoice.buyer)
-            println("  Seller: " + invoice.seller)
-            invoice.getInvoiceEntries().forEach(invEntr -> println("      " + invEntr))
-        })
     }
 }
