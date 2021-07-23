@@ -20,8 +20,10 @@ public class Company {
     @ApiModelProperty(value = "Company name", required = true, example = "Voolith")
     private String name;
 
+    @ApiModelProperty(value = "Health insurance", required = true, example = "500")
     private BigDecimal healthInsurance;
 
+    @ApiModelProperty(value = "Pension insurance", required = true, example = "400")
     private BigDecimal pensionInsurance;
 
 

@@ -28,6 +28,7 @@ public class InvoiceEntry {
     @ApiModelProperty(value = "Tax rate", required = true)
     private Vat vatRate;
 
+    @ApiModelProperty(value = "Car related", required = true)
     private Car car;
 
     public InvoiceEntry(String description, int quantity, BigDecimal price, BigDecimal vatValue, Vat vatRate) {
