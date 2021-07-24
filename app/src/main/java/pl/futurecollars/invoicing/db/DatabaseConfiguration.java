@@ -16,6 +16,7 @@ public class DatabaseConfiguration {
 
     private final String currentDir = Paths.get("").toAbsolutePath().toString();
 
+    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
     @Bean
     IdProvider idProvider(
         @Value("${invoicing-system.database.directory}") String fileDir,
