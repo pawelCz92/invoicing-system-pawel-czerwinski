@@ -1,6 +1,8 @@
 package pl.futurecollars.invoicing.controller.invoice
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
@@ -19,6 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @AutoConfigureMockMvc
+@EnableAutoConfiguration(exclude = [DataSourceAutoConfiguration.class])
 @SpringBootTest
 @Stepwise
 class InvoiceControllerTest extends Specification {
@@ -36,7 +39,7 @@ class InvoiceControllerTest extends Specification {
 
         Files.deleteIfExists(idFilePath)
         Files.deleteIfExists(dataFilePath)
-        Files.delete(idFilePath.getParent())
+        Files.deleteIfExists(idFilePath.getParent())
     }
 
     def "should return not found status when try to get all invoices and db file was not created yet"() {
@@ -53,7 +56,7 @@ class InvoiceControllerTest extends Specification {
 
     def "should save invoice to base"() {
         given:
-        Invoice invoice = TestHelpers.sampleInvoicesList.get(0)
+        Invoice invoice = TestHelpers.getSampleInvoicesList().get(0)
 
         when:
         def invoiceId = mockMvc.perform(
@@ -70,7 +73,7 @@ class InvoiceControllerTest extends Specification {
 
     def "should return invoice by existing id"() {
         given:
-        Invoice invoice = TestHelpers.sampleInvoicesList.get(0)
+        Invoice invoice = TestHelpers.getSampleInvoicesList().get(0)
         invoice.setId(1)
         String invoiceAsJson = jsonService.objectToString(invoice)
 
@@ -134,13 +137,13 @@ class InvoiceControllerTest extends Specification {
 
         and:
         def invoicesAfterDelete = mockMvc.perform(get(COLLECTION))
-                .andExpect(status().isOk())
+                .andExpect(status().isNotFound())
                 .andReturn()
                 .response
                 .contentAsString
 
         then:
-        invoicesAfterDelete == "[]"
+        invoicesAfterDelete == ""
     }
 
     def "should return notFound response when try to delete invoice by using not existing id"() {
