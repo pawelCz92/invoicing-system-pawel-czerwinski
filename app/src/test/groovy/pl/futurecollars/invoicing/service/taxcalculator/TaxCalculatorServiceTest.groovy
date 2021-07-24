@@ -1,10 +1,12 @@
-package pl.futurecollars.invoicing.service
+package pl.futurecollars.invoicing.service.taxcalculator
 
 import pl.futurecollars.invoicing.TestHelpers
 import pl.futurecollars.invoicing.db.FileBasedDatabase
 import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
+import pl.futurecollars.invoicing.service.JsonService
 import pl.futurecollars.invoicing.service.file.FileService
+import pl.futurecollars.invoicing.service.file.IdProvider
 import spock.lang.Specification
 
 import java.nio.file.Files

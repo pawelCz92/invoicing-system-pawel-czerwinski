@@ -1,4 +1,4 @@
-package pl.futurecollars.invoicing.service;
+package pl.futurecollars.invoicing.service.taxcalculator;
 
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;

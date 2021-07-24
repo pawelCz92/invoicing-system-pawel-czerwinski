@@ -5,9 +5,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import pl.futurecollars.invoicing.model.Invoice;
-import pl.futurecollars.invoicing.service.IdProvider;
 import pl.futurecollars.invoicing.service.JsonService;
 import pl.futurecollars.invoicing.service.file.FileService;
+import pl.futurecollars.invoicing.service.file.IdProvider;
 
 @Slf4j
 public class FileBasedDatabase implements Database {

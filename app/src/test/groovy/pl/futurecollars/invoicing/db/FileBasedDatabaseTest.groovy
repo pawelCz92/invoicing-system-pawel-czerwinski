@@ -2,7 +2,7 @@ package pl.futurecollars.invoicing.db
 
 import pl.futurecollars.invoicing.TestHelpers
 import pl.futurecollars.invoicing.model.Invoice
-import pl.futurecollars.invoicing.service.IdProvider
+import pl.futurecollars.invoicing.service.file.IdProvider
 import pl.futurecollars.invoicing.service.JsonService
 import pl.futurecollars.invoicing.service.file.FileService
 import spock.lang.Specification

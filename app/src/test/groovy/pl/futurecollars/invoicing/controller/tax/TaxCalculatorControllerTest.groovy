@@ -1,4 +1,4 @@
-package pl.futurecollars.invoicing.controller
+package pl.futurecollars.invoicing.controller.tax
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.TestHelpers
 import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.service.JsonService
-import pl.futurecollars.invoicing.service.TaxCalculatorResult
+import pl.futurecollars.invoicing.service.taxcalculator.TaxCalculatorResult
 import spock.lang.Specification
 import spock.lang.Stepwise
 
