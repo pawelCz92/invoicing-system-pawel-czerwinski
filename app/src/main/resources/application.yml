@@ -1,6 +1,13 @@
 server:
   port: 7777
 
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/invoicing
+    username: postgres
+    password: pawel1
+    driver-class-name: org.postgresql.Driver
+
 invoicing-system:
   database: file
   database.directory: db

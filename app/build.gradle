@@ -7,6 +7,7 @@ buildscript {
         springDependencyManagementVersion = '1.0.11.RELEASE'
         springFoxStarterVersion = '3.0.0'
         springFoxUiVersion = '3.0.0'
+        flywayVersion = '7.11.3'
     }
 }
 
@@ -38,10 +39,14 @@ dependencies {
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "org.springframework.boot:spring-boot-starter-jdbc"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     implementation "io.springfox:springfox-boot-starter:${springFoxStarterVersion}"
     implementation "io.springfox:springfox-swagger-ui:${springFoxUiVersion}"
+
+    runtimeOnly 'org.postgresql:postgresql:42.2.19'
+    implementation "org.flywaydb:flyway-core:${flywayVersion}"
 }
 
 java {
@@ -68,8 +73,6 @@ jacocoTestReport {
     dependsOn test
 
     reports {
-        xml.enabled false
-        csv.enabled false
         html.destination layout.buildDirectory.dir('reports/jacoco').get().asFile
     }
 }
