@@ -1,4 +1,4 @@
-package pl.futurecollars.invoicing.service;
+package pl.futurecollars.invoicing.service.file;
 
 import java.io.IOException;
 import java.nio.file.Files;

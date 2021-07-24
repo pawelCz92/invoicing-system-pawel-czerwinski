@@ -1,4 +1,4 @@
-package pl.futurecollars.invoicing.controller
+package pl.futurecollars.invoicing.controller.tax
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -6,8 +6,9 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.TestHelpers
+import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.service.JsonService
-import pl.futurecollars.invoicing.service.TaxCalculatorResult
+import pl.futurecollars.invoicing.service.taxcalculator.TaxCalculatorResult
 import spock.lang.Specification
 import spock.lang.Stepwise
 
@@ -15,7 +16,6 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -52,25 +52,27 @@ class TaxCalculatorControllerTest extends Specification {
 
     def "should return TaxCalculatorResult with values 0 for not existing TIN"() {
         setup:
-        String taxIdentificationNumber = "000-00-0000"
-        TaxCalculatorResult blankTaskCalculatorResult = TaxCalculatorResult.builder()
-                .income(BigDecimal.ZERO)
-                .costs(BigDecimal.ZERO)
-                .earnings(BigDecimal.ZERO)
-                .incomingVat(BigDecimal.ZERO)
-                .outgoingVat(BigDecimal.ZERO)
-                .vatToReturn(BigDecimal.ZERO)
-                .build()
+        Company company = new Company("000-00-0000", "any address", "any name",
+                BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
 
         when:
-        def response = mockMvc.perform(get(COLLECTION + taxIdentificationNumber))
-                .andExpect(status().isOk())
-                .andReturn()
-                .response
-                .contentAsString
+        def response = jsonService.stringToObject(
+                (mockMvc.perform(post(COLLECTION)
+                        .content(jsonService.objectToString(company))
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andReturn()
+                        .response
+                        .contentAsString), TaxCalculatorResult.class)
 
         then:
-        response == jsonService.objectToString(blankTaskCalculatorResult)
+        response.income == 0
+        response.costs == 0
+        response.earnings == 0
+        response.incomingVat == 0
+        response.outgoingVat == 0
+        response.vatToReturn == 0
+
     }
 
     def addInvoicesToBase() {
@@ -82,31 +84,54 @@ class TaxCalculatorControllerTest extends Specification {
 
     def "should return object with calculated taxes for existing TIN"() {
         given:
+        Company company = new Company(tin, "any address", "any name",
+                BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
+
         TaxCalculatorResult expectedResult = TaxCalculatorResult.builder()
                 .income(income)
                 .costs(costs)
+                .earnings(earnings)
                 .incomingVat(incomingVat)
                 .outgoingVat(outgoingVat)
-                .earnings(earnings)
                 .vatToReturn(vatToReturn)
+                .earningsMinusPensionInsurance(earningsMinusPensionInsurance)
+                .taxCalculationBase(taxCalculationBase)
+                .incomeTax(incomeTax)
+                .pensionInsurance(pensionInsurance)
+                .healthInsurance(healthInsurance)
+                .reducedHealthInsurance(reducedHealthInsurance)
+                .incomeTaxMinusHealthInsurance(incomeTaxMinusHealthInsurance)
+                .finalIncomeTax(finalIncomeTax)
                 .build()
 
-        String expectedResultAsJson = jsonService.objectToString(expectedResult)
-
         when:
-        String actual = mockMvc.perform(get(COLLECTION + taxIdentificationNumber))
+        TaxCalculatorResult result = jsonService.stringToObject(mockMvc.perform(
+                post(COLLECTION)
+                        .content(jsonService.objectToString(company))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
                 .response
-                .contentAsString
+                .contentAsString, TaxCalculatorResult.class)
 
         then:
-        actual == expectedResultAsJson
+        result == expectedResult
 
         where:
-        taxIdentificationNumber | income | costs  | incomingVat | outgoingVat | earnings | vatToReturn
-        "382-22-1584"           | 4620.0 | 4790.0 | 109.0       | 178.0       | -170.0   | -69.0
-        "677-31-4788"           | 9410.0 | 4620.0 | 287.0       | 109.0       | 4790.0   | 178.0
-        "161-65-1354"           | 0      | 4620.0 | 0           | 109.0       | -4620.0  | -109.0
+        tin << ["100-16-0000"]
+        income << [76011.62]
+        costs << [11329.47]
+        earnings << [64682.15]
+        incomingVat << [0]
+        outgoingVat << [0]
+        vatToReturn << [0]
+        earningsMinusPensionInsurance << [64167.58]
+        taxCalculationBase << [64168]
+        incomeTax << [12191.92]
+        pensionInsurance << [514.57]
+        healthInsurance << [319.94]
+        reducedHealthInsurance << [275.5]
+        incomeTaxMinusHealthInsurance << [11916.42]
+        finalIncomeTax << [11916]
     }
 }

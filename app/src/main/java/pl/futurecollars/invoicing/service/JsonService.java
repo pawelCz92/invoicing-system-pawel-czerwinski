@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class JsonService {
 
@@ -21,7 +23,7 @@ public class JsonService {
         try {
             return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            System.out.println("Serialization from object to string filed!");
+            log.error("Serialization from object to string filed!");
         }
         return "";
     }
@@ -30,8 +32,8 @@ public class JsonService {
         try {
             return objectMapper.readValue(jsonObject, clazz);
         } catch (JsonProcessingException e) {
-            System.out.println("Serialization from string to object filed!");
+            log.warn("Serialization from string to object filed! " + jsonObject);
+            return null;
         }
-        return null;
     }
 }

@@ -2,13 +2,14 @@ package pl.futurecollars.invoicing.db
 
 import pl.futurecollars.invoicing.TestHelpers
 import pl.futurecollars.invoicing.model.Invoice
-import pl.futurecollars.invoicing.service.IdProvider
+import pl.futurecollars.invoicing.service.file.IdProvider
 import pl.futurecollars.invoicing.service.JsonService
 import pl.futurecollars.invoicing.service.file.FileService
 import spock.lang.Specification
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.StandardOpenOption
 import java.time.LocalDate
 import java.util.stream.Collectors
 
@@ -16,12 +17,12 @@ class FileBasedDatabaseTest extends Specification {
 
     private static final Path DB_TEST_FILE_PATH = Path.of("testDBfile.json")
     private static final Path ID_TEST_FILE_PATH = Path.of("testIdsFile.json")
-    private FileBasedDatabase fileBasedDatabase
-    private IdProvider idProvider
-    private FileService fileServiceForData
-    private List<Invoice> sampleInvoices
+    private static FileBasedDatabase fileBasedDatabase
+    private static IdProvider idProvider
+    private static FileService fileServiceForData
+    private static List<Invoice> sampleInvoices
 
-    def setup() {
+    def setupSpec() {
         idProvider = new IdProvider(ID_TEST_FILE_PATH)
         fileServiceForData = new FileService(DB_TEST_FILE_PATH)
         fileBasedDatabase = new FileBasedDatabase(fileServiceForData, idProvider, new JsonService())
@@ -34,7 +35,9 @@ class FileBasedDatabaseTest extends Specification {
     }
 
     def saveSampleInvoicesToBase() {
-        sampleInvoices.forEach(invoice -> fileBasedDatabase.save(invoice))
+        fileBasedDatabase.save(sampleInvoices.get(0))
+        fileBasedDatabase.save(sampleInvoices.get(1))
+        fileBasedDatabase.save(sampleInvoices.get(3))
     }
 
     def "should save invoices to data base file"() {
@@ -49,21 +52,20 @@ class FileBasedDatabaseTest extends Specification {
                 .map(line -> jsonService.stringToObject(line, Invoice.class))
                 .collect(Collectors.toList())
 
-        invoicesFromFile.size() == sampleInvoices.size()
-        invoicesFromFile == sampleInvoices
+        invoicesFromFile.size() == 3
+        invoicesFromFile.containsAll(List.of(sampleInvoices.get(0), sampleInvoices.get(1), sampleInvoices.get(3)))
     }
 
     def "should read last id from file and start generate id from this number"() {
         setup:
         saveSampleInvoicesToBase()
-        FileService fileService = new FileService(ID_TEST_FILE_PATH)
-        fileService.rewriteFileByList(List.of("100"))
-        saveSampleInvoicesToBase()
+        Files.writeString(ID_TEST_FILE_PATH, "100", StandardOpenOption.TRUNCATE_EXISTING)
+        fileBasedDatabase.save((sampleInvoices.get(3)))
         List<Invoice> savedInvoices = fileBasedDatabase.getAll()
         Invoice lastSavedInvoice = savedInvoices.get(savedInvoices.size() - 1)
 
         expect:
-        lastSavedInvoice.getId() == 106
+        lastSavedInvoice.getId() == 101
     }
 
     def "should find invoice by id"() {
@@ -87,21 +89,21 @@ class FileBasedDatabaseTest extends Specification {
         saveSampleInvoicesToBase()
 
         expect:
-        fileBasedDatabase.getAll() == sampleInvoices
+        fileBasedDatabase.getAll() == List.of(sampleInvoices.get(0), sampleInvoices.get(1), sampleInvoices.get(3))
     }
 
     def "should update invoice by id"() {
         setup:
         saveSampleInvoicesToBase()
-        Invoice updatedInvoice = sampleInvoices.get(2)
+        Invoice updatedInvoice = sampleInvoices.get(1)
         updatedInvoice.setDate(LocalDate.of(1999, 1, 1))
 
         when:
-        fileBasedDatabase.update(4, updatedInvoice)
+        fileBasedDatabase.update(2, updatedInvoice)
 
         then:
-        fileBasedDatabase.getAll().size() == sampleInvoices.size()
-        fileBasedDatabase.getById(4).get() == updatedInvoice
+        fileBasedDatabase.getAll().size() == 3
+        fileBasedDatabase.getById(2).get() == updatedInvoice
     }
 
     def "should delete invoice by id"() {
@@ -112,7 +114,7 @@ class FileBasedDatabaseTest extends Specification {
         fileBasedDatabase.delete(1)
 
         then:
-        fileBasedDatabase.getAll().size() == sampleInvoices.size() - 1
+        fileBasedDatabase.getAll().size() == 2
         fileBasedDatabase.getById(1).isEmpty()
     }
 

@@ -1,45 +1,44 @@
 package pl.futurecollars.invoicing.db.memory
 
+import pl.futurecollars.invoicing.TestHelpers
 import pl.futurecollars.invoicing.db.InMemoryDataBase
-import pl.futurecollars.invoicing.model.Company
-import pl.futurecollars.invoicing.model.Invoice
-import pl.futurecollars.invoicing.model.InvoiceEntry
-import pl.futurecollars.invoicing.model.Vat
 import spock.lang.Specification
-
-import java.time.LocalDate
 
 class InMemoryDatabaseTest extends Specification {
 
     def inMemoryBase
-    def seller
-    def buyer
-    def invoiceEntries
-    def invoice
+    def sampleInvoicesList
+
 
     def setup() {
         inMemoryBase = new InMemoryDataBase()
-        seller = new Company("654654654", "ul Kreta, Poznan", "Company S.A")
-        buyer = new Company("9465444445", "ul Poboczna, Wroclaw", "Jan Kowalski")
-        invoiceEntries = List.of(
-                new InvoiceEntry("TV", BigDecimal.valueOf(2000), BigDecimal.valueOf(460), Vat.VAT_23),
-                new InvoiceEntry("Radio", BigDecimal.valueOf(1000), BigDecimal.valueOf(230), Vat.VAT_23))
-        invoice = new Invoice((LocalDate.of(2010, 2, 14)), buyer, seller, invoiceEntries)
-        inMemoryBase.save(invoice)
+        sampleInvoicesList = TestHelpers.getSampleInvoicesList()
     }
 
     def "should save invoice to database"() {
+        given:
+        def invoice1 = sampleInvoicesList.get(0)
+        def invoice2 = sampleInvoicesList.get(1)
+        def invoice3 = sampleInvoicesList.get(2)
+
         when:
-        inMemoryBase.save(invoice)
+        invoice1.setId(inMemoryBase.save(invoice1))
+        invoice2.setId(inMemoryBase.save(invoice2))
+        invoice3.setId(inMemoryBase.save(invoice3))
 
         then:
-        inMemoryBase.getAll().size() == 2
-        inMemoryBase.getAll().get(1) == invoice
+        inMemoryBase.getAll().size() == 3
+        inMemoryBase.getAll().get(0) == invoice1
+        inMemoryBase.getAll().get(1) == invoice2
+        inMemoryBase.getAll().get(2) == invoice3
     }
 
     def "should return optional with value if entry exist in base"() {
+        setup:
+        inMemoryBase.save(sampleInvoicesList.get(5))
+
         expect:
-        inMemoryBase.getById(1) == Optional.of(invoice)
+        inMemoryBase.getById(1) == Optional.of(sampleInvoicesList.get(5))
     }
 
     def "should return empty optional if id not exists"() {
@@ -49,14 +48,16 @@ class InMemoryDatabaseTest extends Specification {
 
     def "should throw IllegalArgumentException if updated entry id does not exist"() {
         when:
-        inMemoryBase.update(1000000, invoice)
+        inMemoryBase.update(1000000, sampleInvoicesList.get(3))
 
         then:
         thrown(IllegalArgumentException)
     }
 
     def "should update entry in base"() {
-        given:
+        setup:
+        def invoice = sampleInvoicesList.get(4)
+        invoice.setId(inMemoryBase.save(invoice))
         def updatedInvoice = invoice
 
         when:
@@ -68,6 +69,9 @@ class InMemoryDatabaseTest extends Specification {
     }
 
     def "should delete entry from base"() {
+        setup:
+        inMemoryBase.save(sampleInvoicesList.get(0))
+
         when:
         inMemoryBase.delete(1)
 

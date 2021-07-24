@@ -1,4 +1,5 @@
-package pl.futurecollars.invoicing.service
+package pl.futurecollars.invoicing.service.file
+
 
 import spock.lang.Specification
 
