@@ -17,11 +17,7 @@ public class InvoiceController implements InvoiceApi {
 
     @Override
     public ResponseEntity<List<Invoice>> getAllInvoices() {
-        try {
-            return ResponseEntity.ok().body(invoiceService.getAll());
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok().body(invoiceService.getAll());
     }
 
     @Override

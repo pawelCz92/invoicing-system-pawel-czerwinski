@@ -24,10 +24,6 @@ public class InvoiceService {
     }
 
     public List<Invoice> getAll() {
-        List<Invoice> allInvoices = database.getAll();
-        if (allInvoices.isEmpty()) {
-            throw new IllegalStateException("There are no invoices in base");
-        }
         return database.getAll();
     }
 

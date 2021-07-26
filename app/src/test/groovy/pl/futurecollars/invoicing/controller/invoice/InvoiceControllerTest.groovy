@@ -42,10 +42,16 @@ class InvoiceControllerTest extends Specification {
         Files.deleteIfExists(idFilePath.getParent())
     }
 
-    def "should return not found status when try to get all invoices and db file was not created yet"() {
-        expect:
+    def "should return empty string if there is no invoices in base"() {
+        when:
         def response = mockMvc.perform(get(COLLECTION))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isOk())
+        .andReturn()
+        .response
+        .contentAsString
+
+        then:
+        response == "[]"
     }
 
     def "should return notFound response when try to get invoice by not existing id"() {
@@ -136,7 +142,7 @@ class InvoiceControllerTest extends Specification {
                 .andExpect(status().isNoContent())
 
         and:
-        def invoicesAfterDelete = mockMvc.perform(get(COLLECTION))
+        def invoicesAfterDelete = mockMvc.perform(get(COLLECTION + "1"))
                 .andExpect(status().isNotFound())
                 .andReturn()
                 .response
