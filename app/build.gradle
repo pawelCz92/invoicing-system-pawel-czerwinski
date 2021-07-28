@@ -122,3 +122,19 @@ tasks.register('applicationCodeCoverageReport', JacocoReport) {
     executionData run
     sourceSets sourceSets.main
 }
+
+task testWithFileDatabase(type: Test) {
+    systemProperty 'spring.profiles.active', 'file'
+}
+
+task testWithMemoryDatabase(type: Test) {
+    systemProperty 'spring.profiles.active', 'memory'
+}
+
+task testWithSqlDatabase(type: Test) {
+    systemProperty 'spring.profiles.active', 'sql'
+}
+
+check.dependsOn testWithFileDatabase
+check.dependsOn testWithMemoryDatabase
+//check.dependsOn testWithSqlDatabase

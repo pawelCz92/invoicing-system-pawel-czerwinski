@@ -3,13 +3,3 @@ invoicing-system:
   database.directory: db
   database.idFileName: db-ids.json
   database.dataFileName: db-data.json
-
-spring:
-  flyway:
-    enabled: false
-
-logging:
-  level:
-    pl:
-      futurecollars:
-        invoicing:
