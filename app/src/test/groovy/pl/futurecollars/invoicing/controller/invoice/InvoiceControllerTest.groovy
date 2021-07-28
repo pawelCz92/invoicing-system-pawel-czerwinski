@@ -21,7 +21,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @AutoConfigureMockMvc
-@EnableAutoConfiguration(exclude = [DataSourceAutoConfiguration.class])
 @SpringBootTest
 @Stepwise
 class InvoiceControllerTest extends Specification {
