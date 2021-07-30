@@ -8,6 +8,7 @@ import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.TestHelpers
 import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.service.JsonService
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Stepwise
 
@@ -29,15 +30,7 @@ class InvoiceControllerTest extends Specification {
     private JsonService jsonService
     private static String COLLECTION = "/invoices/"
 
-    def setupSpec() {
-        cleanFileDataBase()
-    }
-
     def cleanupSpec() {
-        cleanFileDataBase()
-    }
-
-    private void cleanFileDataBase() {
         String currentDir = Paths.get("").toAbsolutePath().toString()
         Path idFilePath = Path.of(currentDir, "db", "db-ids.json")
         Path dataFilePath = Path.of(currentDir, "db", "db-data.json")
@@ -45,18 +38,6 @@ class InvoiceControllerTest extends Specification {
         Files.deleteIfExists(idFilePath)
         Files.deleteIfExists(dataFilePath)
         Files.deleteIfExists(idFilePath.getParent())
-    }
-
-    def "should return empty string if there is no invoices in base"() {
-        when:
-        def response = mockMvc.perform(get(COLLECTION))
-                .andExpect(status().isOk())
-                .andReturn()
-                .response
-                .contentAsString
-
-        then:
-        response == "[]"
     }
 
     def "should return notFound response when try to get invoice by not existing id"() {
