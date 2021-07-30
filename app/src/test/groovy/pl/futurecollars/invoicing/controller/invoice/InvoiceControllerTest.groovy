@@ -42,7 +42,7 @@ class InvoiceControllerTest extends Specification {
 
     def "should return notFound response when try to get invoice by not existing id"() {
         expect:
-        mockMvc.perform(get(COLLECTION + "1"))
+        mockMvc.perform(get(COLLECTION + "9999999"))
                 .andExpect(status().isNotFound())
     }
 
