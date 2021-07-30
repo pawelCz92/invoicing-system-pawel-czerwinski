@@ -41,17 +41,17 @@ class InvoiceControllerTest extends Specification {
         Files.deleteIfExists(idFilePath.getParent())
     }
 
-    def "should return empty string if there is no invoices in base"() {
-        when:
-        def response = mockMvc.perform(get(COLLECTION))
-                .andExpect(status().isOk())
-        .andReturn()
-        .response
-        .contentAsString
-
-        then:
-        response == "[]"
-    }
+//    def "should return empty string if there is no invoices in base"() {
+//        when:
+//        def response = mockMvc.perform(get(COLLECTION))
+//                .andExpect(status().isOk())
+//        .andReturn()
+//        .response
+//        .contentAsString
+//
+//        then:
+//        response == "[]"
+//    }
 
     def "should return notFound response when try to get invoice by not existing id"() {
         expect:
