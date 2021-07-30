@@ -1,8 +1,6 @@
 package pl.futurecollars.invoicing.controller.invoice
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
@@ -31,7 +29,15 @@ class InvoiceControllerTest extends Specification {
     private JsonService jsonService
     private static String COLLECTION = "/invoices/"
 
+    def setupSpec() {
+        cleanFileDataBase()
+    }
+
     def cleanupSpec() {
+        cleanFileDataBase()
+    }
+
+    private void cleanFileDataBase() {
         String currentDir = Paths.get("").toAbsolutePath().toString()
         Path idFilePath = Path.of(currentDir, "db", "db-ids.json")
         Path dataFilePath = Path.of(currentDir, "db", "db-data.json")
@@ -45,9 +51,9 @@ class InvoiceControllerTest extends Specification {
         when:
         def response = mockMvc.perform(get(COLLECTION))
                 .andExpect(status().isOk())
-        .andReturn()
-        .response
-        .contentAsString
+                .andReturn()
+                .response
+                .contentAsString
 
         then:
         response == "[]"
