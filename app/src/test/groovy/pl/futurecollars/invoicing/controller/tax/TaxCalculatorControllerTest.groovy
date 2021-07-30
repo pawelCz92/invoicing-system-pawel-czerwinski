@@ -47,7 +47,7 @@ class TaxCalculatorControllerTest extends Specification {
     def cleanupSpec() {
         Files.deleteIfExists(idFilePath)
         Files.deleteIfExists(dataFilePath)
-        Files.delete(idFilePath.getParent())
+        Files.deleteIfExists(idFilePath.getParent())
     }
 
     def "should return TaxCalculatorResult with values 0 for not existing TIN"() {
