@@ -1,5 +1,5 @@
 invoicing-system:
   database: file
-  database.directory: db
-  database.idFileName: db-ids.json
-  database.dataFileName: db-data.json
+  database.dbDirectory: db
+  database.idFileName: db-ids
+  database.dataFileName: db-data

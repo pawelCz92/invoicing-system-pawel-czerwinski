@@ -1,6 +1,8 @@
 package pl.futurecollars.invoicing.db;
 
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -14,27 +16,29 @@ import pl.futurecollars.invoicing.service.file.IdProvider;
 @Configuration
 public class DatabaseConfiguration {
 
-    private final String currentDir = Paths.get("").toAbsolutePath().toString();
-
-    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
     @Bean
+    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
     IdProvider idProvider(
-        @Value("${invoicing-system.database.directory}") String fileDir,
-        @Value("${invoicing-system.database.idFileName}") String fileName) {
-        return new IdProvider(Paths.get(currentDir, fileDir, fileName));
+        FileService fileService,
+        @Value("${invoicing-system.database.dbDirectory}") String dbDirectory,
+        @Value("${invoicing-system.database.idFileName}") String idFileName
+    ) throws IOException {
+        Path idProviderPath = Files.createTempFile(dbDirectory, idFileName);
+        return new IdProvider(idProviderPath, fileService);
     }
 
-    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
     @Bean
+    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
     FileBasedDatabase fileBasedDatabase(
+        FileService fileService,
         JsonService jsonService,
         IdProvider idProvider,
-        @Value("${invoicing-system.database.directory}") String dirName,
-        @Value("${invoicing-system.database.dataFileName}") String fileName) {
-
-        FileService fileServiceForData = new FileService(Paths.get(currentDir, dirName, fileName));
+        @Value("${invoicing-system.database.dbDirectory}") String dbDirectory,
+        @Value("${invoicing-system.database.dataFileName}") String dbFileName
+    ) throws IOException {
+        Path dbFilePath = Files.createTempFile(dbDirectory, dbFileName);
         log.info("File based database is in use");
-        return new FileBasedDatabase(fileServiceForData, idProvider, jsonService);
+        return new FileBasedDatabase(dbFilePath, idProvider, fileService, jsonService);
     }
 
     @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "memory")
