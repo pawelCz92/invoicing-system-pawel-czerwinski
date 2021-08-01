@@ -28,6 +28,10 @@ class FileBasedDatabaseTest extends Specification {
         sampleInvoices = TestHelpers.getSampleInvoicesList()
     }
 
+    def cleanup(){
+        fileBasedDatabase.deleteAll()
+    }
+
     def setup() {
         idProvider.deleteAll()
         fileBasedDatabase.deleteAll()
