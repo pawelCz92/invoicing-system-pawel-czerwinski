@@ -25,6 +25,24 @@ class InvoiceControllerTest extends Specification {
     private JsonService jsonService
     private static String COLLECTION = "/invoices/"
 
+    def clearBase() {
+        setup:
+        String addingResponse = mockMvc.perform(get(COLLECTION))
+                .andExpect(status().isOk())
+                .andReturn()
+                .response
+                .contentAsString
+
+        List<Invoice> invoices = (List<Invoice>) jsonService.stringToObject(addingResponse, List<Invoice>.class)
+
+        if (invoices.size() > 0) {
+            invoices.forEach(invoice -> {
+                mockMvc.perform(delete(COLLECTION + invoice.id)).andExpect(status().isNoContent())
+            }
+            )
+        }
+    }
+
     def "should return empty string if there is no invoices in base"() {
         when:
         def response = mockMvc.perform(get(COLLECTION))
