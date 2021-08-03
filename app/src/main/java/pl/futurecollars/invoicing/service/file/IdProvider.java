@@ -1,12 +1,8 @@
 package pl.futurecollars.invoicing.service.file;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
-import pl.futurecollars.invoicing.service.file.FileService;
 
 @Slf4j
 public class IdProvider {
@@ -14,9 +10,9 @@ public class IdProvider {
     private final FileService fileService;
     private final Path filePath;
 
-    public IdProvider(Path filePath) {
-        this.fileService = new FileService(filePath);
-        this.filePath = filePath;
+    public IdProvider(Path path, FileService fileService) {
+        this.filePath = path;
+        this.fileService = fileService;
     }
 
     public int getNextIdAndIncrement() {
@@ -26,9 +22,8 @@ public class IdProvider {
     }
 
     private int readLastId() {
-        createFileIfNotExists();
 
-        List<String> idFileLines = fileService.readLinesToList();
+        List<String> idFileLines = fileService.readLinesToList(filePath);
         String message;
         if (idFileLines.isEmpty()) {
             log.warn("There is no last id - starting from 0");
@@ -49,23 +44,14 @@ public class IdProvider {
     }
 
     private void saveId(int id) {
-        fileService.rewriteFileByList(List.of(String.valueOf(id)));
+        fileService.rewriteFileByList(filePath, List.of(String.valueOf(id)));
     }
 
-    private void createFileIfNotExists() {
-        if (Files.notExists(filePath)) {
-            try {
-                if (!Objects.isNull(filePath.getParent())) {
-                    Files.createDirectories(filePath.getParent());
-                }
-                Files.createFile(filePath);
-                log.info("IdProvider file was created");
-            } catch (IOException e) {
-                String message = "There was problem to create file for idProvider: '" + filePath + "'";
-                log.error(message);
-                e.printStackTrace();
-                throw new IllegalStateException(message);
-            }
-        }
+    Path getFilePath() {
+        return this.filePath;
+    }
+
+    public void deleteAll() {
+        fileService.truncateFile(filePath);
     }
 }

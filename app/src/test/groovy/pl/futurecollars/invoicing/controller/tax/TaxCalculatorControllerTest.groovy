@@ -12,9 +12,7 @@ import pl.futurecollars.invoicing.service.taxcalculator.TaxCalculatorResult
 import spock.lang.Specification
 import spock.lang.Stepwise
 
-import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -29,26 +27,6 @@ class TaxCalculatorControllerTest extends Specification {
     @Autowired
     private JsonService jsonService
     private static String COLLECTION = "/tax/"
-
-    private static String currentDir
-    private static Path idFilePath
-    private static Path dataFilePath
-
-    def setupSpec() {
-        currentDir = Paths.get("").toAbsolutePath().toString()
-        idFilePath = Path.of(currentDir, "db", "db-ids.json")
-        dataFilePath = Path.of(currentDir, "db", "db-data.json")
-
-        Files.createDirectory(dataFilePath.getParent())
-        Files.createFile(idFilePath)
-        Files.createFile(dataFilePath)
-    }
-
-    def cleanupSpec() {
-        Files.deleteIfExists(idFilePath)
-        Files.deleteIfExists(dataFilePath)
-        Files.delete(idFilePath.getParent())
-    }
 
     def "should return TaxCalculatorResult with values 0 for not existing TIN"() {
         setup:

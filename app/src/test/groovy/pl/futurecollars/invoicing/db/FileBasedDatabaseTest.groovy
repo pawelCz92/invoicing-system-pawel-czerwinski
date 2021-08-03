@@ -1,37 +1,40 @@
 package pl.futurecollars.invoicing.db
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
 import pl.futurecollars.invoicing.TestHelpers
 import pl.futurecollars.invoicing.model.Invoice
-import pl.futurecollars.invoicing.service.file.IdProvider
 import pl.futurecollars.invoicing.service.JsonService
 import pl.futurecollars.invoicing.service.file.FileService
+import pl.futurecollars.invoicing.service.file.IdProvider
 import spock.lang.Specification
 
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.StandardOpenOption
 import java.time.LocalDate
-import java.util.stream.Collectors
 
+@SpringBootTest
+@ActiveProfiles("file")
 class FileBasedDatabaseTest extends Specification {
 
-    private static final Path DB_TEST_FILE_PATH = Path.of("testDBfile.json")
-    private static final Path ID_TEST_FILE_PATH = Path.of("testIdsFile.json")
-    private static FileBasedDatabase fileBasedDatabase
-    private static IdProvider idProvider
-    private static FileService fileServiceForData
+    @Autowired
+    private FileBasedDatabase fileBasedDatabase
+    @Autowired
+    private IdProvider idProvider
+    @Autowired
+    private FileService fileServiceForData
     private static List<Invoice> sampleInvoices
 
     def setupSpec() {
-        idProvider = new IdProvider(ID_TEST_FILE_PATH)
-        fileServiceForData = new FileService(DB_TEST_FILE_PATH)
-        fileBasedDatabase = new FileBasedDatabase(fileServiceForData, idProvider, new JsonService())
         sampleInvoices = TestHelpers.getSampleInvoicesList()
     }
 
-    def cleanup() {
-        Files.deleteIfExists(DB_TEST_FILE_PATH)
-        Files.deleteIfExists(ID_TEST_FILE_PATH)
+    def cleanup(){
+        fileBasedDatabase.deleteAll()
+    }
+
+    def setup() {
+        idProvider.deleteAll()
+        fileBasedDatabase.deleteAll()
     }
 
     def saveSampleInvoicesToBase() {
@@ -48,24 +51,10 @@ class FileBasedDatabaseTest extends Specification {
         saveSampleInvoicesToBase()
 
         then:
-        List<Invoice> invoicesFromFile = Files.readAllLines(DB_TEST_FILE_PATH).stream()
-                .map(line -> jsonService.stringToObject(line, Invoice.class))
-                .collect(Collectors.toList())
+        List<Invoice> invoicesInBase = fileBasedDatabase.getAll()
 
-        invoicesFromFile.size() == 3
-        invoicesFromFile.containsAll(List.of(sampleInvoices.get(0), sampleInvoices.get(1), sampleInvoices.get(3)))
-    }
-
-    def "should read last id from file and start generate id from this number"() {
-        setup:
-        saveSampleInvoicesToBase()
-        Files.writeString(ID_TEST_FILE_PATH, "100", StandardOpenOption.TRUNCATE_EXISTING)
-        fileBasedDatabase.save((sampleInvoices.get(3)))
-        List<Invoice> savedInvoices = fileBasedDatabase.getAll()
-        Invoice lastSavedInvoice = savedInvoices.get(savedInvoices.size() - 1)
-
-        expect:
-        lastSavedInvoice.getId() == 101
+        invoicesInBase.size() == 3
+        invoicesInBase.containsAll(List.of(sampleInvoices.get(0), sampleInvoices.get(1), sampleInvoices.get(3)))
     }
 
     def "should find invoice by id"() {
