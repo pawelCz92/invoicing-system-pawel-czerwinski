@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import pl.futurecollars.invoicing.db.Database;
 import pl.futurecollars.invoicing.model.Company;
 import pl.futurecollars.invoicing.model.Invoice;
+import pl.futurecollars.invoicing.model.InvoiceEntry;
 
 @AllArgsConstructor
 public class SqlDatabase implements Database {
@@ -25,40 +26,15 @@ public class SqlDatabase implements Database {
             long buyerId = insertCompany(invoice.getBuyer());
             long sellerId = insertCompany(invoice.getSeller());
 
+            int invoiceId =  insertInvoice(keyHolder, invoice, buyerId, sellerId);
 
-            jdbcTemplate.update(con -> {
-                PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO invoices (date, number, buyer, seller) VALUES (?, ?, ?, ?);", new String[] {"id"});
-                ps.setDate(1, Date.valueOf(invoice.getDate()));
-                ps.setString(2, invoice.getNumber());
-                ps.setLong(3, buyerId);
-                ps.setLong(4, sellerId);
-                return ps;
-            }, keyHolder);
-
-            int invoiceId = keyHolder.getKey().intValue();
 
             invoice.getInvoiceEntries().forEach(entry -> {
-                jdbcTemplate.update(con -> {
-                    PreparedStatement ps = con.prepareStatement(
-                        "INSERT INTO invoice_entries (description, quantity, net_price, vat_value, vat_rate) VALUES (?, ?, ?, ?, ?);",
-                        new String[] {"id"});
-                    ps.setString(1, entry.getDescription());
-                    ps.setInt(2, entry.getQuantity());
-                    ps.setBigDecimal(3, entry.getPrice());
-                    ps.setBigDecimal(4, entry.getVatValue());
-                    ps.setInt(5, 1);
-                return ps;
-                }, keyHolder);
-            });
+                insertInvoiceEntry(keyHolder, entry);
 
-            int invoiceEntryId = keyHolder.getKey().intValue();
+                int invoiceEntryId = insertInvoiceEntry(keyHolder, entry);
 
-            jdbcTemplate.update(con -> {
-                PreparedStatement ps = con.prepareStatement("INSERT INTO invoices_invoice_entries VALUES (?, ?);");
-                ps.setInt(1, invoiceId);
-                ps.setInt(2, invoiceEntryId);
-                return ps;
+                insertAssignationInvoiceEntryToInvoice(invoiceId, invoiceEntryId);
             });
 
         } catch (DataAccessException e) {
@@ -68,10 +44,43 @@ public class SqlDatabase implements Database {
         return 0;
     }
 
-    private long insertInvoiceEntry() {//////////////////////////////////////////////////////////////////////
-return 0;
+    private int insertInvoice(GeneratedKeyHolder keyHolder, Invoice invoice, long buyerId, long sellerId) {
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(
+                "INSERT INTO invoices (date, number, buyer, seller) VALUES (?, ?, ?, ?);", new String[] {"id"});
+            ps.setDate(1, Date.valueOf(invoice.getDate()));
+            ps.setString(2, invoice.getNumber());
+            ps.setLong(3, buyerId);
+            ps.setLong(4, sellerId);
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
+    private int insertInvoiceEntry(GeneratedKeyHolder keyHolder, InvoiceEntry entry) {
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(
+                "INSERT INTO invoice_entries (description, quantity, net_price, vat_value, vat_rate) VALUES (?, ?, ?, ?, ?);",
+                new String[] {"id"});
+            ps.setString(1, entry.getDescription());
+            ps.setInt(2, entry.getQuantity());
+            ps.setBigDecimal(3, entry.getPrice());
+            ps.setBigDecimal(4, entry.getVatValue());
+            ps.setInt(5, 1);
+            return ps;
+        }, keyHolder);
+        return keyHolder.getKey().intValue();
+    }
+
+    private void insertAssignationInvoiceEntryToInvoice(int invoiceId, int invoiceEntryId) {
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement("INSERT INTO invoices_invoice_entries VALUES (?, ?);");
+            ps.setInt(1, invoiceId);
+            ps.setInt(2, invoiceEntryId);
+            return ps;
+        });
+    }
 
     private long insertCompany(Company company) {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
@@ -116,4 +125,5 @@ return 0;
     public void delete(int id) {
 
     }
+
 }
