@@ -1,8 +1,10 @@
 package pl.futurecollars.invoicing.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -11,7 +13,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
+@Builder
 public class InvoiceEntry {
+
+    @JsonIgnore
+    private int id;
 
     @ApiModelProperty(value = "Product/service description", required = true, example = "Fiat 126p")
     private String description;
