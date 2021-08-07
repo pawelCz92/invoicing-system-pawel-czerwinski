@@ -68,8 +68,8 @@ public class SqlDatabase implements Database {
 
     @Override
     @Transactional
-    public void update(int id, Invoice updatedInvoice) {
-        sqlService.updateInvoice(id, updatedInvoice);
+    public int update(int id, Invoice updatedInvoice) {
+        return sqlService.updateInvoice(id, updatedInvoice);
     }
 
     @Override
@@ -270,9 +270,9 @@ public class SqlDatabase implements Database {
             jdbcTemplate.update("DELETE FROM invoices WHERE invoices.id = " + id);
         }
 
-        private void updateInvoice(int id, Invoice invoice) {
+        private int updateInvoice(int id, Invoice invoice) {
             deleteInvoiceById(id);
-            save(invoice);
+            return save(invoice);
         }
     }
 }

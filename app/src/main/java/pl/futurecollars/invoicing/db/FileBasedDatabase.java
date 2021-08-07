@@ -50,7 +50,7 @@ public class FileBasedDatabase implements Database {
     }
 
     @Override
-    public void update(int id, Invoice updatedInvoice) {
+    public int update(int id, Invoice updatedInvoice) {
         int lineNumber = fileServiceForData.getLineNumberById(dbFilePath, id)
             .orElseThrow(() -> new IllegalArgumentException("There is no id : " + id));
         List<Invoice> allInvoices = getAll();
@@ -61,6 +61,7 @@ public class FileBasedDatabase implements Database {
                 .map(jsonService::objectToString)
                 .collect(Collectors.toList())
         );
+        return updatedInvoice.getId();
     }
 
     @Override

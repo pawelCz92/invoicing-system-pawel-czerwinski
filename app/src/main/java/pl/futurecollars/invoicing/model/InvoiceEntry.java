@@ -37,11 +37,20 @@ public class InvoiceEntry {
     @ApiModelProperty(value = "Car related", required = true)
     private Car car;
 
-    public InvoiceEntry(String description, int quantity, BigDecimal price, BigDecimal vatValue, Vat vatRate) {
+    public InvoiceEntry(String description, int quantity, BigDecimal price, BigDecimal vatValue, Vat vatRate, Car car) {
         this.description = description;
         this.quantity = quantity;
         this.price = price;
         this.vatValue = vatValue;
         this.vatRate = vatRate;
+        this.car = car;
+    }
+    public InvoiceEntry(String description, int quantity, double price, double vatValue, Vat vatRate, Car car) {
+        this.description = description;
+        this.quantity = quantity;
+        this.price = BigDecimal.valueOf(price);
+        this.vatValue = BigDecimal.valueOf(vatValue);
+        this.vatRate = vatRate;
+        this.car = car;
     }
 }

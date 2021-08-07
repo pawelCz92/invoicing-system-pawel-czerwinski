@@ -19,4 +19,9 @@ public class Car {
     private boolean isIncludingPrivateExpense;
     @ApiModelProperty (value = "Car registration number", required = true, example = "FGH-1462")
     private String registration;
+
+    public Car(boolean isIncludingPrivateExpense, String registration) {
+        this.isIncludingPrivateExpense = isIncludingPrivateExpense;
+        this.registration = registration;
+    }
 }

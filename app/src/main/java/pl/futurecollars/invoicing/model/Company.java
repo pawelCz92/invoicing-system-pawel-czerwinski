@@ -32,5 +32,11 @@ public class Company {
     @ApiModelProperty(value = "Pension insurance", required = true, example = "400")
     private BigDecimal pensionInsurance;
 
-
+    public Company(String taxIdentificationNumber, String address, String name, BigDecimal healthInsurance, BigDecimal pensionInsurance) {
+        this.taxIdentificationNumber = taxIdentificationNumber;
+        this.address = address;
+        this.name = name;
+        this.healthInsurance = healthInsurance;
+        this.pensionInsurance = pensionInsurance;
+    }
 }
