@@ -8,6 +8,8 @@ buildscript {
         springFoxStarterVersion = '3.0.0'
         springFoxUiVersion = '3.0.0'
         flywayVersion = '7.11.3'
+        postgressqlVersion = '42.2.19'
+        h2Version = '1.4.200'
     }
 }
 
@@ -45,8 +47,8 @@ dependencies {
     implementation "io.springfox:springfox-boot-starter:${springFoxStarterVersion}"
     implementation "io.springfox:springfox-swagger-ui:${springFoxUiVersion}"
 
-    runtimeOnly 'org.postgresql:postgresql:42.2.19'
-    runtimeOnly 'com.h2database:h2:1.3.148'
+    runtimeOnly "org.postgresql:postgresql:${postgressqlVersion}"
+    runtimeOnly "com.h2database:h2:${h2Version}"
     implementation "org.flywaydb:flyway-core:${flywayVersion}"
 
 }
@@ -137,4 +139,4 @@ task testWithSqlDatabase(type: Test) {
 
 check.dependsOn testWithFileDatabase
 check.dependsOn testWithMemoryDatabase
-//check.dependsOn testWithSqlDatabase
+check.dependsOn testWithSqlDatabase

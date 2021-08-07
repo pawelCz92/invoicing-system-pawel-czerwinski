@@ -1,6 +1,5 @@
 package pl.futurecollars.invoicing.db
 
-
 import pl.futurecollars.invoicing.TestHelpers
 import pl.futurecollars.invoicing.service.JsonService
 import pl.futurecollars.invoicing.service.file.FileService

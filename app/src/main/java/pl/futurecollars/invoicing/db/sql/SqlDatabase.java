@@ -78,7 +78,7 @@ public class SqlDatabase implements Database {
     }
 
     @PostConstruct
-    private void getVatRatesMap() {
+    void getVatRatesMap() {
         jdbcTemplate.query("SELECT * FROM vat",
             rs -> {
                 vatToId.put(Vat.valueOf("VAT_" + rs.getString("name")), rs.getInt("id"));
