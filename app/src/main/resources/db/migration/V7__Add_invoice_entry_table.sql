@@ -17,6 +17,3 @@ ALTER TABLE public.invoice_entries
 ALTER TABLE public.invoice_entries
     ADD CONSTRAINT car_fk FOREIGN KEY (expense_related_to_car)
         REFERENCES public.cars (id);
-
-ALTER TABLE public.invoice_entries
-    OWNER TO postgres;

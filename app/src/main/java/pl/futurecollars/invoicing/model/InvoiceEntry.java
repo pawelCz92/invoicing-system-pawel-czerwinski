@@ -3,6 +3,7 @@ package pl.futurecollars.invoicing.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode
 @Builder
 public class InvoiceEntry {
 
@@ -45,12 +45,22 @@ public class InvoiceEntry {
         this.vatRate = vatRate;
         this.car = car;
     }
-    public InvoiceEntry(String description, int quantity, double price, double vatValue, Vat vatRate, Car car) {
-        this.description = description;
-        this.quantity = quantity;
-        this.price = BigDecimal.valueOf(price);
-        this.vatValue = BigDecimal.valueOf(vatValue);
-        this.vatRate = vatRate;
-        this.car = car;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        InvoiceEntry that = (InvoiceEntry) o;
+        return quantity == that.quantity && Objects.equals(description, that.description) && Objects.equals(price, that.price) &&
+            Objects.equals(vatValue, that.vatValue) && vatRate == that.vatRate && Objects.equals(car, that.car);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(description, quantity, price, vatValue, vatRate, car);
     }
 }

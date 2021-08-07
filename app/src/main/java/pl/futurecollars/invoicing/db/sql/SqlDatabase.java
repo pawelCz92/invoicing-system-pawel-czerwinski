@@ -90,7 +90,7 @@ public class SqlDatabase implements Database {
         private int insertInvoice(GeneratedKeyHolder keyHolder, Invoice invoice, long buyerId, long sellerId) {
             jdbcTemplate.update(con -> {
                 PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO invoices (date, number, buyer, seller) VALUES (?, ?, ?, ?);", new String[] {"id"});
+                    "INSERT INTO invoices (date, invoice_number, buyer, seller) VALUES (?, ?, ?, ?);", new String[] {"id"});
                 ps.setDate(1, Date.valueOf(invoice.getDate()));
                 ps.setString(2, invoice.getNumber());
                 ps.setLong(3, buyerId);
@@ -166,13 +166,13 @@ public class SqlDatabase implements Database {
 
         private List<Invoice> findAllInvoices() {
             List<Invoice> invoices = jdbcTemplate.query(
-                "SELECT i.id, i.date, i.number, c1.id AS seller_id, c2.id AS buyer_id FROM invoices i " +
+                "SELECT i.id, i.date, i.invoice_number, c1.id AS seller_id, c2.id AS buyer_id FROM invoices i " +
                     "INNER JOIN companies c1 ON i.seller = c1.id " +
                     "INNER JOIN companies c2 ON i.buyer = c2.id", (rs, rowNum) ->
                     Invoice.builder()
                         .id(rs.getInt("id"))
                         .date(rs.getDate("date").toLocalDate())
-                        .number(rs.getString("number"))
+                        .number(rs.getString("invoice_number"))
                         .buyer(findCompanyById(rs.getInt("buyer_id")))
                         .seller(findCompanyById(rs.getInt("seller_id")))
                         .build()
@@ -185,13 +185,13 @@ public class SqlDatabase implements Database {
 
         private Optional<Invoice> findInvoiceById(int id) {
             List<Invoice> invoices = jdbcTemplate.query(
-                "SELECT i.id, i.date, i.number, c1.id AS seller_id, c2.id AS buyer_id FROM invoices i " +
+                "SELECT i.id, i.date, i.invoice_number, c1.id AS seller_id, c2.id AS buyer_id FROM invoices i " +
                     "INNER JOIN companies c1 ON i.seller = c1.id " +
                     "INNER JOIN companies c2 ON i.buyer = c2.id WHERE i.id = " + id, (rs, rowNum) ->
                     Invoice.builder()
                         .id(rs.getInt("id"))
                         .date(rs.getDate("date").toLocalDate())
-                        .number(rs.getString("number"))
+                        .number(rs.getString("invoice_number"))
                         .buyer(findCompanyById(rs.getInt("buyer_id")))
                         .seller(findCompanyById(rs.getInt("seller_id")))
                         .build()
@@ -255,6 +255,7 @@ public class SqlDatabase implements Database {
 
         private Optional<Company> findCompanyByTin(String taxIdentificationNumber) {
             return jdbcTemplate.query(
+                //TODO is here sql injection problem possible?
                 ("SELECT * FROM companies WHERE companies.tax_identification_number = '" + taxIdentificationNumber) + "'", (rs, rowNum) ->
                     Company.builder()
                         .id(rs.getInt("id"))
@@ -267,7 +268,10 @@ public class SqlDatabase implements Database {
         }
 
         private void deleteInvoiceById(int id) {
-            jdbcTemplate.update("DELETE FROM invoices WHERE invoices.id = " + id);
+            if (findInvoiceById(id).isPresent()) {
+                jdbcTemplate.update("DELETE FROM invoices_invoice_entries iie WHERE iie.invoice_id = " + id);
+                jdbcTemplate.update("DELETE FROM invoices WHERE invoices.id = " + id);
+            }
         }
 
         private int updateInvoice(int id, Invoice invoice) {

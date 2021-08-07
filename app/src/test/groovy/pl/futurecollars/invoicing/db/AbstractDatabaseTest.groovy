@@ -5,8 +5,6 @@ import pl.futurecollars.invoicing.model.Invoice
 import spock.lang.Specification
 import spock.lang.Stepwise
 
-import java.util.stream.Collectors
-
 @Stepwise
 abstract class AbstractDatabaseTest extends Specification {
 
@@ -18,9 +16,8 @@ abstract class AbstractDatabaseTest extends Specification {
 
 
     def saveInvoices() {
-        invoiceList = invoiceList.stream().peek(inv -> {
-            inv.setId(database.save(inv))
-        }).collect(Collectors.toList())
+        invoiceList.forEach(database::save)
+        invoiceList = database.getAll()
     }
 
     def "should inject database instance"() {
@@ -78,7 +75,7 @@ abstract class AbstractDatabaseTest extends Specification {
         database.getById(5).isEmpty()
     }
 
-    def "can delete all invoices"(){
+    def "can delete all invoices"() {
         setup:
         saveInvoices()
 

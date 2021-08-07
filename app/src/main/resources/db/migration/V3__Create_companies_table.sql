@@ -11,6 +11,3 @@ CREATE TABLE public.companies
 
 ALTER TABLE public.companies
     ADD CONSTRAINT tin_unique UNIQUE (tax_identification_number);
-
-ALTER TABLE public.companies
-    OWNER to postgres;
