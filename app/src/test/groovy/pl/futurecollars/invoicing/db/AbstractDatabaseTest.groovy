@@ -99,4 +99,20 @@ abstract class AbstractDatabaseTest extends Specification {
         then:
         invoiceToUpdate == database.getById(idNew).get()
     }
+
+    def "should throw illegalArgumentException if there is no id using update"() {
+        when:
+        database.update(999999, invoiceList.get(0))
+
+        then:
+        thrown(IllegalArgumentException)
+    }
+
+    def "should throw illegalArgumentException if there is no id using delete"() {
+        when:
+        database.delete(999888)
+
+        then:
+        thrown(IllegalArgumentException)
+    }
 }

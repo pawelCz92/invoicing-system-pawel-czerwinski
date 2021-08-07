@@ -18,6 +18,22 @@ class TestHelpers extends Specification {
         Vat.VAT_0.getRate() == 0
     }
 
+    def "should invoice entry be equal or not"(){
+        given:
+        InvoiceEntry invoiceEntry1 = getSampleInvoicesList().get(1).getInvoiceEntries().get(0)
+        InvoiceEntry invoiceEntry2 = getSampleInvoicesList().get(1).getInvoiceEntries().get(1)
+
+        expect:
+        !invoiceEntry1.equals(invoiceEntry2)
+        !invoiceEntry1.equals(null)
+        invoiceEntry1.equals(invoiceEntry1)
+    }
+
+    def "test for cover hashcode for invoiceEntry"(){
+        expect:
+        getSampleInvoicesList().get(1).getInvoiceEntries().get(0).hashCode()
+    }
+
     static def getSampleInvoicesList() {
         Company company1 =
                 new Company("382-22-1584", "377 Ohio Road Pulo", "Microsoft",

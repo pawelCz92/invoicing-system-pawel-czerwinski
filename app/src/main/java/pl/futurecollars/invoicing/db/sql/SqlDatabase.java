@@ -202,7 +202,7 @@ public class SqlDatabase implements Database {
 
         private Company findCompanyById(int id) {
             return jdbcTemplate.query(
-                    "SELECT * FROM companies WHERE companies.id = " + id,
+                "SELECT * FROM companies WHERE companies.id = " + id,
                 (rs, rowNum) -> Company.builder()
                     .id(rs.getInt("id"))
                     .taxIdentificationNumber(rs.getString("tax_identification_number"))
@@ -268,12 +268,18 @@ public class SqlDatabase implements Database {
             if (findInvoiceById(id).isPresent()) {
                 jdbcTemplate.update("DELETE FROM invoices_invoice_entries iie WHERE iie.invoice_id = " + id);
                 jdbcTemplate.update("DELETE FROM invoices WHERE invoices.id = " + id);
+            } else {
+                throw new IllegalArgumentException("Id " + id + " does not exists");
             }
         }
 
         private int updateInvoice(int id, Invoice invoice) {
-            deleteInvoiceById(id);
-            return save(invoice);
+            if (findInvoiceById(id).isPresent()) {
+                deleteInvoiceById(id);
+                return save(invoice);
+            } else {
+                throw new IllegalArgumentException("Id " + id + " does not exists");
+            }
         }
     }
 }
