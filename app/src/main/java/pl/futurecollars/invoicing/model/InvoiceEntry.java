@@ -7,7 +7,6 @@ import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
@@ -55,8 +54,8 @@ public class InvoiceEntry {
             return false;
         }
         InvoiceEntry that = (InvoiceEntry) o;
-        return quantity == that.quantity && Objects.equals(description, that.description) && Objects.equals(price, that.price) &&
-            Objects.equals(vatValue, that.vatValue) && vatRate == that.vatRate && Objects.equals(car, that.car);
+        return quantity == that.quantity && Objects.equals(description, that.description) && Objects.equals(price, that.price)
+            && Objects.equals(vatValue, that.vatValue) && vatRate == that.vatRate && Objects.equals(car, that.car);
     }
 
     @Override
