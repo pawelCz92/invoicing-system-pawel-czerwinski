@@ -26,6 +26,7 @@ class TestHelpers extends Specification {
         expect:
         !invoiceEntry1.equals(invoiceEntry2)
         !invoiceEntry1.equals(null)
+        !invoiceEntry1.equals(BigDecimal.ONE)
         invoiceEntry1.equals(invoiceEntry1)
     }
 

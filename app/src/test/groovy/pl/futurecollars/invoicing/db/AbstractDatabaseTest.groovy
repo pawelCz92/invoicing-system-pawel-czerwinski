@@ -93,11 +93,10 @@ abstract class AbstractDatabaseTest extends Specification {
         invoiceToUpdate.setNumber("xxxxxxxx")
 
         when:
-        int idNew = database.update(invoiceToUpdate.getId(), invoiceToUpdate)
-        invoiceToUpdate.setId(idNew)
+        database.update(invoiceToUpdate.getId(), invoiceToUpdate)
 
         then:
-        invoiceToUpdate == database.getById(idNew).get()
+        invoiceToUpdate == database.getById(5).get()
     }
 
     def "should throw illegalArgumentException if there is no id using update"() {

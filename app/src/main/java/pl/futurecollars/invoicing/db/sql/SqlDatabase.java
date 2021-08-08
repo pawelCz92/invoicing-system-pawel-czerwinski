@@ -66,8 +66,8 @@ public class SqlDatabase implements Database {
 
     @Override
     @Transactional
-    public int update(int id, Invoice updatedInvoice) {
-        return sqlService.updateInvoice(id, updatedInvoice);
+    public void update(int id, Invoice updatedInvoice) {
+        sqlService.updateInvoice(id, updatedInvoice);
     }
 
     @Override
@@ -171,8 +171,8 @@ public class SqlDatabase implements Database {
                         .id(rs.getInt("id"))
                         .date(rs.getDate("date").toLocalDate())
                         .number(rs.getString("invoice_number"))
-                        .buyer(findCompanyById(rs.getInt("buyer_id")))
-                        .seller(findCompanyById(rs.getInt("seller_id")))
+                        .buyer(findCompanyById(rs.getInt("buyer_id")).orElse(null))
+                        .seller(findCompanyById(rs.getInt("seller_id")).orElse(null))
                         .build()
             );
 
@@ -190,8 +190,8 @@ public class SqlDatabase implements Database {
                         .id(rs.getInt("id"))
                         .date(rs.getDate("date").toLocalDate())
                         .number(rs.getString("invoice_number"))
-                        .buyer(findCompanyById(rs.getInt("buyer_id")))
-                        .seller(findCompanyById(rs.getInt("seller_id")))
+                        .buyer(findCompanyById(rs.getInt("buyer_id")).orElse(null))
+                        .seller(findCompanyById(rs.getInt("seller_id")).orElse(null))
                         .build()
             );
 
@@ -200,7 +200,7 @@ public class SqlDatabase implements Database {
                 .findFirst();
         }
 
-        private Company findCompanyById(int id) {
+        private Optional<Company> findCompanyById(int id) {
             return jdbcTemplate.query(
                 "SELECT * FROM companies WHERE companies.id = " + id,
                 (rs, rowNum) -> Company.builder()
@@ -210,7 +210,7 @@ public class SqlDatabase implements Database {
                     .name(rs.getString("name"))
                     .healthInsurance(rs.getBigDecimal("health_insurance"))
                     .pensionInsurance(rs.getBigDecimal("pension_insurance"))
-                    .build()).stream().findFirst().orElse(null);
+                    .build()).stream().findFirst();
         }
 
         private List<InvoiceEntry> getInvoiceEntriesFromInvoice(int invoiceId) {
@@ -264,19 +264,57 @@ public class SqlDatabase implements Database {
                         .build()).stream().findFirst();
         }
 
+        private void deleteInvoiceEntryByInvoiceId(int invoiceId) {
+            jdbcTemplate.update("DELETE FROM invoices_invoice_entries iie WHERE iie.invoice_id = " + invoiceId);
+        }
+
         private void deleteInvoiceById(int id) {
             if (findInvoiceById(id).isPresent()) {
-                jdbcTemplate.update("DELETE FROM invoices_invoice_entries iie WHERE iie.invoice_id = " + id);
+                deleteInvoiceEntryByInvoiceId(id);
                 jdbcTemplate.update("DELETE FROM invoices WHERE invoices.id = " + id);
             } else {
                 throw new IllegalArgumentException("Id " + id + " does not exists");
             }
         }
 
-        private int updateInvoice(int id, Invoice invoice) {
+        private void updateInvoice(int id, Invoice invoice) {
             if (findInvoiceById(id).isPresent()) {
-                deleteInvoiceById(id);
-                return save(invoice);
+                //     deleteInvoiceById(id);
+                jdbcTemplate.update("UPDATE invoices SET invoices.date = ? WHERE invoices.id = ?",
+                    invoice.getDate(), invoice.getId());
+                jdbcTemplate.update("UPDATE invoices SET invoices.invoice_number = ? WHERE invoices.id = ?",
+                    invoice.getNumber(), invoice.getId());
+
+                int buyerId = jdbcTemplate.query("SELECT i.buyer FROM invoices i WHERE i.id = " + id,
+                    (rs, rowNr) -> rs.getInt(1)).get(0);
+                int sellerId = jdbcTemplate.query("SELECT i.seller FROM invoices i WHERE i.id = " + id,
+                    (rs, rowNr) -> rs.getInt(1)).get(0);
+
+                Company actualBuyer = findCompanyById(buyerId).get();
+                Company actualSeller = findCompanyById(sellerId).get();
+
+                int newBuyerId = buyerId;
+                int newSellerId = sellerId;
+
+                if (!actualBuyer.equals(invoice.getBuyer())) {
+                    newBuyerId = sqlService.findCompanyByTin(invoice.getBuyer().getTaxIdentificationNumber())
+                        .map(Company::getId)
+                        .orElseGet(() -> sqlService.insertCompany(invoice.getBuyer()));
+                }
+                if (!actualSeller.equals(invoice.getSeller())) {
+                    newSellerId = sqlService.findCompanyByTin(invoice.getSeller().getTaxIdentificationNumber())
+                        .map(Company::getId)
+                        .orElseGet(() -> sqlService.insertCompany(invoice.getSeller()));
+                }
+                if (buyerId != newBuyerId) {
+                    jdbcTemplate.update("UPDATE invoices SET invoices.buyer = ? WHERE invoices.id = ?",
+                        newBuyerId, invoice.getId());
+                }
+                if (sellerId != newSellerId) {
+                    jdbcTemplate.update("UPDATE invoices SET invoices.seller = ? WHERE invoices.id = ?",
+                        newSellerId, invoice.getId());
+                }
+
             } else {
                 throw new IllegalArgumentException("Id " + id + " does not exists");
             }
