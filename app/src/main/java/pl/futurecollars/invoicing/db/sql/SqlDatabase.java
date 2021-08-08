@@ -264,13 +264,13 @@ public class SqlDatabase implements Database {
                         .build()).stream().findFirst();
         }
 
-        private void deleteInvoiceEntryByInvoiceId(int invoiceId) {
+        private void deleteInvoiceEntryAndCarByInvoiceId(int invoiceId) {
             jdbcTemplate.update("DELETE FROM invoices_invoice_entries iie WHERE iie.invoice_id = " + invoiceId);
         }
 
         private void deleteInvoiceById(int id) {
             if (findInvoiceById(id).isPresent()) {
-                deleteInvoiceEntryByInvoiceId(id);
+                deleteInvoiceEntryAndCarByInvoiceId(id);
                 jdbcTemplate.update("DELETE FROM invoices WHERE invoices.id = " + id);
             } else {
                 throw new IllegalArgumentException("Id " + id + " does not exists");
@@ -279,7 +279,6 @@ public class SqlDatabase implements Database {
 
         private void updateInvoice(int id, Invoice invoice) {
             if (findInvoiceById(id).isPresent()) {
-                //     deleteInvoiceById(id);
                 jdbcTemplate.update("UPDATE invoices SET invoices.date = ? WHERE invoices.id = ?",
                     invoice.getDate(), invoice.getId());
                 jdbcTemplate.update("UPDATE invoices SET invoices.invoice_number = ? WHERE invoices.id = ?",
@@ -313,6 +312,17 @@ public class SqlDatabase implements Database {
                 if (sellerId != newSellerId) {
                     jdbcTemplate.update("UPDATE invoices SET invoices.seller = ? WHERE invoices.id = ?",
                         newSellerId, invoice.getId());
+                }
+                Invoice orginalInvoice = findInvoiceById(id).get();
+                if (!(orginalInvoice.getInvoiceEntries().size() == invoice.getInvoiceEntries().size()
+                    && orginalInvoice.getInvoiceEntries().containsAll(invoice.getInvoiceEntries()))) {
+
+                    deleteInvoiceEntryAndCarByInvoiceId(id);
+                    invoice.getInvoiceEntries()
+                        .forEach(invoiceEntry -> {
+                            GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
+                            insertAssignationInvoiceEntryToInvoice(id, insertInvoiceEntry(generatedKeyHolder, invoiceEntry));
+                        });
                 }
 
             } else {
