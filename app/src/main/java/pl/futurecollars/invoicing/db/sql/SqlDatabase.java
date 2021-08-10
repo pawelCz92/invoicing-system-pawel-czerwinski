@@ -2,6 +2,8 @@ package pl.futurecollars.invoicing.db.sql;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +24,21 @@ public class SqlDatabase implements Database {
 
     private final JdbcTemplate jdbcTemplate;
     private final Map<Vat, Integer> vatToId = new HashMap<>();
+    private final Map<Integer, Vat> idToVat = new HashMap<>();
 
     public SqlDatabase(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @PostConstruct
+    void getVatRatesMap() {
+        jdbcTemplate.query("SELECT * FROM vat",
+            rs -> {
+                Vat vat = Vat.valueOf("VAT_" + rs.getString("name"));
+                int id = rs.getInt("id");
+                vatToId.put(vat, id);
+                idToVat.put(id, vat);
+            });
     }
 
     @Override
@@ -72,14 +86,6 @@ public class SqlDatabase implements Database {
     @Override
     public void delete(int id) {
         deleteInvoiceById(id);
-    }
-
-    @PostConstruct
-    void getVatRatesMap() {
-        jdbcTemplate.query("SELECT * FROM vat",
-            rs -> {
-                vatToId.put(Vat.valueOf("VAT_" + rs.getString("name")), rs.getInt("id"));
-            });
     }
 
     private int insertInvoice(GeneratedKeyHolder keyHolder, Invoice invoice, long buyerId, long sellerId) {
@@ -161,15 +167,34 @@ public class SqlDatabase implements Database {
 
     private List<Invoice> findAllInvoices() {
         List<Invoice> invoices = jdbcTemplate.query(
-            "SELECT i.id, i.date, i.invoice_number, c1.id AS seller_id, c2.id AS buyer_id FROM invoices i "
-                + "INNER JOIN companies c1 ON i.seller = c1.id "
-                + "INNER JOIN companies c2 ON i.buyer = c2.id", (rs, rowNum) ->
+            "SELECT i.id, i.date, i.invoice_number, c1.id AS buyer_id, c1.name AS buyer_name, c1.tax_identification_number AS buyer_tin, "
+                + "c1.address AS buyer_address, c1.pension_insurance AS buyer_pension_insurance, c1.health_insurance AS buyer_health_insurance, "
+                + "c2.id AS seller_id, c2.name AS seller_name, c2.tax_identification_number AS seller_tin, c2.address AS seller_address, "
+                + "c2.pension_insurance AS seller_pension_insurance, c2.health_insurance AS seller_health_insurance "
+                + "FROM invoices i "
+                + "INNER JOIN companies c1 ON i.buyer = c1.id "
+                + "INNER JOIN companies c2 ON i.seller = c2.id",
+            (rs, rowNum) ->
                 Invoice.builder()
                     .id(rs.getInt("id"))
                     .date(rs.getDate("date").toLocalDate())
                     .number(rs.getString("invoice_number"))
-                    .buyer(findCompanyById(rs.getInt("buyer_id")).orElse(null))
-                    .seller(findCompanyById(rs.getInt("seller_id")).orElse(null))
+                    .buyer(Company.builder()
+                        .id(rs.getInt("buyer_id"))
+                        .address(rs.getString("buyer_address"))
+                        .taxIdentificationNumber(rs.getString("buyer_tin"))
+                        .name(rs.getString("buyer_name"))
+                        .pensionInsurance(rs.getBigDecimal("buyer_pension_insurance"))
+                        .healthInsurance(rs.getBigDecimal("buyer_health_insurance"))
+                        .build())
+                    .seller(Company.builder()
+                        .id(rs.getInt("seller_id"))
+                        .address(rs.getString("seller_address"))
+                        .taxIdentificationNumber(rs.getString("seller_tin"))
+                        .name(rs.getString("seller_name"))
+                        .pensionInsurance(rs.getBigDecimal("seller_pension_insurance"))
+                        .healthInsurance(rs.getBigDecimal("seller_health_insurance"))
+                        .build())
                     .build()
         );
 
@@ -189,12 +214,10 @@ public class SqlDatabase implements Database {
                     .number(rs.getString("invoice_number"))
                     .buyer(findCompanyById(rs.getInt("buyer_id")).orElse(null))
                     .seller(findCompanyById(rs.getInt("seller_id")).orElse(null))
+                    .invoiceEntries(getInvoiceEntriesFromInvoice(id))
                     .build()
         );
-
-        return invoices.stream()
-            .peek(invoice -> invoice.setInvoiceEntries(getInvoiceEntriesFromInvoice(invoice.getId())))
-            .findFirst();
+        return invoices.stream().findFirst();
     }
 
     private Optional<Company> findCompanyById(int id) {
@@ -222,18 +245,10 @@ public class SqlDatabase implements Database {
                     .quantity(rs.getInt("quantity"))
                     .price(rs.getBigDecimal("net_price"))
                     .vatValue(rs.getBigDecimal("vat_value"))
-                    .vatRate(idToVat(rs.getInt("vat_rate")))
+                    .vatRate(idToVat.get(rs.getInt("vat_rate")))
                     .car(findCarById(rs.getInt("expense_related_to_car")))
                     .build()
         );
-    }
-
-    private Vat idToVat(int id) {
-        return vatToId.entrySet().stream()
-            .filter(entry -> entry.getValue() == id)
-            .findFirst()
-            .map(Map.Entry::getKey)
-            .orElse(null);
     }
 
     private Car findCarById(int id) {
@@ -248,17 +263,39 @@ public class SqlDatabase implements Database {
     }
 
     private Optional<Company> findCompanyByTin(String taxIdentificationNumber) {
-        return jdbcTemplate.query(
-            // TODO is here sql injection problem possible?
-            ("SELECT * FROM companies WHERE companies.tax_identification_number = '" + taxIdentificationNumber) + "'", (rs, rowNum) ->
-                Company.builder()
+//        return jdbcTemplate.query(
+//            // TODO is here sql injection problem possible?
+//            ("SELECT * FROM companies WHERE companies.tax_identification_number = '" + taxIdentificationNumber) + "'", (rs, rowNum) ->
+//                Company.builder()
+//                    .id(rs.getInt("id"))
+//                    .taxIdentificationNumber(rs.getString("tax_identification_number"))
+//                    .address(rs.getString("address"))
+//                    .name(rs.getString("name"))
+//                    .healthInsurance(rs.getBigDecimal("health_insurance"))
+//                    .pensionInsurance(rs.getBigDecimal("pension_insurance"))
+//                    .build()).stream().findFirst();
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM companies WHERE companies.tax_identification_number = ?");
+
+            ps.setString(1, taxIdentificationNumber);
+
+            ResultSet rs = ps.executeQuery();
+
+            List<Company> companies = new ArrayList<>();
+
+            while (rs.next()) {
+                companies.add(Company.builder()
                     .id(rs.getInt("id"))
                     .taxIdentificationNumber(rs.getString("tax_identification_number"))
                     .address(rs.getString("address"))
                     .name(rs.getString("name"))
                     .healthInsurance(rs.getBigDecimal("health_insurance"))
                     .pensionInsurance(rs.getBigDecimal("pension_insurance"))
-                    .build()).stream().findFirst();
+                    .build());
+            }
+            return ps;
+        });
     }
 
     private void deleteInvoiceEntryAndCarByInvoiceId(int invoiceId) {
