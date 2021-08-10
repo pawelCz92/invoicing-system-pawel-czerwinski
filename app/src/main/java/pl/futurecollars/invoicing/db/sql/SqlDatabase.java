@@ -2,8 +2,6 @@ package pl.futurecollars.invoicing.db.sql;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -263,39 +261,16 @@ public class SqlDatabase implements Database {
     }
 
     private Optional<Company> findCompanyByTin(String taxIdentificationNumber) {
-//        return jdbcTemplate.query(
-//            // TODO is here sql injection problem possible?
-//            ("SELECT * FROM companies WHERE companies.tax_identification_number = '" + taxIdentificationNumber) + "'", (rs, rowNum) ->
-//                Company.builder()
-//                    .id(rs.getInt("id"))
-//                    .taxIdentificationNumber(rs.getString("tax_identification_number"))
-//                    .address(rs.getString("address"))
-//                    .name(rs.getString("name"))
-//                    .healthInsurance(rs.getBigDecimal("health_insurance"))
-//                    .pensionInsurance(rs.getBigDecimal("pension_insurance"))
-//                    .build()).stream().findFirst();
-
-        jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM companies WHERE companies.tax_identification_number = ?");
-
-            ps.setString(1, taxIdentificationNumber);
-
-            ResultSet rs = ps.executeQuery();
-
-            List<Company> companies = new ArrayList<>();
-
-            while (rs.next()) {
-                companies.add(Company.builder()
+        return jdbcTemplate.query(
+            ("SELECT * FROM companies WHERE companies.tax_identification_number = '" + taxIdentificationNumber) + "'", (rs, rowNum) ->
+                Company.builder()
                     .id(rs.getInt("id"))
                     .taxIdentificationNumber(rs.getString("tax_identification_number"))
                     .address(rs.getString("address"))
                     .name(rs.getString("name"))
                     .healthInsurance(rs.getBigDecimal("health_insurance"))
                     .pensionInsurance(rs.getBigDecimal("pension_insurance"))
-                    .build());
-            }
-            return ps;
-        });
+                    .build()).stream().findFirst();
     }
 
     private void deleteInvoiceEntryAndCarByInvoiceId(int invoiceId) {
