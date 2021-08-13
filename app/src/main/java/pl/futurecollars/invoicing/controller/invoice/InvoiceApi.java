@@ -27,13 +27,13 @@ public interface InvoiceApi {
 
     @ApiOperation(value = "Get invoice by id")
     @GetMapping("/{id}")
-    ResponseEntity<Invoice> getInvoiceById(@PathVariable int id);
+    ResponseEntity<Invoice> getInvoiceById(@PathVariable Long id);
 
     @ApiOperation(value = "Update invoice with given id")
     @PutMapping("/{id}")
-    ResponseEntity<?> updateById(@PathVariable int id, @RequestBody Invoice invoice);
+    ResponseEntity<?> updateById(@PathVariable Long id, @RequestBody Invoice invoice);
 
     @ApiOperation(value = "Delete invoice with given id")
     @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteById(@PathVariable int id);
+    ResponseEntity<?> deleteById(@PathVariable Long id);
 }

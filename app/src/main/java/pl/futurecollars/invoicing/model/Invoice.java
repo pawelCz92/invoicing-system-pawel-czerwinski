@@ -27,7 +27,7 @@ public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Exclude
-    private int id;
+    private Long id;
 
     @ApiModelProperty(value = "Invoice number (assigned by user)", required = true, example = "2021/05/09/0000001")
     private String number;

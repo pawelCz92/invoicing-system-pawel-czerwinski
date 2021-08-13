@@ -21,8 +21,8 @@ import pl.futurecollars.invoicing.model.Vat;
 public class SqlDatabase implements Database {
 
     private final JdbcTemplate jdbcTemplate;
-    private final Map<Vat, Integer> vatToId = new HashMap<>();
-    private final Map<Integer, Vat> idToVat = new HashMap<>();
+    private final Map<Vat, Long> vatToId = new HashMap<>();
+    private final Map<Long, Vat> idToVat = new HashMap<>();
 
     public SqlDatabase(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -33,7 +33,7 @@ public class SqlDatabase implements Database {
         jdbcTemplate.query("SELECT * FROM vat",
             rs -> {
                 Vat vat = Vat.valueOf("VAT_" + rs.getString("name"));
-                int id = rs.getInt("id");
+                Long id = rs.getLong("id");
                 vatToId.put(vat, id);
                 idToVat.put(id, vat);
             });
@@ -41,18 +41,18 @@ public class SqlDatabase implements Database {
 
     @Override
     @Transactional
-    public int save(Invoice invoice) {
+    public Long save(Invoice invoice) {
         try {
             GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
-            int buyerId = findCompanyByTin(invoice.getBuyer().getTaxIdentificationNumber())
+            Long buyerId = findCompanyByTin(invoice.getBuyer().getTaxIdentificationNumber())
                 .map(Company::getId)
                 .orElseGet(() -> insertCompany(invoice.getBuyer()));
 
-            int sellerId = findCompanyByTin(invoice.getSeller().getTaxIdentificationNumber())
+            Long sellerId = findCompanyByTin(invoice.getSeller().getTaxIdentificationNumber())
                 .map(Company::getId).orElseGet(() -> insertCompany(invoice.getSeller()));
 
-            int invoiceId = insertInvoice(keyHolder, invoice, buyerId, sellerId);
+            Long invoiceId = insertInvoice(keyHolder, invoice, buyerId, sellerId);
             invoice.setId(invoiceId);
             invoice.getInvoiceEntries().forEach(entry -> {
                 insertInvoiceEntry(keyHolder, entry);
@@ -66,7 +66,7 @@ public class SqlDatabase implements Database {
     }
 
     @Override
-    public Optional<Invoice> getById(int id) {
+    public Optional<Invoice> getById(Long id) {
         return findInvoiceById(id);
     }
 
@@ -77,12 +77,12 @@ public class SqlDatabase implements Database {
 
     @Override
     @Transactional
-    public void update(int id, Invoice updatedInvoice) {
+    public void update(Long id, Invoice updatedInvoice) {
         updateInvoice(id, updatedInvoice);
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Long id) {
         deleteInvoiceById(id);
     }
 

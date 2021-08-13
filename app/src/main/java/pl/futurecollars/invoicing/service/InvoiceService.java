@@ -19,7 +19,7 @@ public class InvoiceService {
         return database.save(invoice);
     }
 
-    public Optional<Invoice> getById(int id) {
+    public Optional<Invoice> getById(Long id) {
         return database.getById(id);
     }
 
@@ -27,11 +27,11 @@ public class InvoiceService {
         return database.getAll();
     }
 
-    public void update(int id, Invoice updatedInvoice) throws IllegalArgumentException {
+    public void update(Long id, Invoice updatedInvoice) throws IllegalArgumentException {
         database.update(id, updatedInvoice);
     }
 
-    public void delete(int id) {
+    public void delete(Long id) {
         database.delete(id);
     }
 }
