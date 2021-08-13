@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="pl.futurecollars.invoicing.service.JsonServiceTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2021-08-13T15:50:24" hostname="LENOVO-PAWEL" time="0.039">
+  <properties/>
+  <testcase name="should convert object to string" classname="pl.futurecollars.invoicing.service.JsonServiceTest" time="0.018"/>
+  <testcase name="should convert string to object" classname="pl.futurecollars.invoicing.service.JsonServiceTest" time="0.009"/>
+  <testcase name="should return empty string if serialization from object to string fail" classname="pl.futurecollars.invoicing.service.JsonServiceTest" time="0.01"/>
+  <testcase name="should return null if serialization to object fail" classname="pl.futurecollars.invoicing.service.JsonServiceTest" time="0.001"/>
+  <system-out><![CDATA[2021-08-13 17:50:24.341 ERROR 5020 --- [    Test worker] p.f.invoicing.service.JsonService        : Serialization from object to string filed!
+2021-08-13 17:50:24.343  WARN 5020 --- [    Test worker] p.f.invoicing.service.JsonService        : Serialization from string to object filed! incorrect form
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FileService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">pl.futurecollars.invoicing.service.file</a> &gt; <span class="el_source">FileService.java</span></div><h1>FileService.java</h1><pre class="source lang-java linenums">package pl.futurecollars.invoicing.service.file;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+<span class="fc" id="L15">@Slf4j</span>
+@Service
+<span class="fc" id="L17">public class FileService {</span>
+
+<span class="fc" id="L19">    private static final Pattern PATTERN_FOR_SEARCH_BY_ID = Pattern.compile(&quot;^\\{\&quot;id\&quot;:(\\d+).+&quot;);</span>
+
+    public void appendLine(Path filePath, String line) {
+        try {
+<span class="fc" id="L23">            Files.writeString(filePath, line.concat(System.lineSeparator()), StandardOpenOption.APPEND);</span>
+<span class="fc" id="L24">        } catch (IOException e) {</span>
+<span class="fc" id="L25">            String message = &quot;There was problem to write to file: &quot; + filePath;</span>
+<span class="fc" id="L26">            log.error(message);</span>
+<span class="fc" id="L27">            throw new IllegalStateException(message);</span>
+<span class="fc" id="L28">        }</span>
+<span class="fc" id="L29">    }</span>
+
+    public void rewriteFileByList(Path filePath, List&lt;String&gt; lines) {
+        try {
+<span class="fc" id="L33">            Files.write(filePath, lines, StandardOpenOption.TRUNCATE_EXISTING);</span>
+<span class="fc" id="L34">        } catch (IOException e) {</span>
+<span class="fc" id="L35">            String message = &quot;There is problem to update base file&quot;;</span>
+<span class="fc" id="L36">            log.error(message);</span>
+<span class="fc" id="L37">            throw new IllegalStateException(message);</span>
+<span class="fc" id="L38">        }</span>
+<span class="fc" id="L39">    }</span>
+
+    public List&lt;String&gt; readLinesToList(Path filePath) {
+        try {
+<span class="fc" id="L43">            return Files.readAllLines(filePath);</span>
+<span class="fc" id="L44">        } catch (IOException e) {</span>
+<span class="fc" id="L45">            String message = &quot;There was problem to read from file &quot; + filePath;</span>
+<span class="fc" id="L46">            log.error(message);</span>
+<span class="fc" id="L47">            throw new IllegalStateException(message);</span>
+        }
+    }
+
+    public Optional&lt;String&gt; findLineById(Path filePath, int id) {
+        List&lt;String&gt; searchResult;
+<span class="fc" id="L53">        searchResult = readLinesToList(filePath).stream()</span>
+<span class="fc" id="L54">            .filter(line -&gt; checkMatching(line, id))</span>
+<span class="fc" id="L55">            .collect(Collectors.toList());</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (searchResult.size() &gt; 1) {</span>
+<span class="fc" id="L57">            String message = String.format(&quot;Error - There is %d id's %d in base.&quot;, searchResult.size(), id);</span>
+<span class="fc" id="L58">            log.error(message);</span>
+<span class="fc" id="L59">            throw new IllegalStateException(message);</span>
+        }
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (searchResult.isEmpty()) {</span>
+<span class="fc" id="L62">            return Optional.empty();</span>
+        }
+<span class="fc" id="L64">        return Optional.of(searchResult.get(0));</span>
+    }
+
+    private boolean checkMatching(String line, int id) {
+<span class="fc" id="L68">        Matcher matcher = PATTERN_FOR_SEARCH_BY_ID.matcher(line);</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (matcher.matches()) {</span>
+<span class="fc" id="L70">            return matcher.group(1).equals(String.valueOf(id));</span>
+        }
+<span class="fc" id="L72">        return false;</span>
+    }
+
+    public Optional&lt;Integer&gt; getLineNumberById(Path filePath, int id) {
+<span class="fc" id="L76">        List&lt;String&gt; lines = readLinesToList(filePath);</span>
+<span class="fc" id="L77">        int lineNumber = 0;</span>
+<span class="fc" id="L78">        int foundedIdNumber = 0;</span>
+
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        for (int i = 0; i &lt; lines.size(); i++) {</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">            if (checkMatching(lines.get(i), id)) {</span>
+<span class="fc" id="L82">                lineNumber = i;</span>
+<span class="fc" id="L83">                foundedIdNumber++;</span>
+            }
+        }
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (foundedIdNumber &gt; 1) {</span>
+<span class="fc" id="L87">            return Optional.empty();</span>
+        }
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (foundedIdNumber == 0) {</span>
+<span class="fc" id="L90">            return Optional.empty();</span>
+        }
+<span class="fc" id="L92">        return Optional.of(lineNumber);</span>
+    }
+
+    public void truncateFile(Path filePath) {
+        try {
+<span class="nc" id="L97">            Files.writeString(filePath, &quot;&quot;, StandardOpenOption.TRUNCATE_EXISTING);</span>
+<span class="nc" id="L98">        } catch (IOException e) {</span>
+<span class="nc" id="L99">            e.printStackTrace();</span>
+<span class="nc" id="L100">        }</span>
+<span class="nc" id="L101">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

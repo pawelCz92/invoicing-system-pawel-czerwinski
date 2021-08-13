@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlDatabase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">pl.futurecollars.invoicing.db.sql</a> &gt; <span class="el_source">SqlDatabase.java</span></div><h1>SqlDatabase.java</h1><pre class="source lang-java linenums">package pl.futurecollars.invoicing.db.sql;
+
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.transaction.annotation.Transactional;
+import pl.futurecollars.invoicing.db.Database;
+import pl.futurecollars.invoicing.model.Car;
+import pl.futurecollars.invoicing.model.Company;
+import pl.futurecollars.invoicing.model.Invoice;
+import pl.futurecollars.invoicing.model.InvoiceEntry;
+import pl.futurecollars.invoicing.model.Vat;
+
+public class SqlDatabase implements Database {
+
+    private final JdbcTemplate jdbcTemplate;
+<span class="fc" id="L24">    private final Map&lt;Vat, Integer&gt; vatToId = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L25">    private final Map&lt;Integer, Vat&gt; idToVat = new HashMap&lt;&gt;();</span>
+
+<span class="fc" id="L27">    public SqlDatabase(JdbcTemplate jdbcTemplate) {</span>
+<span class="fc" id="L28">        this.jdbcTemplate = jdbcTemplate;</span>
+<span class="fc" id="L29">    }</span>
+
+    @PostConstruct
+    void getVatRatesMap() {
+<span class="fc" id="L33">        jdbcTemplate.query(&quot;SELECT * FROM vat&quot;,</span>
+            rs -&gt; {
+<span class="fc" id="L35">                Vat vat = Vat.valueOf(&quot;VAT_&quot; + rs.getString(&quot;name&quot;));</span>
+<span class="fc" id="L36">                int id = rs.getInt(&quot;id&quot;);</span>
+<span class="fc" id="L37">                vatToId.put(vat, id);</span>
+<span class="fc" id="L38">                idToVat.put(id, vat);</span>
+<span class="fc" id="L39">            });</span>
+<span class="fc" id="L40">    }</span>
+
+    @Override
+    @Transactional
+    public int save(Invoice invoice) {
+        try {
+<span class="fc" id="L46">            GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();</span>
+
+<span class="fc" id="L48">            int buyerId = findCompanyByTin(invoice.getBuyer().getTaxIdentificationNumber())</span>
+<span class="fc" id="L49">                .map(Company::getId)</span>
+<span class="fc" id="L50">                .orElseGet(() -&gt; insertCompany(invoice.getBuyer()));</span>
+
+<span class="fc" id="L52">            int sellerId = findCompanyByTin(invoice.getSeller().getTaxIdentificationNumber())</span>
+<span class="fc" id="L53">                .map(Company::getId).orElseGet(() -&gt; insertCompany(invoice.getSeller()));</span>
+
+<span class="fc" id="L55">            int invoiceId = insertInvoice(keyHolder, invoice, buyerId, sellerId);</span>
+<span class="fc" id="L56">            invoice.setId(invoiceId);</span>
+<span class="fc" id="L57">            invoice.getInvoiceEntries().forEach(entry -&gt; {</span>
+<span class="fc" id="L58">                insertInvoiceEntry(keyHolder, entry);</span>
+<span class="fc" id="L59">                int invoiceEntryId = insertInvoiceEntry(keyHolder, entry);</span>
+<span class="fc" id="L60">                insertAssignationInvoiceEntryToInvoice(invoiceId, invoiceEntryId);</span>
+<span class="fc" id="L61">            });</span>
+<span class="nc" id="L62">        } catch (Exception e) {</span>
+<span class="nc" id="L63">            e.printStackTrace();</span>
+<span class="fc" id="L64">        }</span>
+<span class="fc" id="L65">        return invoice.getId();</span>
+    }
+
+    @Override
+    public Optional&lt;Invoice&gt; getById(int id) {
+<span class="fc" id="L70">        return findInvoiceById(id);</span>
+    }
+
+    @Override
+    public List&lt;Invoice&gt; getAll() {
+<span class="fc" id="L75">        return findAllInvoices();</span>
+    }
+
+    @Override
+    @Transactional
+    public void update(int id, Invoice updatedInvoice) {
+<span class="fc" id="L81">        updateInvoice(id, updatedInvoice);</span>
+<span class="fc" id="L82">    }</span>
+
+    @Override
+    public void delete(int id) {
+<span class="fc" id="L86">        deleteInvoiceById(id);</span>
+<span class="fc" id="L87">    }</span>
+
+    @Override
+    public void deleteAll() {
+<span class="nc" id="L91">        getAll().forEach(inv -&gt; delete(inv.getId()));</span>
+<span class="nc" id="L92">    }</span>
+
+    private int insertInvoice(GeneratedKeyHolder keyHolder, Invoice invoice, long buyerId, long sellerId) {
+<span class="fc" id="L95">        jdbcTemplate.update(con -&gt; {</span>
+<span class="fc" id="L96">            PreparedStatement ps = con.prepareStatement(</span>
+                &quot;INSERT INTO invoices (date, invoice_number, buyer, seller) VALUES (?, ?, ?, ?);&quot;, new String[] {&quot;id&quot;});
+<span class="fc" id="L98">            ps.setDate(1, Date.valueOf(invoice.getDate()));</span>
+<span class="fc" id="L99">            ps.setString(2, invoice.getNumber());</span>
+<span class="fc" id="L100">            ps.setLong(3, buyerId);</span>
+<span class="fc" id="L101">            ps.setLong(4, sellerId);</span>
+<span class="fc" id="L102">            return ps;</span>
+        }, keyHolder);
+
+<span class="fc" id="L105">        return keyHolder.getKey().intValue();</span>
+    }
+
+    private int insertInvoiceEntry(GeneratedKeyHolder keyHolder, InvoiceEntry entry) {
+<span class="fc" id="L109">        jdbcTemplate.update(con -&gt; {</span>
+<span class="fc" id="L110">            PreparedStatement ps = con.prepareStatement(</span>
+                &quot;INSERT INTO invoice_entries (description, quantity, net_price, vat_value, vat_rate, expense_related_to_car) &quot;
+                    + &quot;VALUES (?, ?, ?, ?, ?, ?);&quot;, new String[] {&quot;id&quot;});
+
+<span class="fc" id="L114">            ps.setString(1, entry.getDescription());</span>
+<span class="fc" id="L115">            ps.setInt(2, entry.getQuantity());</span>
+<span class="fc" id="L116">            ps.setBigDecimal(3, entry.getPrice());</span>
+<span class="fc" id="L117">            ps.setBigDecimal(4, entry.getVatValue());</span>
+<span class="fc" id="L118">            ps.setInt(5, vatToId.get(entry.getVatRate()));</span>
+<span class="fc" id="L119">            ps.setObject(6, insertCar(entry.getCar()));</span>
+<span class="fc" id="L120">            return ps;</span>
+        }, keyHolder);
+
+<span class="fc" id="L123">        return keyHolder.getKey().intValue();</span>
+    }
+
+    private void insertAssignationInvoiceEntryToInvoice(int invoiceId, int invoiceEntryId) {
+<span class="fc" id="L127">        jdbcTemplate.update(con -&gt; {</span>
+<span class="fc" id="L128">            PreparedStatement ps = con.prepareStatement(&quot;INSERT INTO invoices_invoice_entries VALUES (?, ?);&quot;);</span>
+<span class="fc" id="L129">            ps.setInt(1, invoiceId);</span>
+<span class="fc" id="L130">            ps.setInt(2, invoiceEntryId);</span>
+<span class="fc" id="L131">            return ps;</span>
+        });
+<span class="fc" id="L133">    }</span>
+
+    private Integer insertCompany(Company company) {
+<span class="fc" id="L136">        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();</span>
+
+<span class="fc" id="L138">        jdbcTemplate.update(con -&gt; {</span>
+<span class="fc" id="L139">            PreparedStatement ps = con.prepareStatement(</span>
+                &quot;INSERT INTO companies (name, address, tax_identification_number, health_insurance, pension_insurance) &quot;
+                    + &quot;VALUES (?, ?, ?, ?, ?);&quot;, new String[] {&quot;id&quot;});
+<span class="fc" id="L142">            ps.setString(1, company.getName());</span>
+<span class="fc" id="L143">            ps.setString(2, company.getAddress());</span>
+<span class="fc" id="L144">            ps.setString(3, company.getTaxIdentificationNumber());</span>
+<span class="fc" id="L145">            ps.setBigDecimal(4, company.getHealthInsurance());</span>
+<span class="fc" id="L146">            ps.setBigDecimal(5, company.getPensionInsurance());</span>
+<span class="fc" id="L147">            return ps;</span>
+        }, keyHolder);
+
+<span class="fc" id="L150">        return keyHolder.getKey().intValue();</span>
+    }
+
+    private Integer insertCar(Car car) {
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        if (car == null) {</span>
+<span class="fc" id="L155">            return null;</span>
+        }
+
+<span class="fc" id="L158">        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();</span>
+<span class="fc" id="L159">        jdbcTemplate.update(con -&gt; {</span>
+<span class="fc" id="L160">            PreparedStatement ps = con.prepareStatement(</span>
+                &quot;INSERT INTO cars (registration_number, personal_use) values (?, ?);&quot;,
+                new String[] {&quot;id&quot;});
+<span class="fc" id="L163">            ps.setString(1, car.getRegistration());</span>
+<span class="fc" id="L164">            ps.setBoolean(2, car.isIncludingPrivateExpense());</span>
+<span class="fc" id="L165">            return ps;</span>
+        }, keyHolder);
+
+<span class="fc" id="L168">        return keyHolder.getKey().intValue();</span>
+    }
+
+    private List&lt;Invoice&gt; findAllInvoices() {
+<span class="fc" id="L172">        List&lt;Invoice&gt; invoices = jdbcTemplate.query(</span>
+            &quot;SELECT i.id, i.date, i.invoice_number, c1.id AS buyer_id, c1.name AS buyer_name, c1.tax_identification_number AS buyer_tin, &quot;
+                + &quot;c1.address AS buyer_address, c1.pension_insurance AS buyer_pension_insurance, c1.health_insurance AS buyer_health_insurance, &quot;
+                + &quot;c2.id AS seller_id, c2.name AS seller_name, c2.tax_identification_number AS seller_tin, c2.address AS seller_address, &quot;
+                + &quot;c2.pension_insurance AS seller_pension_insurance, c2.health_insurance AS seller_health_insurance &quot;
+                + &quot;FROM invoices i &quot;
+                + &quot;INNER JOIN companies c1 ON i.buyer = c1.id &quot;
+                + &quot;INNER JOIN companies c2 ON i.seller = c2.id&quot;,
+            (rs, rowNum) -&gt;
+<span class="fc" id="L181">                Invoice.builder()</span>
+<span class="fc" id="L182">                    .id(rs.getInt(&quot;id&quot;))</span>
+<span class="fc" id="L183">                    .date(rs.getDate(&quot;date&quot;).toLocalDate())</span>
+<span class="fc" id="L184">                    .number(rs.getString(&quot;invoice_number&quot;))</span>
+<span class="fc" id="L185">                    .buyer(Company.builder()</span>
+<span class="fc" id="L186">                        .id(rs.getInt(&quot;buyer_id&quot;))</span>
+<span class="fc" id="L187">                        .address(rs.getString(&quot;buyer_address&quot;))</span>
+<span class="fc" id="L188">                        .taxIdentificationNumber(rs.getString(&quot;buyer_tin&quot;))</span>
+<span class="fc" id="L189">                        .name(rs.getString(&quot;buyer_name&quot;))</span>
+<span class="fc" id="L190">                        .pensionInsurance(rs.getBigDecimal(&quot;buyer_pension_insurance&quot;))</span>
+<span class="fc" id="L191">                        .healthInsurance(rs.getBigDecimal(&quot;buyer_health_insurance&quot;))</span>
+<span class="fc" id="L192">                        .build())</span>
+<span class="fc" id="L193">                    .seller(Company.builder()</span>
+<span class="fc" id="L194">                        .id(rs.getInt(&quot;seller_id&quot;))</span>
+<span class="fc" id="L195">                        .address(rs.getString(&quot;seller_address&quot;))</span>
+<span class="fc" id="L196">                        .taxIdentificationNumber(rs.getString(&quot;seller_tin&quot;))</span>
+<span class="fc" id="L197">                        .name(rs.getString(&quot;seller_name&quot;))</span>
+<span class="fc" id="L198">                        .pensionInsurance(rs.getBigDecimal(&quot;seller_pension_insurance&quot;))</span>
+<span class="fc" id="L199">                        .healthInsurance(rs.getBigDecimal(&quot;seller_health_insurance&quot;))</span>
+<span class="fc" id="L200">                        .build())</span>
+<span class="fc" id="L201">                    .build()</span>
+        );
+
+<span class="fc" id="L204">        return invoices.stream()</span>
+<span class="fc" id="L205">            .peek(invoice -&gt; invoice.setInvoiceEntries(getInvoiceEntriesFromInvoice(invoice.getId())))</span>
+<span class="fc" id="L206">            .collect(Collectors.toList());</span>
+    }
+
+    private Optional&lt;Invoice&gt; findInvoiceById(int id) {
+<span class="fc" id="L210">        List&lt;Invoice&gt; invoices = jdbcTemplate.query(</span>
+            &quot;SELECT i.id, i.date, i.invoice_number, c1.id AS seller_id, c2.id AS buyer_id FROM invoices i &quot;
+                + &quot;INNER JOIN companies c1 ON i.seller = c1.id &quot;
+                + &quot;INNER JOIN companies c2 ON i.buyer = c2.id WHERE i.id = &quot; + id, (rs, rowNum) -&gt;
+<span class="fc" id="L214">                Invoice.builder()</span>
+<span class="fc" id="L215">                    .id(rs.getInt(&quot;id&quot;))</span>
+<span class="fc" id="L216">                    .date(rs.getDate(&quot;date&quot;).toLocalDate())</span>
+<span class="fc" id="L217">                    .number(rs.getString(&quot;invoice_number&quot;))</span>
+<span class="fc" id="L218">                    .buyer(findCompanyById(rs.getInt(&quot;buyer_id&quot;)).orElse(null))</span>
+<span class="fc" id="L219">                    .seller(findCompanyById(rs.getInt(&quot;seller_id&quot;)).orElse(null))</span>
+<span class="fc" id="L220">                    .invoiceEntries(getInvoiceEntriesFromInvoice(id))</span>
+<span class="fc" id="L221">                    .build()</span>
+        );
+<span class="fc" id="L223">        return invoices.stream().findFirst();</span>
+    }
+
+    private Optional&lt;Company&gt; findCompanyById(int id) {
+<span class="fc" id="L227">        return jdbcTemplate.query(</span>
+            &quot;SELECT * FROM companies WHERE companies.id = &quot; + id,
+<span class="fc" id="L229">            (rs, rowNum) -&gt; Company.builder()</span>
+<span class="fc" id="L230">                .id(rs.getInt(&quot;id&quot;))</span>
+<span class="fc" id="L231">                .taxIdentificationNumber(rs.getString(&quot;tax_identification_number&quot;))</span>
+<span class="fc" id="L232">                .address(rs.getString(&quot;address&quot;))</span>
+<span class="fc" id="L233">                .name(rs.getString(&quot;name&quot;))</span>
+<span class="fc" id="L234">                .healthInsurance(rs.getBigDecimal(&quot;health_insurance&quot;))</span>
+<span class="fc" id="L235">                .pensionInsurance(rs.getBigDecimal(&quot;pension_insurance&quot;))</span>
+<span class="fc" id="L236">                .build()).stream().findFirst();</span>
+    }
+
+    private List&lt;InvoiceEntry&gt; getInvoiceEntriesFromInvoice(int invoiceId) {
+<span class="fc" id="L240">        return jdbcTemplate.query(</span>
+            &quot;SELECT * FROM invoices_invoice_entries iie &quot;
+                + &quot;INNER JOIN invoice_entries e ON iie.invoice_entry_id = e.id &quot;
+                + &quot;LEFT OUTER JOIN cars c ON e.expense_related_to_car = c.id &quot;
+                + &quot;WHERE iie.invoice_id = &quot; + invoiceId, (rs, ignored) -&gt;
+<span class="fc" id="L245">                InvoiceEntry.builder()</span>
+<span class="fc" id="L246">                    .id(rs.getInt(&quot;id&quot;))</span>
+<span class="fc" id="L247">                    .description(rs.getString(&quot;description&quot;))</span>
+<span class="fc" id="L248">                    .quantity(rs.getInt(&quot;quantity&quot;))</span>
+<span class="fc" id="L249">                    .price(rs.getBigDecimal(&quot;net_price&quot;))</span>
+<span class="fc" id="L250">                    .vatValue(rs.getBigDecimal(&quot;vat_value&quot;))</span>
+<span class="fc" id="L251">                    .vatRate(idToVat.get(rs.getInt(&quot;vat_rate&quot;)))</span>
+<span class="fc" id="L252">                    .car(findCarById(rs.getInt(&quot;expense_related_to_car&quot;)))</span>
+<span class="fc" id="L253">                    .build()</span>
+        );
+    }
+
+    private Car findCarById(int id) {
+<span class="fc" id="L258">        return jdbcTemplate.query(</span>
+            &quot;SELECT * FROM cars WHERE cars.id = &quot; + id,
+            (rs, rowNum) -&gt;
+<span class="fc" id="L261">                Car.builder()</span>
+<span class="fc" id="L262">                    .id(rs.getInt(&quot;id&quot;))</span>
+<span class="fc" id="L263">                    .registration(rs.getString(&quot;registration_number&quot;))</span>
+<span class="fc" id="L264">                    .isIncludingPrivateExpense(rs.getBoolean(&quot;personal_use&quot;))</span>
+<span class="fc" id="L265">                    .build()).stream().findFirst().orElse(null);</span>
+    }
+
+    private Optional&lt;Company&gt; findCompanyByTin(String taxIdentificationNumber) {
+<span class="fc" id="L269">        return jdbcTemplate.query(</span>
+            (&quot;SELECT * FROM companies WHERE companies.tax_identification_number = '&quot; + taxIdentificationNumber) + &quot;'&quot;, (rs, rowNum) -&gt;
+<span class="fc" id="L271">                Company.builder()</span>
+<span class="fc" id="L272">                    .id(rs.getInt(&quot;id&quot;))</span>
+<span class="fc" id="L273">                    .taxIdentificationNumber(rs.getString(&quot;tax_identification_number&quot;))</span>
+<span class="fc" id="L274">                    .address(rs.getString(&quot;address&quot;))</span>
+<span class="fc" id="L275">                    .name(rs.getString(&quot;name&quot;))</span>
+<span class="fc" id="L276">                    .healthInsurance(rs.getBigDecimal(&quot;health_insurance&quot;))</span>
+<span class="fc" id="L277">                    .pensionInsurance(rs.getBigDecimal(&quot;pension_insurance&quot;))</span>
+<span class="fc" id="L278">                    .build()).stream().findFirst();</span>
+    }
+
+    private void deleteInvoiceEntryAndCarByInvoiceId(int invoiceId) {
+<span class="fc" id="L282">        jdbcTemplate.update(&quot;DELETE FROM invoices_invoice_entries iie WHERE iie.invoice_id = &quot; + invoiceId);</span>
+<span class="fc" id="L283">    }</span>
+
+    private void deleteInvoiceById(int id) {
+<span class="fc bfc" id="L286" title="All 2 branches covered.">        if (findInvoiceById(id).isPresent()) {</span>
+<span class="fc" id="L287">            deleteInvoiceEntryAndCarByInvoiceId(id);</span>
+<span class="fc" id="L288">            jdbcTemplate.update(&quot;DELETE FROM invoices WHERE invoices.id = &quot; + id);</span>
+        } else {
+<span class="fc" id="L290">            throw new IllegalArgumentException(&quot;Id &quot; + id + &quot; does not exists&quot;);</span>
+        }
+<span class="fc" id="L292">    }</span>
+
+    private void updateInvoice(int id, Invoice invoice) {
+<span class="fc bfc" id="L295" title="All 2 branches covered.">        if (findInvoiceById(id).isPresent()) {</span>
+<span class="fc" id="L296">            jdbcTemplate.update(&quot;UPDATE invoices SET invoices.date = ? WHERE invoices.id = ?&quot;,</span>
+<span class="fc" id="L297">                invoice.getDate(), invoice.getId());</span>
+<span class="fc" id="L298">            jdbcTemplate.update(&quot;UPDATE invoices SET invoices.invoice_number = ? WHERE invoices.id = ?&quot;,</span>
+<span class="fc" id="L299">                invoice.getNumber(), invoice.getId());</span>
+
+<span class="fc" id="L301">            int buyerId = jdbcTemplate.query(&quot;SELECT i.buyer FROM invoices i WHERE i.id = &quot; + id,</span>
+<span class="fc" id="L302">                (rs, rowNr) -&gt; rs.getInt(1)).get(0);</span>
+<span class="fc" id="L303">            int sellerId = jdbcTemplate.query(&quot;SELECT i.seller FROM invoices i WHERE i.id = &quot; + id,</span>
+<span class="fc" id="L304">                (rs, rowNr) -&gt; rs.getInt(1)).get(0);</span>
+
+<span class="fc" id="L306">            Company actualBuyer = findCompanyById(buyerId).get();</span>
+<span class="fc" id="L307">            Company actualSeller = findCompanyById(sellerId).get();</span>
+
+<span class="fc" id="L309">            int newBuyerId = buyerId;</span>
+<span class="fc" id="L310">            int newSellerId = sellerId;</span>
+
+<span class="fc bfc" id="L312" title="All 2 branches covered.">            if (!actualBuyer.equals(invoice.getBuyer())) {</span>
+<span class="fc" id="L313">                newBuyerId = findCompanyByTin(invoice.getBuyer().getTaxIdentificationNumber())</span>
+<span class="fc" id="L314">                    .map(Company::getId)</span>
+<span class="fc" id="L315">                    .orElseGet(() -&gt; insertCompany(invoice.getBuyer()));</span>
+            }
+<span class="fc bfc" id="L317" title="All 2 branches covered.">            if (!actualSeller.equals(invoice.getSeller())) {</span>
+<span class="fc" id="L318">                newSellerId = findCompanyByTin(invoice.getSeller().getTaxIdentificationNumber())</span>
+<span class="fc" id="L319">                    .map(Company::getId)</span>
+<span class="fc" id="L320">                    .orElseGet(() -&gt; insertCompany(invoice.getSeller()));</span>
+            }
+<span class="fc bfc" id="L322" title="All 2 branches covered.">            if (buyerId != newBuyerId) {</span>
+<span class="fc" id="L323">                jdbcTemplate.update(&quot;UPDATE invoices SET invoices.buyer = ? WHERE invoices.id = ?&quot;,</span>
+<span class="fc" id="L324">                    newBuyerId, invoice.getId());</span>
+            }
+<span class="fc bfc" id="L326" title="All 2 branches covered.">            if (sellerId != newSellerId) {</span>
+<span class="fc" id="L327">                jdbcTemplate.update(&quot;UPDATE invoices SET invoices.seller = ? WHERE invoices.id = ?&quot;,</span>
+<span class="fc" id="L328">                    newSellerId, invoice.getId());</span>
+            }
+<span class="fc" id="L330">            Invoice orginalInvoice = findInvoiceById(id).get();</span>
+<span class="pc bpc" id="L331" title="1 of 2 branches missed.">            if (!(orginalInvoice.getInvoiceEntries().size() == invoice.getInvoiceEntries().size()</span>
+<span class="pc bpc" id="L332" title="1 of 2 branches missed.">                &amp;&amp; orginalInvoice.getInvoiceEntries().containsAll(invoice.getInvoiceEntries()))) {</span>
+
+<span class="nc" id="L334">                deleteInvoiceEntryAndCarByInvoiceId(id);</span>
+<span class="nc" id="L335">                invoice.getInvoiceEntries()</span>
+<span class="nc" id="L336">                    .forEach(invoiceEntry -&gt; {</span>
+<span class="nc" id="L337">                        GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();</span>
+<span class="nc" id="L338">                        insertAssignationInvoiceEntryToInvoice(id, insertInvoiceEntry(generatedKeyHolder, invoiceEntry));</span>
+<span class="nc" id="L339">                    });</span>
+            }
+
+<span class="fc" id="L342">        } else {</span>
+<span class="fc" id="L343">            throw new IllegalArgumentException(&quot;Id &quot; + id + &quot; does not exists&quot;);</span>
+        }
+<span class="fc" id="L345">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="pl.futurecollars.invoicing.db.sql.SqlDatabaseTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2021-08-13T15:50:20" hostname="LENOVO-PAWEL" time="3.292">
+  <properties/>
+  <testcase name="should inject database instance" classname="pl.futurecollars.invoicing.db.sql.SqlDatabaseTest" time="0.001"/>
+  <testcase name="should return empty collection if there is no invoices in base" classname="pl.futurecollars.invoicing.db.sql.SqlDatabaseTest" time="0.006"/>
+  <testcase name="should return empty optional if there is no invoice with given id" classname="pl.futurecollars.invoicing.db.sql.SqlDatabaseTest" time="0.004"/>
+  <testcase name="should return all saved invoices" classname="pl.futurecollars.invoicing.db.sql.SqlDatabaseTest" time="0.252"/>
+  <testcase name="should return invoice by id" classname="pl.futurecollars.invoicing.db.sql.SqlDatabaseTest" time="0.142"/>
+  <testcase name="should return invoices without deleted one" classname="pl.futurecollars.invoicing.db.sql.SqlDatabaseTest" time="0.16"/>
+  <testcase name="can delete all invoices" classname="pl.futurecollars.invoicing.db.sql.SqlDatabaseTest" time="0.148"/>
+  <testcase name="should update invoice" classname="pl.futurecollars.invoicing.db.sql.SqlDatabaseTest" time="0.106"/>
+  <testcase name="should throw illegalArgumentException if there is no id using update" classname="pl.futurecollars.invoicing.db.sql.SqlDatabaseTest" time="0.001"/>
+  <testcase name="should throw illegalArgumentException if there is no id using delete" classname="pl.futurecollars.invoicing.db.sql.SqlDatabaseTest" time="0.001"/>
+  <testcase name="should update invoice date and number" classname="pl.futurecollars.invoicing.db.sql.SqlDatabaseTest" time="0.035"/>
+  <testcase name="should update invoice buyer and seller for existing company" classname="pl.futurecollars.invoicing.db.sql.SqlDatabaseTest" time="0.043"/>
+  <testcase name="should update invoice buyer and seller for not existing company" classname="pl.futurecollars.invoicing.db.sql.SqlDatabaseTest" time="0.07"/>
+  <system-out><![CDATA[2021-08-13 17:50:19.727  INFO 5020 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2021-08-13 17:50:19.913  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:19.915  INFO 5020 --- [    Test worker] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:h2:mem:testdb (H2 1.4)
+2021-08-13 17:50:19.999  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped pre-schema database level objects (execution time 00:00.002s)
+2021-08-13 17:50:20.004  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully cleaned schema "PUBLIC" (execution time 00:00.003s)
+2021-08-13 17:50:20.005  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped post-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:20.013  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:20.070  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 8 migrations (execution time 00:00.049s)
+2021-08-13 17:50:20.097  INFO 5020 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2021-08-13 17:50:20.183  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2021-08-13 17:50:20.196  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - Create invoice table"
+2021-08-13 17:50:20.255  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "2 - Rename issue date to date"
+2021-08-13 17:50:20.309  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "3 - Create companies table"
+2021-08-13 17:50:20.379  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "4 - Add buyer and seller to invoices"
+2021-08-13 17:50:20.446  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "5 - Add car table"
+2021-08-13 17:50:20.485  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "6 - Add vat table"
+2021-08-13 17:50:20.527  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "7 - Add invoice entry table"
+2021-08-13 17:50:20.560  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "8 - Connect invoices with invoice entries"
+2021-08-13 17:50:20.599  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 8 migrations to schema "PUBLIC", now at version v8 (execution time 00:00.435s)
+2021-08-13 17:50:20.624  INFO 5020 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2021-08-13 17:50:20.632  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:20.634  INFO 5020 --- [    Test worker] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:h2:mem:testdb (H2 1.4)
+2021-08-13 17:50:20.642  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped pre-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:20.652  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully cleaned schema "PUBLIC" (execution time 00:00.008s)
+2021-08-13 17:50:20.653  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped post-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:20.657  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:20.671  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 8 migrations (execution time 00:00.011s)
+2021-08-13 17:50:20.678  INFO 5020 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2021-08-13 17:50:20.693  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2021-08-13 17:50:20.698  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - Create invoice table"
+2021-08-13 17:50:20.718  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "2 - Rename issue date to date"
+2021-08-13 17:50:20.740  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "3 - Create companies table"
+2021-08-13 17:50:20.764  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "4 - Add buyer and seller to invoices"
+2021-08-13 17:50:20.811  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "5 - Add car table"
+2021-08-13 17:50:20.830  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "6 - Add vat table"
+2021-08-13 17:50:20.854  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "7 - Add invoice entry table"
+2021-08-13 17:50:20.876  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "8 - Connect invoices with invoice entries"
+2021-08-13 17:50:20.896  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 8 migrations to schema "PUBLIC", now at version v8 (execution time 00:00.206s)
+2021-08-13 17:50:20.904  INFO 5020 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2021-08-13 17:50:20.910  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:20.911  INFO 5020 --- [    Test worker] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:h2:mem:testdb (H2 1.4)
+2021-08-13 17:50:20.919  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped pre-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:20.926  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully cleaned schema "PUBLIC" (execution time 00:00.006s)
+2021-08-13 17:50:20.927  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped post-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:20.932  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:20.947  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 8 migrations (execution time 00:00.010s)
+2021-08-13 17:50:20.952  INFO 5020 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2021-08-13 17:50:20.967  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2021-08-13 17:50:20.972  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - Create invoice table"
+2021-08-13 17:50:20.993  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "2 - Rename issue date to date"
+2021-08-13 17:50:21.022  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "3 - Create companies table"
+2021-08-13 17:50:21.062  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "4 - Add buyer and seller to invoices"
+2021-08-13 17:50:21.089  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "5 - Add car table"
+2021-08-13 17:50:21.110  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "6 - Add vat table"
+2021-08-13 17:50:21.125  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "7 - Add invoice entry table"
+2021-08-13 17:50:21.143  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "8 - Connect invoices with invoice entries"
+2021-08-13 17:50:21.161  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 8 migrations to schema "PUBLIC", now at version v8 (execution time 00:00.200s)
+2021-08-13 17:50:21.169  INFO 5020 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2021-08-13 17:50:21.175  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:21.175  INFO 5020 --- [    Test worker] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:h2:mem:testdb (H2 1.4)
+2021-08-13 17:50:21.181  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped pre-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:21.192  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully cleaned schema "PUBLIC" (execution time 00:00.010s)
+2021-08-13 17:50:21.192  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped post-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:21.197  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:21.214  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 8 migrations (execution time 00:00.014s)
+2021-08-13 17:50:21.220  INFO 5020 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2021-08-13 17:50:21.232  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2021-08-13 17:50:21.237  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - Create invoice table"
+2021-08-13 17:50:21.250  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "2 - Rename issue date to date"
+2021-08-13 17:50:21.266  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "3 - Create companies table"
+2021-08-13 17:50:21.282  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "4 - Add buyer and seller to invoices"
+2021-08-13 17:50:21.309  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "5 - Add car table"
+2021-08-13 17:50:21.326  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "6 - Add vat table"
+2021-08-13 17:50:21.342  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "7 - Add invoice entry table"
+2021-08-13 17:50:21.364  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "8 - Connect invoices with invoice entries"
+2021-08-13 17:50:21.377  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 8 migrations to schema "PUBLIC", now at version v8 (execution time 00:00.147s)
+2021-08-13 17:50:21.632  INFO 5020 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2021-08-13 17:50:21.640  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:21.641  INFO 5020 --- [    Test worker] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:h2:mem:testdb (H2 1.4)
+2021-08-13 17:50:21.647  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped pre-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:21.656  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully cleaned schema "PUBLIC" (execution time 00:00.007s)
+2021-08-13 17:50:21.656  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped post-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:21.660  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:21.677  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 8 migrations (execution time 00:00.013s)
+2021-08-13 17:50:21.683  INFO 5020 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2021-08-13 17:50:21.694  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2021-08-13 17:50:21.698  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - Create invoice table"
+2021-08-13 17:50:21.722  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "2 - Rename issue date to date"
+2021-08-13 17:50:21.737  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "3 - Create companies table"
+2021-08-13 17:50:21.756  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "4 - Add buyer and seller to invoices"
+2021-08-13 17:50:21.781  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "5 - Add car table"
+2021-08-13 17:50:21.802  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "6 - Add vat table"
+2021-08-13 17:50:21.827  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "7 - Add invoice entry table"
+2021-08-13 17:50:21.852  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "8 - Connect invoices with invoice entries"
+2021-08-13 17:50:21.872  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 8 migrations to schema "PUBLIC", now at version v8 (execution time 00:00.181s)
+2021-08-13 17:50:22.017  INFO 5020 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2021-08-13 17:50:22.022  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:22.023  INFO 5020 --- [    Test worker] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:h2:mem:testdb (H2 1.4)
+2021-08-13 17:50:22.027  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped pre-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:22.035  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully cleaned schema "PUBLIC" (execution time 00:00.007s)
+2021-08-13 17:50:22.036  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped post-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:22.040  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:22.057  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 8 migrations (execution time 00:00.014s)
+2021-08-13 17:50:22.062  INFO 5020 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2021-08-13 17:50:22.076  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2021-08-13 17:50:22.080  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - Create invoice table"
+2021-08-13 17:50:22.098  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "2 - Rename issue date to date"
+2021-08-13 17:50:22.110  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "3 - Create companies table"
+2021-08-13 17:50:22.124  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "4 - Add buyer and seller to invoices"
+2021-08-13 17:50:22.145  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "5 - Add car table"
+2021-08-13 17:50:22.162  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "6 - Add vat table"
+2021-08-13 17:50:22.180  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "7 - Add invoice entry table"
+2021-08-13 17:50:22.196  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "8 - Connect invoices with invoice entries"
+2021-08-13 17:50:22.214  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 8 migrations to schema "PUBLIC", now at version v8 (execution time 00:00.142s)
+2021-08-13 17:50:22.376  INFO 5020 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2021-08-13 17:50:22.381  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:22.381  INFO 5020 --- [    Test worker] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:h2:mem:testdb (H2 1.4)
+2021-08-13 17:50:22.389  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped pre-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:22.395  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully cleaned schema "PUBLIC" (execution time 00:00.005s)
+2021-08-13 17:50:22.395  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped post-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:22.398  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:22.410  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 8 migrations (execution time 00:00.009s)
+2021-08-13 17:50:22.413  INFO 5020 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2021-08-13 17:50:22.421  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2021-08-13 17:50:22.427  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - Create invoice table"
+2021-08-13 17:50:22.443  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "2 - Rename issue date to date"
+2021-08-13 17:50:22.459  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "3 - Create companies table"
+2021-08-13 17:50:22.475  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "4 - Add buyer and seller to invoices"
+2021-08-13 17:50:22.501  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "5 - Add car table"
+2021-08-13 17:50:22.521  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "6 - Add vat table"
+2021-08-13 17:50:22.535  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "7 - Add invoice entry table"
+2021-08-13 17:50:22.546  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "8 - Connect invoices with invoice entries"
+2021-08-13 17:50:22.561  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 8 migrations to schema "PUBLIC", now at version v8 (execution time 00:00.143s)
+2021-08-13 17:50:22.712  INFO 5020 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2021-08-13 17:50:22.719  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:22.720  INFO 5020 --- [    Test worker] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:h2:mem:testdb (H2 1.4)
+2021-08-13 17:50:22.727  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped pre-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:22.732  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully cleaned schema "PUBLIC" (execution time 00:00.004s)
+2021-08-13 17:50:22.733  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped post-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:22.736  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:22.753  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 8 migrations (execution time 00:00.012s)
+2021-08-13 17:50:22.756  INFO 5020 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2021-08-13 17:50:22.764  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2021-08-13 17:50:22.768  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - Create invoice table"
+2021-08-13 17:50:22.780  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "2 - Rename issue date to date"
+2021-08-13 17:50:22.795  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "3 - Create companies table"
+2021-08-13 17:50:22.809  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "4 - Add buyer and seller to invoices"
+2021-08-13 17:50:22.827  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "5 - Add car table"
+2021-08-13 17:50:22.838  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "6 - Add vat table"
+2021-08-13 17:50:22.850  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "7 - Add invoice entry table"
+2021-08-13 17:50:22.861  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "8 - Connect invoices with invoice entries"
+2021-08-13 17:50:22.874  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 8 migrations to schema "PUBLIC", now at version v8 (execution time 00:00.111s)
+2021-08-13 17:50:22.982  INFO 5020 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2021-08-13 17:50:22.988  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:22.989  INFO 5020 --- [    Test worker] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:h2:mem:testdb (H2 1.4)
+2021-08-13 17:50:22.995  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped pre-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:23.001  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully cleaned schema "PUBLIC" (execution time 00:00.004s)
+2021-08-13 17:50:23.001  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped post-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:23.005  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:23.019  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 8 migrations (execution time 00:00.010s)
+2021-08-13 17:50:23.022  INFO 5020 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2021-08-13 17:50:23.033  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2021-08-13 17:50:23.037  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - Create invoice table"
+2021-08-13 17:50:23.047  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "2 - Rename issue date to date"
+2021-08-13 17:50:23.060  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "3 - Create companies table"
+2021-08-13 17:50:23.072  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "4 - Add buyer and seller to invoices"
+2021-08-13 17:50:23.087  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "5 - Add car table"
+2021-08-13 17:50:23.098  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "6 - Add vat table"
+2021-08-13 17:50:23.116  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "7 - Add invoice entry table"
+2021-08-13 17:50:23.134  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "8 - Connect invoices with invoice entries"
+2021-08-13 17:50:23.149  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 8 migrations to schema "PUBLIC", now at version v8 (execution time 00:00.119s)
+2021-08-13 17:50:23.153  INFO 5020 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2021-08-13 17:50:23.159  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:23.160  INFO 5020 --- [    Test worker] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:h2:mem:testdb (H2 1.4)
+2021-08-13 17:50:23.166  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped pre-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:23.171  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully cleaned schema "PUBLIC" (execution time 00:00.004s)
+2021-08-13 17:50:23.171  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped post-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:23.175  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:23.187  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 8 migrations (execution time 00:00.009s)
+2021-08-13 17:50:23.190  INFO 5020 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2021-08-13 17:50:23.200  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2021-08-13 17:50:23.205  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - Create invoice table"
+2021-08-13 17:50:23.218  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "2 - Rename issue date to date"
+2021-08-13 17:50:23.229  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "3 - Create companies table"
+2021-08-13 17:50:23.244  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "4 - Add buyer and seller to invoices"
+2021-08-13 17:50:23.260  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "5 - Add car table"
+2021-08-13 17:50:23.274  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "6 - Add vat table"
+2021-08-13 17:50:23.284  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "7 - Add invoice entry table"
+2021-08-13 17:50:23.295  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "8 - Connect invoices with invoice entries"
+2021-08-13 17:50:23.307  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 8 migrations to schema "PUBLIC", now at version v8 (execution time 00:00.111s)
+2021-08-13 17:50:23.311  INFO 5020 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2021-08-13 17:50:23.317  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:23.318  INFO 5020 --- [    Test worker] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:h2:mem:testdb (H2 1.4)
+2021-08-13 17:50:23.322  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped pre-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:23.326  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully cleaned schema "PUBLIC" (execution time 00:00.003s)
+2021-08-13 17:50:23.326  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped post-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:23.329  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:23.340  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 8 migrations (execution time 00:00.009s)
+2021-08-13 17:50:23.343  INFO 5020 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2021-08-13 17:50:23.355  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2021-08-13 17:50:23.360  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - Create invoice table"
+2021-08-13 17:50:23.373  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "2 - Rename issue date to date"
+2021-08-13 17:50:23.384  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "3 - Create companies table"
+2021-08-13 17:50:23.394  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "4 - Add buyer and seller to invoices"
+2021-08-13 17:50:23.408  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "5 - Add car table"
+2021-08-13 17:50:23.418  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "6 - Add vat table"
+2021-08-13 17:50:23.427  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "7 - Add invoice entry table"
+2021-08-13 17:50:23.438  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "8 - Connect invoices with invoice entries"
+2021-08-13 17:50:23.452  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 8 migrations to schema "PUBLIC", now at version v8 (execution time 00:00.100s)
+2021-08-13 17:50:23.489  INFO 5020 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2021-08-13 17:50:23.496  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:23.497  INFO 5020 --- [    Test worker] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:h2:mem:testdb (H2 1.4)
+2021-08-13 17:50:23.502  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped pre-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:23.507  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully cleaned schema "PUBLIC" (execution time 00:00.004s)
+2021-08-13 17:50:23.507  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped post-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:23.510  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:23.523  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 8 migrations (execution time 00:00.010s)
+2021-08-13 17:50:23.527  INFO 5020 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2021-08-13 17:50:23.535  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2021-08-13 17:50:23.540  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - Create invoice table"
+2021-08-13 17:50:23.557  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "2 - Rename issue date to date"
+2021-08-13 17:50:23.568  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "3 - Create companies table"
+2021-08-13 17:50:23.581  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "4 - Add buyer and seller to invoices"
+2021-08-13 17:50:23.600  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "5 - Add car table"
+2021-08-13 17:50:23.610  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "6 - Add vat table"
+2021-08-13 17:50:23.621  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "7 - Add invoice entry table"
+2021-08-13 17:50:23.636  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "8 - Connect invoices with invoice entries"
+2021-08-13 17:50:23.646  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 8 migrations to schema "PUBLIC", now at version v8 (execution time 00:00.112s)
+2021-08-13 17:50:23.690  INFO 5020 --- [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2021-08-13 17:50:23.696  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:23.697  INFO 5020 --- [    Test worker] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:h2:mem:testdb (H2 1.4)
+2021-08-13 17:50:23.701  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped pre-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:23.705  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully cleaned schema "PUBLIC" (execution time 00:00.003s)
+2021-08-13 17:50:23.706  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbClean        : Successfully dropped post-schema database level objects (execution time 00:00.000s)
+2021-08-13 17:50:23.709  INFO 5020 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 7.11.3 by Redgate
+2021-08-13 17:50:23.726  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 8 migrations (execution time 00:00.013s)
+2021-08-13 17:50:23.729  INFO 5020 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2021-08-13 17:50:23.736  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2021-08-13 17:50:23.740  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - Create invoice table"
+2021-08-13 17:50:23.750  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "2 - Rename issue date to date"
+2021-08-13 17:50:23.763  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "3 - Create companies table"
+2021-08-13 17:50:23.776  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "4 - Add buyer and seller to invoices"
+2021-08-13 17:50:23.794  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "5 - Add car table"
+2021-08-13 17:50:23.805  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "6 - Add vat table"
+2021-08-13 17:50:23.816  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "7 - Add invoice entry table"
+2021-08-13 17:50:23.831  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "8 - Connect invoices with invoice entries"
+2021-08-13 17:50:23.842  INFO 5020 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 8 migrations to schema "PUBLIC", now at version v8 (execution time 00:00.107s)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

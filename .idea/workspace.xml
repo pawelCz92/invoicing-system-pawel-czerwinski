@@ -1,0 +1,871 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="3" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b6368667-f9e7-4cdf-ad58-a09618e1c1d7" name="Default Changelist" comment="task done">
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pl/futurecollars/invoicing/controller/invoice/InvoiceApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pl/futurecollars/invoicing/controller/invoice/InvoiceApi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pl/futurecollars/invoicing/controller/invoice/InvoiceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pl/futurecollars/invoicing/controller/invoice/InvoiceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pl/futurecollars/invoicing/db/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pl/futurecollars/invoicing/db/Database.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pl/futurecollars/invoicing/db/FileBasedDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pl/futurecollars/invoicing/db/FileBasedDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pl/futurecollars/invoicing/db/InMemoryDataBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pl/futurecollars/invoicing/db/InMemoryDataBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pl/futurecollars/invoicing/db/sql/SqlDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pl/futurecollars/invoicing/db/sql/SqlDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pl/futurecollars/invoicing/model/Invoice.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pl/futurecollars/invoicing/model/Invoice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pl/futurecollars/invoicing/service/InvoiceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pl/futurecollars/invoicing/service/InvoiceService.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CoverageOptionsProvider">
+    <option name="myAddOrReplace" value="0" />
+  </component>
+  <component name="ExportToHTMLSettings">
+    <option name="OPEN_IN_BROWSER" value="true" />
+    <option name="OUTPUT_DIRECTORY" value="C:\DANE\Pulpit\raport intellij cov" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/app">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="invoicing-system-pawel-czerwinski" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="invoicing-system-pawel-czerwinski" type="f1a62948:ProjectNode" />
+                <item name="app" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="invoicing-system-pawel-czerwinski" type="f1a62948:ProjectNode" />
+                <item name="app" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="invoicing-system-pawel-czerwinski" type="f1a62948:ProjectNode" />
+                <item name="app" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="verification" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="invoicing-system-pawel-czerwinski" type="f1a62948:ProjectNode" />
+                <item name="app" type="2d1252cf:ModuleNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="task-8-document-api" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="JpbToolWindowState">
+    <option name="myId2FirstActivated">
+      <map>
+        <entry key="JPA Inspector" value="true" />
+        <entry key="JPA Palette" value="true" />
+        <entry key="JPA Structure" value="true" />
+      </map>
+    </option>
+    <option name="myId2Visible">
+      <map>
+        <entry key="JPA Inspector" value="false" />
+        <entry key="JPA Palette" value="false" />
+        <entry key="JPA Structure" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedIndex" value="1" />
+  </component>
+  <component name="ProjectId" id="1tUJhHAUX6sEKP134UMDt2X8doM" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showVisibilityIcons" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="DatabaseDriversLRU" value="postgresql" />
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/SQL Dialect" value="PostgreSQL" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="Spock" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.Spock" value="spock.lang.Specification" />
+    <property name="last.edited.regexp" value="{&quot;id&quot;:1, sdfgdfg" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/test/resources" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="pl.futurecollars.invoicing.model" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\test\resources" />
+      <recent name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="spock.lang.Specification" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\resources\db\migration" />
+      <recent name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\resources" />
+      <recent name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\resources\db.migration\migration" />
+    </key>
+    <key name="ExtractSuperBase.RECENT_KEYS">
+      <recent name="pl.futurecollars.invoicing.controller" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="pl.futurecollars.invoicing.service" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="pl.futurecollars.invoicing.service" />
+      <recent name="pl.futurecollars.invoicing.controller" />
+      <recent name="pl.futurecollars.invoicing.db" />
+      <recent name="pl.futurecollars.invoicing.service.file" />
+      <recent name="pl.futurecollars.invoicing.db.memory" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.App">
+    <configuration name="JpaDatabaseTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;pl.futurecollars.invoicing.db.sql.JpaDatabaseTest&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":app:testWithJpaDatabase" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="SqlDatabaseTest.should update invoice buyer and seller for not existing company" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;pl.futurecollars.invoicing.db.sql.SqlDatabaseTest.should update invoice buyer and seller for not existing company&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":app:test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="invoicing-system-pawel-czerwinski:app [check]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/app" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="check" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="invoicing-system-pawel-czerwinski:app [testWithSqlDatabase]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/app" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="testWithSqlDatabase" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="invoicing-system-pawel-czerwinski:app [test]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/app" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="App" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="invoicing-system-pawel-czerwinski.app.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="pl.futurecollars.invoicing.App" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.invoicing-system-pawel-czerwinski:app [test]" />
+        <item itemvalue="Gradle.JpaDatabaseTest" />
+        <item itemvalue="Gradle.invoicing-system-pawel-czerwinski:app [check]" />
+        <item itemvalue="Gradle.invoicing-system-pawel-czerwinski:app [testWithSqlDatabase]" />
+        <item itemvalue="Gradle.SqlDatabaseTest.should update invoice buyer and seller for not existing company" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b6368667-f9e7-4cdf-ad58-a09618e1c1d7" name="Default Changelist" comment="" />
+      <created>1622817857051</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1622817857051</updated>
+      <workItem from="1622817861973" duration="1192000" />
+      <workItem from="1622819124123" duration="4193000" />
+      <workItem from="1622882322744" duration="828000" />
+      <workItem from="1623175990524" duration="2137000" />
+      <workItem from="1623178179596" duration="2760000" />
+      <workItem from="1623339887069" duration="7085000" />
+      <workItem from="1623349771294" duration="596000" />
+      <workItem from="1623354197486" duration="834000" />
+      <workItem from="1623355044016" duration="27000" />
+      <workItem from="1623426449109" duration="479000" />
+      <workItem from="1623426963704" duration="3844000" />
+      <workItem from="1623480315928" duration="38143000" />
+      <workItem from="1623591083157" duration="2379000" />
+      <workItem from="1623593521587" duration="29881000" />
+      <workItem from="1623864080494" duration="1684000" />
+      <workItem from="1623943038124" duration="7794000" />
+      <workItem from="1624030556210" duration="6341000" />
+      <workItem from="1624038418069" duration="5829000" />
+      <workItem from="1624092883858" duration="18569000" />
+      <workItem from="1624176226045" duration="10889000" />
+      <workItem from="1624290869274" duration="5390000" />
+      <workItem from="1624375269181" duration="21062000" />
+      <workItem from="1624540845290" duration="1384000" />
+      <workItem from="1624551345773" duration="3742000" />
+      <workItem from="1624558076166" duration="2569000" />
+      <workItem from="1624635881444" duration="7318000" />
+      <workItem from="1624693051996" duration="2050000" />
+      <workItem from="1624697367816" duration="4525000" />
+      <workItem from="1624805350107" duration="1378000" />
+      <workItem from="1624892583293" duration="72000" />
+      <workItem from="1624892984405" duration="246000" />
+      <workItem from="1624893557293" duration="636000" />
+      <workItem from="1624895054033" duration="3070000" />
+      <workItem from="1624977818651" duration="6728000" />
+      <workItem from="1625065742095" duration="7745000" />
+      <workItem from="1625148751859" duration="5543000" />
+      <workItem from="1625157084413" duration="5854000" />
+      <workItem from="1625237392864" duration="2079000" />
+      <workItem from="1625242357464" duration="9377000" />
+      <workItem from="1625302996582" duration="9535000" />
+      <workItem from="1625324460695" duration="19620000" />
+      <workItem from="1625393906731" duration="15269000" />
+      <workItem from="1625495433031" duration="1564000" />
+      <workItem from="1625508657649" duration="295000" />
+      <workItem from="1625509116397" duration="1917000" />
+      <workItem from="1625651126752" duration="3194000" />
+      <workItem from="1625664909039" duration="6896000" />
+      <workItem from="1625753765483" duration="1296000" />
+      <workItem from="1625991194695" duration="6950000" />
+      <workItem from="1626102299168" duration="138000" />
+      <workItem from="1626102480089" duration="5775000" />
+      <workItem from="1626186893288" duration="14096000" />
+      <workItem from="1626247796828" duration="14139000" />
+      <workItem from="1626274710970" duration="331000" />
+      <workItem from="1626450644686" duration="5371000" />
+      <workItem from="1626530573696" duration="4461000" />
+      <workItem from="1626536581743" duration="10633000" />
+      <workItem from="1626604773335" duration="78000" />
+      <workItem from="1626604953533" duration="37000" />
+      <workItem from="1626605068909" duration="42000" />
+      <workItem from="1626605701107" duration="3165000" />
+      <workItem from="1626618239476" duration="10145000" />
+      <workItem from="1626680874644" duration="17701000" />
+      <workItem from="1626774457080" duration="4921000" />
+      <workItem from="1626802654033" duration="1771000" />
+      <workItem from="1626854540273" duration="5916000" />
+      <workItem from="1626863325425" duration="3374000" />
+      <workItem from="1626875655422" duration="10366000" />
+      <workItem from="1626967416661" duration="4587000" />
+      <workItem from="1627048308687" duration="803000" />
+      <workItem from="1627118635510" duration="881000" />
+      <workItem from="1627136788259" duration="4337000" />
+      <workItem from="1627141211133" duration="9688000" />
+      <workItem from="1627151023664" duration="1979000" />
+      <workItem from="1627305053068" duration="1257000" />
+      <workItem from="1627462164116" duration="2425000" />
+      <workItem from="1627478756279" duration="2879000" />
+      <workItem from="1627648355672" duration="1978000" />
+      <workItem from="1627651731293" duration="4277000" />
+      <workItem from="1627806467479" duration="17746000" />
+      <workItem from="1627891445794" duration="435000" />
+      <workItem from="1627892013205" duration="1341000" />
+      <workItem from="1628000931847" duration="6615000" />
+      <workItem from="1628083793707" duration="4394000" />
+      <workItem from="1628089985607" duration="9858000" />
+      <workItem from="1628149530148" duration="9982000" />
+      <workItem from="1628168114989" duration="8526000" />
+      <workItem from="1628323540399" duration="16862000" />
+      <workItem from="1628347419933" duration="8663000" />
+      <workItem from="1628356764371" duration="20668000" />
+      <workItem from="1628610076516" duration="9437000" />
+      <workItem from="1628624022624" duration="144000" />
+      <workItem from="1628841741958" duration="14884000" />
+    </task>
+    <task id="LOCAL-00059" summary="Made correction to V8 migration and created V9 migration for insert data to tables">
+      <created>1627149218985</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1627149218985</updated>
+    </task>
+    <task id="LOCAL-00060" summary="Updated JsonServiceTest - created spring profiles">
+      <created>1627150738282</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1627150738282</updated>
+    </task>
+    <task id="LOCAL-00061" summary="Done some refactoring etc - Task 11 done">
+      <created>1627152922116</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1627152922116</updated>
+    </task>
+    <task id="LOCAL-00062" summary="made some corrections">
+      <created>1627306070163</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1627306070164</updated>
+    </task>
+    <task id="LOCAL-00063" summary="made some corrections">
+      <created>1627463891542</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1627463891543</updated>
+    </task>
+    <task id="LOCAL-00064" summary="made some corrections in build.gradle and application-s yml">
+      <created>1627464735084</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1627464735084</updated>
+    </task>
+    <task id="LOCAL-00065" summary="updated github actions">
+      <created>1627478841467</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1627478841468</updated>
+    </task>
+    <task id="LOCAL-00066" summary="updated github actions">
+      <created>1627479005676</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1627479005676</updated>
+    </task>
+    <task id="LOCAL-00067" summary="updated github actions">
+      <created>1627482753719</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1627482753719</updated>
+    </task>
+    <task id="LOCAL-00068" summary="updated github actions">
+      <created>1627482939731</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1627482939731</updated>
+    </task>
+    <task id="LOCAL-00069" summary="updated">
+      <created>1627649048915</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1627649048916</updated>
+    </task>
+    <task id="LOCAL-00070" summary="updated">
+      <created>1627649788189</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1627649788189</updated>
+    </task>
+    <task id="LOCAL-00071" summary="updated">
+      <created>1627650301446</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1627650301446</updated>
+    </task>
+    <task id="LOCAL-00072" summary="updated">
+      <created>1627651999645</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1627651999646</updated>
+    </task>
+    <task id="LOCAL-00073" summary="updated">
+      <created>1627652183806</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1627652183806</updated>
+    </task>
+    <task id="LOCAL-00074" summary="updated">
+      <created>1627654316499</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1627654316499</updated>
+    </task>
+    <task id="LOCAL-00075" summary="updated">
+      <created>1627807692704</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1627807692704</updated>
+    </task>
+    <task id="LOCAL-00076" summary="made some refactoring">
+      <created>1627828184870</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1627828184870</updated>
+    </task>
+    <task id="LOCAL-00077" summary="updated">
+      <created>1627828848526</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1627828848526</updated>
+    </task>
+    <task id="LOCAL-00078" summary="updated">
+      <created>1627831961531</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1627831961531</updated>
+    </task>
+    <task id="LOCAL-00079" summary="updated">
+      <created>1627892963225</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1627892963226</updated>
+    </task>
+    <task id="LOCAL-00080" summary="configured Sql database">
+      <created>1628006867178</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1628006867179</updated>
+    </task>
+    <task id="LOCAL-00081" summary="insert company and invoice (part of)">
+      <created>1628093047512</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1628093047512</updated>
+    </task>
+    <task id="LOCAL-00082" summary="insert company and invoice (part of)">
+      <created>1628094896033</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1628094896033</updated>
+    </task>
+    <task id="LOCAL-00083" summary="insert invoice, with companies and invoice-entries almost done (vat to do)">
+      <created>1628096140805</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1628096140805</updated>
+    </task>
+    <task id="LOCAL-00084" summary="added inserting car">
+      <created>1628098622991</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1628098622991</updated>
+    </task>
+    <task id="LOCAL-00085" summary="commit">
+      <created>1628178177093</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1628178177094</updated>
+    </task>
+    <task id="LOCAL-00086" summary="commit">
+      <created>1628178603703</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1628178603703</updated>
+    </task>
+    <task id="LOCAL-00087" summary="commit">
+      <created>1628179098913</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1628179098913</updated>
+    </task>
+    <task id="LOCAL-00088" summary="commit">
+      <created>1628179563653</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1628179563653</updated>
+    </task>
+    <task id="LOCAL-00089" summary="commit">
+      <created>1628180367709</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1628180367709</updated>
+    </task>
+    <task id="LOCAL-00090" summary="commit">
+      <created>1628180514321</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1628180514321</updated>
+    </task>
+    <task id="LOCAL-00091" summary="commit">
+      <created>1628323812205</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1628323812206</updated>
+    </task>
+    <task id="LOCAL-00092" summary="commit">
+      <created>1628324893085</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1628324893085</updated>
+    </task>
+    <task id="LOCAL-00093" summary="commit">
+      <created>1628330753265</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1628330753265</updated>
+    </task>
+    <task id="LOCAL-00094" summary="made abstractDbtest class and used in memory and file db">
+      <created>1628349608853</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1628349608853</updated>
+    </task>
+    <task id="LOCAL-00095" summary="made test for sql db">
+      <created>1628350750147</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1628350750147</updated>
+    </task>
+    <task id="LOCAL-00096" summary="done">
+      <created>1628354544235</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1628354544235</updated>
+    </task>
+    <task id="LOCAL-00097" summary="done">
+      <created>1628356218753</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1628356218753</updated>
+    </task>
+    <task id="LOCAL-00098" summary="made some corrections">
+      <created>1628357473487</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1628357473488</updated>
+    </task>
+    <task id="LOCAL-00099" summary="made some corrections">
+      <created>1628360324949</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1628360324949</updated>
+    </task>
+    <task id="LOCAL-00100" summary="made some corrections">
+      <created>1628360565162</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1628360565162</updated>
+    </task>
+    <task id="LOCAL-00101" summary="made some corrections">
+      <created>1628417110658</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1628417110658</updated>
+    </task>
+    <task id="LOCAL-00102" summary="made some corrections">
+      <created>1628430035841</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1628430035841</updated>
+    </task>
+    <task id="LOCAL-00103" summary="removed unnecessary inner class SqlService">
+      <created>1628610376711</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1628610376711</updated>
+    </task>
+    <task id="LOCAL-00104" summary="made corrections">
+      <created>1628620480773</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1628620480774</updated>
+    </task>
+    <task id="LOCAL-00105" summary="made corrections">
+      <created>1628621573742</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1628621573742</updated>
+    </task>
+    <task id="LOCAL-00106" summary="task done">
+      <created>1628869746732</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1628869746733</updated>
+    </task>
+    <task id="LOCAL-00107" summary="task done">
+      <created>1628870436697</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1628870436697</updated>
+    </task>
+    <option name="localTasksCounter" value="108" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="task-11-stup-sql-db-with-flyway" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="task-11-stup-sql-db-with-flyway" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="master" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
+    <MESSAGE value="Tax calculator works fine - refactoring necessary (app not work yet)" />
+    <MESSAGE value="task 10 done" />
+    <MESSAGE value="checkout corrections" />
+    <MESSAGE value="Added missing Api descriptions" />
+    <MESSAGE value="Made some refactoring" />
+    <MESSAGE value="DB configured - migrations works ok" />
+    <MESSAGE value="Made correction to V8 migration and created V9 migration for insert data to tables" />
+    <MESSAGE value="Updated JsonServiceTest - created spring profiles" />
+    <MESSAGE value="Done some refactoring etc - Task 11 done" />
+    <MESSAGE value="made some corrections in build.gradle and application-s yml" />
+    <MESSAGE value="updated github actions" />
+    <MESSAGE value="made some refactoring" />
+    <MESSAGE value="updated" />
+    <MESSAGE value="configured Sql database" />
+    <MESSAGE value="insert company and invoice (part of)" />
+    <MESSAGE value="insert invoice, with companies and invoice-entries almost done (vat to do)" />
+    <MESSAGE value="added inserting car" />
+    <MESSAGE value="commit" />
+    <MESSAGE value="made abstractDbtest class and used in memory and file db" />
+    <MESSAGE value="made test for sql db" />
+    <MESSAGE value="done" />
+    <MESSAGE value="made some corrections" />
+    <MESSAGE value="removed unnecessary inner class SqlService" />
+    <MESSAGE value="made corrections" />
+    <MESSAGE value="task done" />
+    <option name="LAST_COMMIT_MESSAGE" value="task done" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/invoicing_system_pawel_czerwinski$Tests_in__invoicing_system_pawel_czerwinski_app_test_.ic" NAME="Tests in 'invoicing-system-pawel-czerwinski.app.test' Coverage Results" MODIFIED="1625307250710" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/invoicing_system_pawel_czerwinski$invoicing_system_pawel_czerwinski_app__test_.ic" NAME="invoicing-system-pawel-czerwinski:app [test] Coverage Results" MODIFIED="1625307871181" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/invoicing_system_pawel_czerwinski$FileBasedDatabaseTest.ic" NAME="FileBasedDatabaseTest Coverage Results" MODIFIED="1627815839948" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
+  <component name="com.vaadin.designer2.intellij.settings.SizePresetsSettingsComponent">
+    <option name="sizePresets">
+      <list>
+        <SizePreset>
+          <option name="caption" value="Phone" />
+          <option name="height" value="568" />
+          <option name="width" value="320" />
+        </SizePreset>
+        <SizePreset>
+          <option name="caption" value="Tablet" />
+          <option name="height" value="1024" />
+          <option name="width" value="768" />
+        </SizePreset>
+        <SizePreset>
+          <option name="caption" value="Desktop" />
+          <option name="height" value="900" />
+          <option name="width" value="1440" />
+        </SizePreset>
+      </list>
+    </option>
+  </component>
+</project>

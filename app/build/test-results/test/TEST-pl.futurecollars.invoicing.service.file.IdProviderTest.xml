@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="pl.futurecollars.invoicing.service.file.IdProviderTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2021-08-13T15:50:24" hostname="LENOVO-PAWEL" time="0.032">
+  <properties/>
+  <testcase name="should throw IllegalStateException for more than one line in idProvide file" classname="pl.futurecollars.invoicing.service.file.IdProviderTest" time="0.018"/>
+  <testcase name="should throw IllegalStateException if there is problem to convert id file content to id" classname="pl.futurecollars.invoicing.service.file.IdProviderTest" time="0.013"/>
+  <system-out><![CDATA[2021-08-13 17:50:24.238  WARN 5020 --- [    Test worker] p.f.invoicing.service.file.IdProvider    : There is no last id - starting from 0
+2021-08-13 17:50:24.247 ERROR 5020 --- [    Test worker] p.f.invoicing.service.file.IdProvider    : Something went wrong - in id file should not be more than 1 line
+2021-08-13 17:50:24.261 ERROR 5020 --- [    Test worker] p.f.invoicing.service.file.IdProvider    : There was a problem to convert: 'For input string: "text - not be able to convert to id (integer)"' to number
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

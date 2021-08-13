@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="pl.futurecollars.invoicing.service.file.FileServiceTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2021-08-13T15:50:23" hostname="LENOVO-PAWEL" time="0.283">
+  <properties/>
+  <testcase name="should write line to file" classname="pl.futurecollars.invoicing.service.file.FileServiceTest" time="0.028"/>
+  <testcase name="should throw IllegalStateException if there is problem to write to file" classname="pl.futurecollars.invoicing.service.file.FileServiceTest" time="0.051"/>
+  <testcase name="should read lines from file" classname="pl.futurecollars.invoicing.service.file.FileServiceTest" time="0.018"/>
+  <testcase name="should throw IllegalStateException if there is problem to read from file" classname="pl.futurecollars.invoicing.service.file.FileServiceTest" time="0.011"/>
+  <testcase name="should return empty Optional if id not found" classname="pl.futurecollars.invoicing.service.file.FileServiceTest" time="0.024"/>
+  <testcase name="should return Optional of line number for existing and unique ID" classname="pl.futurecollars.invoicing.service.file.FileServiceTest" time="0.026"/>
+  <testcase name="should return empty Optional for not existing or not unique ID" classname="pl.futurecollars.invoicing.service.file.FileServiceTest" time="0.022"/>
+  <testcase name="should rewrite file" classname="pl.futurecollars.invoicing.service.file.FileServiceTest" time="0.015"/>
+  <testcase name="should throw IllegalStateException if there is problem to update file" classname="pl.futurecollars.invoicing.service.file.FileServiceTest" time="0.01"/>
+  <testcase name="should return list of two text lines if fileService write two lines to file" classname="pl.futurecollars.invoicing.service.file.FileServiceTest" time="0.011"/>
+  <testcase name="should throw IllegalStateException if founded more than one line with same id" classname="pl.futurecollars.invoicing.service.file.FileServiceTest" time="0.028"/>
+  <testcase name="should create file if not exists when rewrite method is used" classname="pl.futurecollars.invoicing.service.file.FileServiceTest" time="0.011"/>
+  <system-out><![CDATA[2021-08-13 17:50:23.993 ERROR 5020 --- [    Test worker] p.f.invoicing.service.file.FileService   : There was problem to write to file: C:\Users\Pawel\AppData\Local\Temp\fileServiceFile11621351251638190183txt
+2021-08-13 17:50:24.050 ERROR 5020 --- [    Test worker] p.f.invoicing.service.file.FileService   : There was problem to read from file C:\Users\Pawel\AppData\Local\Temp\fileServiceFile8990287198547450414txt
+2021-08-13 17:50:24.159 ERROR 5020 --- [    Test worker] p.f.invoicing.service.file.FileService   : There is problem to update base file
+2021-08-13 17:50:24.196 ERROR 5020 --- [    Test worker] p.f.invoicing.service.file.FileService   : Error - There is 2 id's 2 in base.
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

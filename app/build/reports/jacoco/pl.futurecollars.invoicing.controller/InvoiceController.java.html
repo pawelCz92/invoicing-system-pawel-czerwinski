@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InvoiceController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">pl.futurecollars.invoicing.controller</a> &gt; <span class="el_source">InvoiceController.java</span></div><h1>InvoiceController.java</h1><pre class="source lang-java linenums">package pl.futurecollars.invoicing.controller;
+
+import java.util.List;
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import pl.futurecollars.invoicing.model.Invoice;
+import pl.futurecollars.invoicing.service.InvoiceService;
+
+@RestController
+@AllArgsConstructor
+public class InvoiceController implements InvoiceApi {
+
+    private final InvoiceService invoiceService;
+
+    @Override
+    public ResponseEntity&lt;List&lt;Invoice&gt;&gt; getAllInvoices() {
+        try {
+<span class="fc" id="L21">            return ResponseEntity.ok().body(invoiceService.getAll());</span>
+<span class="fc" id="L22">        } catch (Exception e) {</span>
+<span class="fc" id="L23">            return ResponseEntity.notFound().build();</span>
+        }
+    }
+
+    @Override
+    public ResponseEntity&lt;Integer&gt; saveInvoice(@RequestBody Invoice invoice) {
+        try {
+<span class="fc" id="L30">            return ResponseEntity.ok(invoiceService.save(invoice));</span>
+<span class="nc" id="L31">        } catch (Exception e) {</span>
+<span class="nc" id="L32">            return ResponseEntity.notFound().build();</span>
+        }
+    }
+
+    @Override
+    public ResponseEntity&lt;Invoice&gt; getInvoiceById(@PathVariable int id) {
+        try {
+<span class="fc" id="L39">            return invoiceService.getById(id)</span>
+<span class="fc" id="L40">                .map(invoice -&gt; ResponseEntity.ok().body(invoice))</span>
+<span class="fc" id="L41">                .orElse(ResponseEntity.notFound().build());</span>
+<span class="fc" id="L42">        } catch (Exception e) {</span>
+<span class="fc" id="L43">            return ResponseEntity.notFound().build();</span>
+        }
+    }
+
+    @Override
+    public ResponseEntity&lt;?&gt; updateById(@PathVariable int id, @RequestBody Invoice invoice) {
+        try {
+<span class="fc" id="L50">            invoiceService.update(id, invoice);</span>
+<span class="fc" id="L51">            return ResponseEntity.noContent().build();</span>
+<span class="fc" id="L52">        } catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L53">            return ResponseEntity.notFound().build();</span>
+        }
+    }
+
+    @Override
+    public ResponseEntity&lt;?&gt; deleteById(@PathVariable int id) {
+        try {
+<span class="fc" id="L60">            invoiceService.delete(id);</span>
+<span class="fc" id="L61">            return ResponseEntity.noContent().build();</span>
+<span class="fc" id="L62">        } catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L63">            return ResponseEntity.notFound().build();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

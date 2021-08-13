@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="pl.futurecollars.invoicing.controller.tax.TaxCalculatorControllerTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2021-08-13T15:50:15" hostname="LENOVO-PAWEL" time="0.399">
+  <properties/>
+  <testcase name="should return TaxCalculatorResult with values 0 for not existing TIN" classname="pl.futurecollars.invoicing.controller.tax.TaxCalculatorControllerTest" time="0.066"/>
+  <testcase name="addInvoicesToBase" classname="pl.futurecollars.invoicing.controller.tax.TaxCalculatorControllerTest" time="0.245"/>
+  <testcase name="should return object with calculated taxes for existing TIN [tin: 100-16-0000, income: 76011.62, costs: 11329.47, earnings: 64682.15, incomingVat: 0.00, outgoingVat: 0.00, vatToReturn: 0.00, earningsMinusPensionInsurance: 64167.58, taxCalculationBase: 64168, incomeTax: 12191.92, pensionInsurance: 514.57, healthInsurance: 319.94, reducedHealthInsurance: 275.5, incomeTaxMinusHealthInsurance: 11916.42, finalIncomeTax: 11916, #0]" classname="pl.futurecollars.invoicing.controller.tax.TaxCalculatorControllerTest" time="0.073"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

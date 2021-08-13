@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.37">
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\App.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\controller\SpringFoxConfig.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\controller\invoice\InvoiceApi.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\controller\invoice\InvoiceController.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\controller\tax\TaxCalculatorController.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\controller\tax\TaxCalculatorControllerApi.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\db\Database.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\db\DatabaseConfiguration.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\db\FileBasedDatabase.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\db\InMemoryDataBase.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\db\sql\SqlDatabase.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\model\Car.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\model\Company.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\model\Invoice.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\model\InvoiceEntry.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\model\Vat.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\service\InvoiceService.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\service\JsonService.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\service\file\FileService.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\service\file\IdProvider.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\service\taxcalculator\TaxCalculatorResult.java">
+</file>
+<file name="C:\FUTURE_COLLARS\invoicing-system-pawel-czerwinski\app\src\main\java\pl\futurecollars\invoicing\service\taxcalculator\TaxCalculatorService.java">
+</file>
+</checkstyle>

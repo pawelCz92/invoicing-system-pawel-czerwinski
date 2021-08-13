@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="pl.futurecollars.invoicing.db.FileBasedDatabaseTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2021-08-13T15:50:19" hostname="LENOVO-PAWEL" time="0.367">
+  <properties/>
+  <testcase name="should inject database instance" classname="pl.futurecollars.invoicing.db.FileBasedDatabaseTest" time="0.001"/>
+  <testcase name="should return empty collection if there is no invoices in base" classname="pl.futurecollars.invoicing.db.FileBasedDatabaseTest" time="0.002"/>
+  <testcase name="should return empty optional if there is no invoice with given id" classname="pl.futurecollars.invoicing.db.FileBasedDatabaseTest" time="0.006"/>
+  <testcase name="should return all saved invoices" classname="pl.futurecollars.invoicing.db.FileBasedDatabaseTest" time="0.067"/>
+  <testcase name="should return invoice by id" classname="pl.futurecollars.invoicing.db.FileBasedDatabaseTest" time="0.04"/>
+  <testcase name="should return invoices without deleted one" classname="pl.futurecollars.invoicing.db.FileBasedDatabaseTest" time="0.059"/>
+  <testcase name="can delete all invoices" classname="pl.futurecollars.invoicing.db.FileBasedDatabaseTest" time="0.082"/>
+  <testcase name="should update invoice" classname="pl.futurecollars.invoicing.db.FileBasedDatabaseTest" time="0.048"/>
+  <testcase name="should throw illegalArgumentException if there is no id using update" classname="pl.futurecollars.invoicing.db.FileBasedDatabaseTest" time="0.007"/>
+  <testcase name="should throw illegalArgumentException if there is no id using delete" classname="pl.futurecollars.invoicing.db.FileBasedDatabaseTest" time="0.001"/>
+  <testcase name="should save data to right file" classname="pl.futurecollars.invoicing.db.FileBasedDatabaseTest" time="0.019"/>
+  <system-out><![CDATA[2021-08-13 17:50:19.311  WARN 5020 --- [    Test worker] p.f.invoicing.service.file.IdProvider    : There is no last id - starting from 0
+2021-08-13 17:50:19.373  WARN 5020 --- [    Test worker] p.f.invoicing.service.file.IdProvider    : There is no last id - starting from 0
+2021-08-13 17:50:19.419  WARN 5020 --- [    Test worker] p.f.invoicing.service.file.IdProvider    : There is no last id - starting from 0
+2021-08-13 17:50:19.481  WARN 5020 --- [    Test worker] p.f.invoicing.service.file.IdProvider    : There is no last id - starting from 0
+2021-08-13 17:50:19.564  WARN 5020 --- [    Test worker] p.f.invoicing.service.file.IdProvider    : There is no last id - starting from 0
+2021-08-13 17:50:19.634  WARN 5020 --- [    Test worker] p.f.invoicing.service.file.IdProvider    : There is no last id - starting from 0
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

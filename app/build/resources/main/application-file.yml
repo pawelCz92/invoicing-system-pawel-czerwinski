@@ -1,0 +1,5 @@
+invoicing-system:
+  database: file
+  database.dbDirectory: db
+  database.idFileName: db-ids
+  database.dataFileName: db-data

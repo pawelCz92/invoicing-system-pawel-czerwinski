@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="pl.futurecollars.invoicing.TestHelpers" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-08-13T15:50:24" hostname="LENOVO-PAWEL" time="0.001">
+  <properties/>
+  <testcase name="should return suitable values of Vat" classname="pl.futurecollars.invoicing.TestHelpers" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

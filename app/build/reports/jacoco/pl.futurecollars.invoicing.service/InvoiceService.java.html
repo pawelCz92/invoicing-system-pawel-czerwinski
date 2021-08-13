@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InvoiceService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">pl.futurecollars.invoicing.service</a> &gt; <span class="el_source">InvoiceService.java</span></div><h1>InvoiceService.java</h1><pre class="source lang-java linenums">package pl.futurecollars.invoicing.service;
+
+import java.util.List;
+import java.util.Optional;
+import org.springframework.stereotype.Service;
+import pl.futurecollars.invoicing.db.Database;
+import pl.futurecollars.invoicing.model.Invoice;
+
+@Service
+public class InvoiceService {
+
+    private final Database database;
+
+<span class="fc" id="L14">    public InvoiceService(Database database) {</span>
+<span class="fc" id="L15">        this.database = database;</span>
+<span class="fc" id="L16">    }</span>
+
+    public int save(Invoice invoice) {
+<span class="fc" id="L19">        return database.save(invoice);</span>
+    }
+
+    public Optional&lt;Invoice&gt; getById(int id) {
+<span class="fc" id="L23">        return database.getById(id);</span>
+    }
+
+    public List&lt;Invoice&gt; getAll() {
+<span class="fc" id="L27">        return database.getAll();</span>
+    }
+
+    public void update(int id, Invoice updatedInvoice) throws IllegalArgumentException {
+<span class="fc" id="L31">        database.update(id, updatedInvoice);</span>
+<span class="fc" id="L32">    }</span>
+
+    public void delete(int id) {
+<span class="fc" id="L35">        database.delete(id);</span>
+<span class="fc" id="L36">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
