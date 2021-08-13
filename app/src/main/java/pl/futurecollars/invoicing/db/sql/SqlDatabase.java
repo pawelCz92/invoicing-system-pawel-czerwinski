@@ -86,6 +86,11 @@ public class SqlDatabase implements Database {
         deleteInvoiceById(id);
     }
 
+    @Override
+    public void deleteAll() {
+        getAll().forEach(inv -> delete(inv.getId()));
+    }
+
     private int insertInvoice(GeneratedKeyHolder keyHolder, Invoice invoice, long buyerId, long sellerId) {
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(

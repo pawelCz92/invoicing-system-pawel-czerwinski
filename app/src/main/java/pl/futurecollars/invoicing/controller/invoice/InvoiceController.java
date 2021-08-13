@@ -25,6 +25,7 @@ public class InvoiceController implements InvoiceApi {
         try {
             return ResponseEntity.ok(invoiceService.save(invoice));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.notFound().build();
         }
     }

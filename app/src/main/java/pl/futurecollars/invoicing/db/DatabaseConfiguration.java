@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import pl.futurecollars.invoicing.db.sql.SqlDatabase;
+import pl.futurecollars.invoicing.db.sql.jpa.InvoiceRepository;
+import pl.futurecollars.invoicing.db.sql.jpa.JpaDatabase;
 import pl.futurecollars.invoicing.service.JsonService;
 import pl.futurecollars.invoicing.service.file.FileService;
 import pl.futurecollars.invoicing.service.file.IdProvider;
@@ -43,16 +45,24 @@ public class DatabaseConfiguration {
         return new FileBasedDatabase(dbFilePath, idProvider, fileService, jsonService);
     }
 
-    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "memory")
     @Bean
+    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "memory")
     InMemoryDataBase inMemoryDataBase() {
         log.info("In memory based database is in use");
         return new InMemoryDataBase();
     }
 
-    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "sql")
     @Bean
+    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "sql")
     public Database sqlDatabase(JdbcTemplate jdbcTemplate) {
+        log.info("SQL database is in use");
         return new SqlDatabase(jdbcTemplate);
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "jpa")
+    public Database jpaDatabase(InvoiceRepository invoiceRepository) {
+        log.info("JPA database is in use");
+        return new JpaDatabase(invoiceRepository);
     }
 }

@@ -18,23 +18,6 @@ class TestHelpers extends Specification {
         Vat.VAT_0.getRate() == 0
     }
 
-    def "should invoice entry be equal or not"(){
-        given:
-        InvoiceEntry invoiceEntry1 = getSampleInvoicesList().get(1).getInvoiceEntries().get(0)
-        InvoiceEntry invoiceEntry2 = getSampleInvoicesList().get(1).getInvoiceEntries().get(1)
-
-        expect:
-        !invoiceEntry1.equals(invoiceEntry2)
-        !invoiceEntry1.equals(null)
-        !invoiceEntry1.equals(BigDecimal.ONE)
-        invoiceEntry1.equals(invoiceEntry1)
-    }
-
-    def "test for cover hashcode for invoiceEntry"(){
-        expect:
-        getSampleInvoicesList().get(1).getInvoiceEntries().get(0).hashCode()
-    }
-
     static def getSampleInvoicesList() {
         Company company1 =
                 new Company("382-22-1584", "377 Ohio Road Pulo", "Microsoft",
@@ -59,44 +42,44 @@ class TestHelpers extends Specification {
                         BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
 
         invoiceEntries = List.of(
-                /* 0*/ new InvoiceEntry("tv", 1, 1000.0, 230.0, Vat.VAT_23, null),
-                /* 1*/ new InvoiceEntry("Radio", 1, 100.0, 23.0, Vat.VAT_23, null),
-                /* 2*/ new InvoiceEntry("Radio", 1, 100.0, 23.0, Vat.VAT_23, null),
-                /* 3*/ new InvoiceEntry("Dell XX", 1, 3000.0, 690.0, Vat.VAT_23, null),
-                /* 4*/ new InvoiceEntry("Fuel", 120, 600.0, 138.0, Vat.VAT_23, null),
-                /* 5*/ new InvoiceEntry("Tv", 1, 2000.0, 460.0, Vat.VAT_23, null),
-                /* 6*/ new InvoiceEntry("Car Clean", 1, 2000.0, 460.0, Vat.VAT_23,
+                /* 0*/ new InvoiceEntry("tv", 1, 1000.00, 230.00, Vat.VAT_23, null),
+                /* 1*/ new InvoiceEntry("Radio", 1, 100.00, 23.00, Vat.VAT_23, null),
+                /* 2*/ new InvoiceEntry("Radio", 1, 100.00, 23.00, Vat.VAT_23, null),
+                /* 3*/ new InvoiceEntry("Dell XX", 1, 3000.00, 690.00, Vat.VAT_23, null),
+                /* 4*/ new InvoiceEntry("Fuel", 120, 600.00, 138.00, Vat.VAT_23, null),
+                /* 5*/ new InvoiceEntry("Tv", 1, 2000.00, 460.00, Vat.VAT_23, null),
+                /* 6*/ new InvoiceEntry("Car Clean", 1, 2000.00, 460.00, Vat.VAT_23,
                 new Car(true, "HPE-2343")),
-                /* 7*/ new InvoiceEntry("Desk", 1, 100.0, 8.0, Vat.VAT_8, null),
-                /* 8*/ new InvoiceEntry("Chair", 1, 230.0, 18.4, Vat.VAT_8, null),
-                /* 9*/ new InvoiceEntry("Table", 1, 34.0, 7.82, Vat.VAT_23, null),
-                /*10*/ new InvoiceEntry("Sofa", 1, 230.0, 0.0, Vat.VAT_0, null),
-                /*11*/ new InvoiceEntry("Printer", 2, 300.0, 0.0, Vat.VAT_0, null),
-                /*12*/ new InvoiceEntry("Speackres", 3, 50.0, 0.0, Vat.VAT_0, null),
-                /*13*/ new InvoiceEntry("Radiator", 1, 80.0, 18.4, Vat.VAT_23, null),
-                /*14*/ new InvoiceEntry("Internet", 1, 50.0, 0.0, Vat.VAT_0, null),
-                /*15*/ new InvoiceEntry("Door", 1, 300.0, 24.0, Vat.VAT_8, null),
-                /*16*/ new InvoiceEntry("Car", 1, 20000.0, 1600.0, Vat.VAT_8,
+                /* 7*/ new InvoiceEntry("Desk", 1, 100.00, 8.00, Vat.VAT_8, null),
+                /* 8*/ new InvoiceEntry("Chair", 1, 230.00, 18.40, Vat.VAT_8, null),
+                /* 9*/ new InvoiceEntry("Table", 1, 34.00, 7.82, Vat.VAT_23, null),
+                /*10*/ new InvoiceEntry("Sofa", 1, 230.00, 0.00, Vat.VAT_0, null),
+                /*11*/ new InvoiceEntry("Printer", 2, 300.00, 0.00, Vat.VAT_0, null),
+                /*12*/ new InvoiceEntry("Speackres", 3, 50.00, 0.00, Vat.VAT_0, null),
+                /*13*/ new InvoiceEntry("Radiator", 1, 80.00, 18.40, Vat.VAT_23, null),
+                /*14*/ new InvoiceEntry("Internet", 1, 50.00, 0.00, Vat.VAT_0, null),
+                /*15*/ new InvoiceEntry("Door", 1, 300.00, 24.00, Vat.VAT_8, null),
+                /*16*/ new InvoiceEntry("Car", 1, 20000.00, 1600.00, Vat.VAT_8,
                 new Car(true, "EU-23421")),
-                /*17*/ new InvoiceEntry("Tablet", 1, 100.0, 8.0, Vat.VAT_8, null),
-                /*18*/ new InvoiceEntry("SmartPhone", 1, 1000.0, 80.0, Vat.VAT_8, null),
-                /*19*/ new InvoiceEntry("Vacuum cleaner", 1, 120.0, 27.6, Vat.VAT_23, null),
-                /*20*/ new InvoiceEntry("Elecrtic grill", 1, 1000.0, 230.0, Vat.VAT_23, null),
-                /*21*/ new InvoiceEntry("Toster", 1, 300.0, 15.0, Vat.VAT_5, null),
-                /*22*/ new InvoiceEntry("Projector", 1, 2000.0, 100.0, Vat.VAT_5, null),
-                /*23*/ new InvoiceEntry("SmartWatch", 1, 500.0, 115.0, Vat.VAT_23, null),
-                /*24*/ new InvoiceEntry("Camera", 1, 700.0, 35.0, Vat.VAT_5, null),
-                /*25*/ new InvoiceEntry("Keyboard", 1, 100.0, 0.0, Vat.VAT_0, null),
-                /*26*/ new InvoiceEntry("Mouse", 1, 50.0, 11.5, Vat.VAT_23, null),
-                /*27*/ new InvoiceEntry("TvDecoder", 1, 500.0, 115.0, Vat.VAT_23, null),
+                /*17*/ new InvoiceEntry("Tablet", 1, 100.00, 8.00, Vat.VAT_8, null),
+                /*18*/ new InvoiceEntry("SmartPhone", 1, 1000.00, 80.00, Vat.VAT_8, null),
+                /*19*/ new InvoiceEntry("Vacuum cleaner", 1, 120.00, 27.60, Vat.VAT_23, null),
+                /*20*/ new InvoiceEntry("Elecrtic grill", 1, 1000.00, 230.00, Vat.VAT_23, null),
+                /*21*/ new InvoiceEntry("Toster", 1, 300.00, 15.00, Vat.VAT_5, null),
+                /*22*/ new InvoiceEntry("Projector", 1, 2000.00, 100.00, Vat.VAT_5, null),
+                /*23*/ new InvoiceEntry("SmartWatch", 1, 500.00, 115.00, Vat.VAT_23, null),
+                /*24*/ new InvoiceEntry("Camera", 1, 700.00, 35.00, Vat.VAT_5, null),
+                /*25*/ new InvoiceEntry("Keyboard", 1, 100.00, 0.00, Vat.VAT_0, null),
+                /*26*/ new InvoiceEntry("Mouse", 1, 50.00, 11.50, Vat.VAT_23, null),
+                /*27*/ new InvoiceEntry("TvDecoder", 1, 500.00, 115.00, Vat.VAT_23, null),
                 /*28*/ new InvoiceEntry("Tires", 1, 702.74, 161.63, Vat.VAT_23,
                 new Car(true, "HPE-2343")),
-                /*29*/ new InvoiceEntry("car service", 1, 400.0, 92.0, Vat.VAT_23,
+                /*29*/ new InvoiceEntry("car service", 1, 400.00, 92.00, Vat.VAT_23,
                 new Car(false, "HPE-2343")),
-                /*30*/ new InvoiceEntry("car wash", 1, 50.0, 4.0, Vat.VAT_8, null),
-                /*31*/ new InvoiceEntry("testIn", 1, 76_011.62, 0, Vat.VAT_23, null),
-                /*32*/ new InvoiceEntry("testOut", 1, 11_329.47, 0, Vat.VAT_0, null),
-                /*33*/ new InvoiceEntry("hdmi cable", 5, 250, 20, Vat.VAT_8, null)
+                /*30*/ new InvoiceEntry("car wash", 1, 50.00, 4.00, Vat.VAT_8, null),
+                /*31*/ new InvoiceEntry("testIn", 1, 76_011.62, 0.00, Vat.VAT_23, null),
+                /*32*/ new InvoiceEntry("testOut", 1, 11_329.47, 0.00, Vat.VAT_0, null),
+                /*33*/ new InvoiceEntry("hdmi cable", 5, 250.00, 20.00, Vat.VAT_8, null)
         )
 
         return List.of(

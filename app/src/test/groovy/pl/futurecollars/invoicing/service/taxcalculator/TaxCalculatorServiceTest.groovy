@@ -2,17 +2,19 @@ package pl.futurecollars.invoicing.service.taxcalculator
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.annotation.IfProfileValue
 import pl.futurecollars.invoicing.TestHelpers
-import pl.futurecollars.invoicing.db.FileBasedDatabase
+import pl.futurecollars.invoicing.db.Database
 import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
 import spock.lang.Specification
 
 @SpringBootTest
+@IfProfileValue(name = "spring.profiles.active", values = ["file", "sql", "memory"])
 class TaxCalculatorServiceTest extends Specification {
 
     @Autowired
-    private FileBasedDatabase fileBasedDatabase
+    private Database database
     @Autowired
     private TaxCalculatorService taxCalculatorService
     private static List<Invoice> sampleInvoices
@@ -20,14 +22,14 @@ class TaxCalculatorServiceTest extends Specification {
 
     def saveSampleInvoicesToBase() {
         sampleInvoices = TestHelpers.getSampleInvoicesList()
-        sampleInvoices.forEach(invoice -> fileBasedDatabase.save(invoice))
+        sampleInvoices.forEach(invoice -> database.save(invoice))
     }
 
     def "should calculate taxes"() {
         setup:
-        fileBasedDatabase.deleteAll()
+        database.deleteAll()
         saveSampleInvoicesToBase()
-        Company company = new Company(tin, "any address", "any name",
+        Company company = new Company(tin, "any address x", "any name",
                 BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
 
         TaxCalculatorResult expectedResult = TaxCalculatorResult.builder()
@@ -58,9 +60,9 @@ class TaxCalculatorServiceTest extends Specification {
         income << [76011.62, 22702.74]
         costs << [11329.47, 30591.56]
         earnings << [64682.15, -7888.82]
-        incomingVat << [0, 1861.63]
-        outgoingVat << [0, 1942.85]
-        vatToReturn << [0, -81.22]
+        incomingVat << [0.00, 1861.63]
+        outgoingVat << [0.00, 1942.85]
+        vatToReturn << [0.00, -81.22]
         earningsMinusPensionInsurance << [64167.58, -8403.39]
         taxCalculationBase << [64168, -8403]
         incomeTax << [12191.92, -1596.57]

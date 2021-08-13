@@ -20,6 +20,8 @@ public interface Database {
 
     void delete(int id);
 
+    void deleteAll();
+
     default BigDecimal visit(Predicate<Invoice> filterRules, Function<InvoiceEntry, BigDecimal> amountToSelect) {
         return getAll().stream()
             .filter(filterRules)

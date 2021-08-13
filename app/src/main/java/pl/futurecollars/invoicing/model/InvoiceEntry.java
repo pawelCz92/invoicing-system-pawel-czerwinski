@@ -4,18 +4,30 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
+@Entity(name = "invoice_entries")
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Builder
 public class InvoiceEntry {
 
     @JsonIgnore
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Exclude
     private int id;
 
     @ApiModelProperty(value = "Product/service description", required = true, example = "Fiat 126p")
@@ -34,6 +46,7 @@ public class InvoiceEntry {
     private Vat vatRate;
 
     @ApiModelProperty(value = "Car related", required = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Car car;
 
     public InvoiceEntry(String description, int quantity, BigDecimal price, BigDecimal vatValue, Vat vatRate, Car car) {
@@ -43,23 +56,5 @@ public class InvoiceEntry {
         this.vatValue = vatValue;
         this.vatRate = vatRate;
         this.car = car;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        InvoiceEntry that = (InvoiceEntry) o;
-        return quantity == that.quantity && Objects.equals(description, that.description) && Objects.equals(price, that.price)
-            && Objects.equals(vatValue, that.vatValue) && vatRate == that.vatRate && Objects.equals(car, that.car);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(description, quantity, price, vatValue, vatRate, car);
     }
 }
