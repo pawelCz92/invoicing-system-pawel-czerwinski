@@ -12,6 +12,3 @@ ALTER TABLE public.invoices_invoice_entries
 ALTER TABLE public.invoices_invoice_entries
     ADD CONSTRAINT invoice_entry_id FOREIGN KEY (invoice_entry_id)
         REFERENCES public.invoice_entries (id);
-
-ALTER TABLE public.invoices_invoice_entries
-    OWNER TO postgres;

@@ -1,13 +1,13 @@
-INSERT INTO public.cars (id, registration_number, personal_user)
+INSERT INTO public.cars (id, registration_number, personal_use)
 VALUES (1, 'FGH-1234', true);
 
-INSERT INTO public.cars (id, registration_number, personal_user)
+INSERT INTO public.cars (id, registration_number, personal_use)
 VALUES (2, 'QWE-2344', true);
 
-INSERT INTO public.cars (id, registration_number, personal_user)
+INSERT INTO public.cars (id, registration_number, personal_use)
 VALUES (3, 'TRE-4567', true);
 
-INSERT INTO public.cars (id, registration_number, personal_user)
+INSERT INTO public.cars (id, registration_number, personal_use)
 VALUES (4, 'GWH-3445', true);
 
 

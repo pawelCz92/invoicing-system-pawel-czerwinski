@@ -18,6 +18,23 @@ class TestHelpers extends Specification {
         Vat.VAT_0.getRate() == 0
     }
 
+    def "should invoice entry be equal or not"(){
+        given:
+        InvoiceEntry invoiceEntry1 = getSampleInvoicesList().get(1).getInvoiceEntries().get(0)
+        InvoiceEntry invoiceEntry2 = getSampleInvoicesList().get(1).getInvoiceEntries().get(1)
+
+        expect:
+        !invoiceEntry1.equals(invoiceEntry2)
+        !invoiceEntry1.equals(null)
+        !invoiceEntry1.equals(BigDecimal.ONE)
+        invoiceEntry1.equals(invoiceEntry1)
+    }
+
+    def "test for cover hashcode for invoiceEntry"(){
+        expect:
+        getSampleInvoicesList().get(1).getInvoiceEntries().get(0).hashCode()
+    }
+
     static def getSampleInvoicesList() {
         Company company1 =
                 new Company("382-22-1584", "377 Ohio Road Pulo", "Microsoft",
@@ -42,80 +59,127 @@ class TestHelpers extends Specification {
                         BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
 
         invoiceEntries = List.of(
-                /* 0*/ new InvoiceEntry("tv", 1, 1000, 230, Vat.VAT_23),
-                /* 1*/ new InvoiceEntry("Radio", 1, 100, 23, Vat.VAT_23),
-                /* 2*/ new InvoiceEntry("Radio", 1, 100, 23, Vat.VAT_23),
-                /* 3*/ new InvoiceEntry("Dell XX", 1, 3000, 690, Vat.VAT_23),
-                /* 4*/ new InvoiceEntry("Fuel", 120, 600, 138, Vat.VAT_23),
-                /* 5*/ new InvoiceEntry("Tv", 1, 2000, 460, Vat.VAT_23),
-                /* 6*/ new InvoiceEntry("Car Clean", 1, 2000, 460, Vat.VAT_23,
+                /* 0*/ new InvoiceEntry("tv", 1, 1000.0, 230.0, Vat.VAT_23, null),
+                /* 1*/ new InvoiceEntry("Radio", 1, 100.0, 23.0, Vat.VAT_23, null),
+                /* 2*/ new InvoiceEntry("Radio", 1, 100.0, 23.0, Vat.VAT_23, null),
+                /* 3*/ new InvoiceEntry("Dell XX", 1, 3000.0, 690.0, Vat.VAT_23, null),
+                /* 4*/ new InvoiceEntry("Fuel", 120, 600.0, 138.0, Vat.VAT_23, null),
+                /* 5*/ new InvoiceEntry("Tv", 1, 2000.0, 460.0, Vat.VAT_23, null),
+                /* 6*/ new InvoiceEntry("Car Clean", 1, 2000.0, 460.0, Vat.VAT_23,
                 new Car(true, "HPE-2343")),
-                /* 7*/ new InvoiceEntry("Desk", 1, 100, 8, Vat.VAT_8),
-                /* 8*/ new InvoiceEntry("Chair", 1, 230, 18.4, Vat.VAT_8),
-                /* 9*/ new InvoiceEntry("Table", 1, 34, 7.82, Vat.VAT_23),
-                /*10*/ new InvoiceEntry("Sofa", 1, 230, 0, Vat.VAT_0),
-                /*11*/ new InvoiceEntry("Printer", 2, 300, 0, Vat.VAT_0),
-                /*12*/ new InvoiceEntry("Speackres", 3, 50, 0, Vat.VAT_0),
-                /*13*/ new InvoiceEntry("Radiator", 1, 80, 18.4, Vat.VAT_23),
-                /*14*/ new InvoiceEntry("Internet", 1, 50, 0, Vat.VAT_0),
-                /*15*/ new InvoiceEntry("Door", 1, 300, 24, Vat.VAT_8),
-                /*16*/ new InvoiceEntry("Car", 1, 20000, 1600, Vat.VAT_8,
+                /* 7*/ new InvoiceEntry("Desk", 1, 100.0, 8.0, Vat.VAT_8, null),
+                /* 8*/ new InvoiceEntry("Chair", 1, 230.0, 18.4, Vat.VAT_8, null),
+                /* 9*/ new InvoiceEntry("Table", 1, 34.0, 7.82, Vat.VAT_23, null),
+                /*10*/ new InvoiceEntry("Sofa", 1, 230.0, 0.0, Vat.VAT_0, null),
+                /*11*/ new InvoiceEntry("Printer", 2, 300.0, 0.0, Vat.VAT_0, null),
+                /*12*/ new InvoiceEntry("Speackres", 3, 50.0, 0.0, Vat.VAT_0, null),
+                /*13*/ new InvoiceEntry("Radiator", 1, 80.0, 18.4, Vat.VAT_23, null),
+                /*14*/ new InvoiceEntry("Internet", 1, 50.0, 0.0, Vat.VAT_0, null),
+                /*15*/ new InvoiceEntry("Door", 1, 300.0, 24.0, Vat.VAT_8, null),
+                /*16*/ new InvoiceEntry("Car", 1, 20000.0, 1600.0, Vat.VAT_8,
                 new Car(true, "EU-23421")),
-                /*17*/ new InvoiceEntry("Tablet", 1, 100, 8, Vat.VAT_8),
-                /*18*/ new InvoiceEntry("SmartPhone", 1, 1000, 80, Vat.VAT_8),
-                /*19*/ new InvoiceEntry("Vacuum cleaner", 1, 120, 27.6, Vat.VAT_23),
-                /*20*/ new InvoiceEntry("Elecrtic grill", 1, 1000, 230, Vat.VAT_23),
-                /*21*/ new InvoiceEntry("Toster", 1, 300, 15, Vat.VAT_5),
-                /*22*/ new InvoiceEntry("Projector", 1, 2000, 100, Vat.VAT_5),
-                /*23*/ new InvoiceEntry("SmartWatch", 1, 500, 115, Vat.VAT_23),
-                /*24*/ new InvoiceEntry("Camera", 1, 700, 35, Vat.VAT_5),
-                /*25*/ new InvoiceEntry("Keyboard", 1, 100, 0, Vat.VAT_0),
-                /*26*/ new InvoiceEntry("Mouse", 1, 50, 11.5, Vat.VAT_23),
-                /*27*/ new InvoiceEntry("TvDecoder", 1, 500, 115, Vat.VAT_23),
+                /*17*/ new InvoiceEntry("Tablet", 1, 100.0, 8.0, Vat.VAT_8, null),
+                /*18*/ new InvoiceEntry("SmartPhone", 1, 1000.0, 80.0, Vat.VAT_8, null),
+                /*19*/ new InvoiceEntry("Vacuum cleaner", 1, 120.0, 27.6, Vat.VAT_23, null),
+                /*20*/ new InvoiceEntry("Elecrtic grill", 1, 1000.0, 230.0, Vat.VAT_23, null),
+                /*21*/ new InvoiceEntry("Toster", 1, 300.0, 15.0, Vat.VAT_5, null),
+                /*22*/ new InvoiceEntry("Projector", 1, 2000.0, 100.0, Vat.VAT_5, null),
+                /*23*/ new InvoiceEntry("SmartWatch", 1, 500.0, 115.0, Vat.VAT_23, null),
+                /*24*/ new InvoiceEntry("Camera", 1, 700.0, 35.0, Vat.VAT_5, null),
+                /*25*/ new InvoiceEntry("Keyboard", 1, 100.0, 0.0, Vat.VAT_0, null),
+                /*26*/ new InvoiceEntry("Mouse", 1, 50.0, 11.5, Vat.VAT_23, null),
+                /*27*/ new InvoiceEntry("TvDecoder", 1, 500.0, 115.0, Vat.VAT_23, null),
                 /*28*/ new InvoiceEntry("Tires", 1, 702.74, 161.63, Vat.VAT_23,
                 new Car(true, "HPE-2343")),
-                /*29*/ new InvoiceEntry("car service", 1, 400, 92, Vat.VAT_23,
+                /*29*/ new InvoiceEntry("car service", 1, 400.0, 92.0, Vat.VAT_23,
                 new Car(false, "HPE-2343")),
-                /*30*/ new InvoiceEntry("car wash", 1, 50, 4, Vat.VAT_8),
-                /*31*/ new InvoiceEntry("testIn", 1,
-                BigDecimal.valueOf(76_011.62), BigDecimal.valueOf(0), Vat.VAT_23),
-                /*32*/ new InvoiceEntry("testOut", 1, BigDecimal.valueOf(11_329.47), 0, Vat.VAT_0),
-                /*33*/ new InvoiceEntry("hdmi cable", 5, 250, 20, Vat.VAT_8)
+                /*30*/ new InvoiceEntry("car wash", 1, 50.0, 4.0, Vat.VAT_8, null),
+                /*31*/ new InvoiceEntry("testIn", 1, 76_011.62, 0, Vat.VAT_23, null),
+                /*32*/ new InvoiceEntry("testOut", 1, 11_329.47, 0, Vat.VAT_0, null),
+                /*33*/ new InvoiceEntry("hdmi cable", 5, 250, 20, Vat.VAT_8, null)
         )
 
         return List.of(
-                new Invoice(LocalDate.of(2000, 11, 23), company1, company2, List.of(
-                        invoiceEntries.get(1), invoiceEntries.get(3), invoiceEntries.get(9), invoiceEntries.get(10),
-                        invoiceEntries.get(26), invoiceEntries.get(20), invoiceEntries.get(17)
-                )),
-                new Invoice(LocalDate.of(2005, 10, 25), company3, company2, List.of(
-                        invoiceEntries.get(3), invoiceEntries.get(4), invoiceEntries.get(9), invoiceEntries.get(12),
-                        invoiceEntries.get(11), invoiceEntries.get(22), invoiceEntries.get(12)
-                )),
-                new Invoice(LocalDate.of(2009, 1, 22), company4, company1, List.of(
-                        invoiceEntries.get(3), invoiceEntries.get(4), invoiceEntries.get(9), invoiceEntries.get(12),
-                        invoiceEntries.get(11), invoiceEntries.get(22), invoiceEntries.get(12)
-                )),
-                new Invoice(LocalDate.of(2010, 7, 22), company2, company1, List.of(
-                        invoiceEntries.get(1), invoiceEntries.get(3), invoiceEntries.get(9), invoiceEntries.get(10),
-                        invoiceEntries.get(26), invoiceEntries.get(20), invoiceEntries.get(17)
-                )),
-                new Invoice(LocalDate.of(2010, 2, 22), company4, company3, List.of(
-                        invoiceEntries.get(9), invoiceEntries.get(10), invoiceEntries.get(11), invoiceEntries.get(10),
-                        invoiceEntries.get(12), invoiceEntries.get(13), invoiceEntries.get(14)
-                )),
-                new Invoice(LocalDate.of(2010, 2, 22), company4, company5, List.of(
-                        invoiceEntries.get(22), invoiceEntries.get(16), invoiceEntries.get(28)
-                )),
-                new Invoice(LocalDate.of(2010, 2, 22), company6, company4, List.of(
-                        invoiceEntries.get(22), invoiceEntries.get(16), invoiceEntries.get(28)
-                )),
-                new Invoice(LocalDate.of(2012, 2, 23), company6, company7, List.of(
-                        invoiceEntries.get(31)
-                )),
-                new Invoice(LocalDate.of(2012, 2, 23), company7, company6, List.of(
-                        invoiceEntries.get(32)
-                ))
+                Invoice.builder()
+                        .date(LocalDate.of(2000, 11, 23))
+                        .number("2021/05/09/1289")
+                        .buyer(company1)
+                        .seller(company2)
+                        .invoiceEntries(List.of(
+                                invoiceEntries.get(1), invoiceEntries.get(3), invoiceEntries.get(9), invoiceEntries.get(10),
+                                invoiceEntries.get(26), invoiceEntries.get(20), invoiceEntries.get(17))
+                        )
+                        .build(),
+                Invoice.builder()
+                        .date(LocalDate.of(2005, 10, 25))
+                        .number("2021/05/09/5675")
+                        .buyer(company3)
+                        .seller(company2)
+                        .invoiceEntries(List.of(
+                                invoiceEntries.get(3), invoiceEntries.get(4), invoiceEntries.get(9), invoiceEntries.get(12),
+                                invoiceEntries.get(11), invoiceEntries.get(22), invoiceEntries.get(12)))
+                        .build(),
+                Invoice.builder()
+                        .date(LocalDate.of(2009, 1, 22))
+                        .number("2021/05/09/3333")
+                        .buyer(company4)
+                        .seller(company1)
+                        .invoiceEntries(List.of(
+                                invoiceEntries.get(3), invoiceEntries.get(4), invoiceEntries.get(9), invoiceEntries.get(12),
+                                invoiceEntries.get(11), invoiceEntries.get(22), invoiceEntries.get(12)))
+                        .build(),
+                Invoice.builder()
+                        .date(LocalDate.of(2010, 7, 22))
+                        .number("2021/05/09/5555")
+                        .buyer(company2)
+                        .seller(company1)
+                        .invoiceEntries(List.of(
+                                invoiceEntries.get(1), invoiceEntries.get(3), invoiceEntries.get(9), invoiceEntries.get(10),
+                                invoiceEntries.get(26), invoiceEntries.get(20), invoiceEntries.get(17)))
+                        .build(),
+
+                Invoice.builder()
+                        .date(LocalDate.of(2010, 2, 22))
+                        .number("2021/05/09/2222")
+                        .buyer(company4)
+                        .seller(company3)
+                        .invoiceEntries(List.of(
+                                invoiceEntries.get(9), invoiceEntries.get(10), invoiceEntries.get(11), invoiceEntries.get(10),
+                                invoiceEntries.get(12), invoiceEntries.get(13), invoiceEntries.get(14)))
+                        .build(),
+                Invoice.builder()
+                        .date(LocalDate.of(2010, 2, 22))
+                        .number("2021/05/09/1111")
+                        .buyer(company4)
+                        .seller(company5)
+                        .invoiceEntries(List.of(
+                                invoiceEntries.get(22), invoiceEntries.get(16), invoiceEntries.get(28)))
+                        .build(),
+
+                Invoice.builder()
+                        .date(LocalDate.of(2010, 2, 22))
+                        .number("2021/05/09/9864")
+                        .buyer(company6)
+                        .seller(company4)
+                        .invoiceEntries(List.of(
+                                invoiceEntries.get(22), invoiceEntries.get(16), invoiceEntries.get(28)))
+                        .build(),
+                Invoice.builder()
+                        .date(LocalDate.of(2012, 2, 23))
+                        .number("2021/05/09/3278")
+                        .buyer(company6)
+                        .seller(company7)
+                        .invoiceEntries(List.of(
+                                invoiceEntries.get(31)))
+                        .build(),
+                Invoice.builder()
+                        .date(LocalDate.of(2012, 2, 23))
+                        .number("2021/05/09/3455")
+                        .buyer(company7)
+                        .seller(company6)
+                        .invoiceEntries(List.of(
+                                invoiceEntries.get(32)))
+                        .build()
         )
     }
 }

@@ -1,10 +1,6 @@
 package pl.futurecollars.invoicing.service
 
-import pl.futurecollars.invoicing.model.Car
-import pl.futurecollars.invoicing.model.Company
-import pl.futurecollars.invoicing.model.Invoice
-import pl.futurecollars.invoicing.model.InvoiceEntry
-import pl.futurecollars.invoicing.model.Vat
+import pl.futurecollars.invoicing.model.*
 import spock.lang.Specification
 
 import java.time.LocalDate
@@ -19,17 +15,49 @@ class JsonServiceTest extends Specification {
     def static invoice
 
     def setupSpec() {
-        buyer =  new Company("382-22-1584", "377 Ohio Road Pulo", "Microsoft",
-                BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
-        seller = new Company("677-31-4788", "ul. Dluga Warszawa", "JBL",
-                BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
+        buyer = Company.builder()
+                .taxIdentificationNumber("382-22-1584")
+                .address("377 Ohio Road Pulo")
+                .name("Microsoft")
+                .healthInsurance(BigDecimal.valueOf(319.94))
+                .pensionInsurance(BigDecimal.valueOf(514.57))
+                .build()
+
+        seller = Company.builder()
+                .taxIdentificationNumber("677-31-4788")
+                .address("ul. Dluga Warszawa")
+                .name("JBL")
+                .healthInsurance(BigDecimal.valueOf(319.94))
+                .pensionInsurance(BigDecimal.valueOf(514.57))
+                .build()
 
         invoiceEntries = List.of(
-                new InvoiceEntry("tv", 1, 1000, 230, Vat.VAT_23),
-                new InvoiceEntry("Radio", 1, 100, 23, Vat.VAT_23, new Car(true, "HPEXE-3"))
+                InvoiceEntry.builder()
+                        .description("tv")
+                        .quantity(1)
+                        .price(BigDecimal.valueOf(1000))
+                        .vatValue(BigDecimal.valueOf(230))
+                        .vatRate(Vat.VAT_23)
+                        .build(),
+
+
+                InvoiceEntry.builder()
+                        .description("Radio")
+                        .quantity(1)
+                        .price(BigDecimal.valueOf(100))
+                        .vatValue(BigDecimal.valueOf(23))
+                        .vatRate(Vat.VAT_23)
+                        .car(new Car(true, "HPEXE-3"))
+                        .build()
         )
 
-        invoice = new Invoice(LocalDate.of(2020, 1, 20), buyer, seller, invoiceEntries)
+        invoice = Invoice.builder()
+                .date(LocalDate.of(2020, 1, 20))
+                .buyer(buyer)
+                .seller(seller)
+                .invoiceEntries(invoiceEntries)
+                .build()
+
         jsonSample = "{\"id\":0,\"number\":null,\"date\":\"2020-01-20\",\"buyer\":{\"tax" +
                 "IdentificationNumber\":\"382-22-1584\",\"address\":\"377 Ohio Road Pulo\",\"name\":\"Micro" +
                 "soft\",\"healthInsurance\":319.94,\"pensionInsurance\":514.57},\"seller\":{\"tax" +

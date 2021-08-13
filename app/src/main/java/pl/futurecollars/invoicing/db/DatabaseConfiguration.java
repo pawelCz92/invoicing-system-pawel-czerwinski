@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
+import pl.futurecollars.invoicing.db.sql.SqlDatabase;
 import pl.futurecollars.invoicing.service.JsonService;
 import pl.futurecollars.invoicing.service.file.FileService;
 import pl.futurecollars.invoicing.service.file.IdProvider;
@@ -46,5 +48,11 @@ public class DatabaseConfiguration {
     InMemoryDataBase inMemoryDataBase() {
         log.info("In memory based database is in use");
         return new InMemoryDataBase();
+    }
+
+    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "sql")
+    @Bean
+    public Database sqlDatabase(JdbcTemplate jdbcTemplate) {
+        return new SqlDatabase(jdbcTemplate);
     }
 }
