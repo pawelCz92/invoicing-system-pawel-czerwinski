@@ -10,7 +10,7 @@ import pl.futurecollars.invoicing.model.InvoiceEntry;
 
 public interface Database {
 
-    int save(Invoice invoice);
+    Long save(Invoice invoice);
 
     Optional<Invoice> getById(Long id);
 

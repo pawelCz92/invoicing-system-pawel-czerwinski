@@ -21,7 +21,7 @@ public class InvoiceController implements InvoiceApi {
     }
 
     @Override
-    public ResponseEntity<Integer> saveInvoice(@RequestBody Invoice invoice) {
+    public ResponseEntity<Long> saveInvoice(@RequestBody Invoice invoice) {
         try {
             return ResponseEntity.ok(invoiceService.save(invoice));
         } catch (Exception e) {

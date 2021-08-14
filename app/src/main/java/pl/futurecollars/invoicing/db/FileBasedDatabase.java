@@ -53,8 +53,10 @@ public class FileBasedDatabase implements Database {
     public void update(Long id, Invoice updatedInvoice) {
         int lineNumber = fileServiceForData.getLineNumberById(dbFilePath, id)
             .orElseThrow(() -> new IllegalArgumentException("There is no id : " + id));
+
         List<Invoice> allInvoices = getAll();
         updatedInvoice.setId(id);
+
         allInvoices.set(lineNumber, updatedInvoice);
         fileServiceForData.rewriteFileByList(dbFilePath,
             allInvoices.stream()

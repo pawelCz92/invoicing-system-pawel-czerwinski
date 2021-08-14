@@ -23,7 +23,7 @@ public interface InvoiceApi {
 
     @ApiOperation(value = "Add new invoice to system")
     @PostMapping
-    ResponseEntity<Integer> saveInvoice(@RequestBody Invoice invoice);
+    ResponseEntity<Long> saveInvoice(@RequestBody Invoice invoice);
 
     @ApiOperation(value = "Get invoice by id")
     @GetMapping("/{id}")

@@ -15,8 +15,8 @@ public class IdProvider {
         this.fileService = fileService;
     }
 
-    public int getNextIdAndIncrement() {
-        int id = readLastId() + 1;
+    public long getNextIdAndIncrement() {
+        long id = readLastId() + 1;
         saveId(id);
         return id;
     }
@@ -43,7 +43,7 @@ public class IdProvider {
         }
     }
 
-    private void saveId(int id) {
+    private void saveId(long id) {
         fileService.rewriteFileByList(filePath, List.of(String.valueOf(id)));
     }
 

@@ -15,7 +15,7 @@ public class InvoiceService {
         this.database = database;
     }
 
-    public int save(Invoice invoice) {
+    public Long save(Invoice invoice) {
         return database.save(invoice);
     }
 

@@ -1,6 +1,6 @@
 CREATE TABLE public.invoices
 (
-    id             serial                NOT NULL,
+    id             bigserial                NOT NULL,
     issue_date     date                  NOT NULL,
     invoice_number character varying(50) NOT NULL,
     PRIMARY KEY (id)

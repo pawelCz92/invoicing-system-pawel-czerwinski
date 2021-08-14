@@ -1,12 +1,12 @@
 CREATE TABLE public.invoice_invoice_entries
 (
-    invoice_id       bigint NOT NULL,
+    invoices_id       bigint NOT NULL,
     invoice_entry_id bigint NOT NULL,
-    PRIMARY KEY (invoice_id, invoice_entry_id)
+    PRIMARY KEY (invoices_id, invoice_entry_id)
 );
 
 ALTER TABLE public.invoice_invoice_entries
-    ADD CONSTRAINT invoice_id_fk FOREIGN KEY (invoice_id)
+    ADD CONSTRAINT invoice_id_fk FOREIGN KEY (invoices_id)
         REFERENCES public.invoices (id);
 
 ALTER TABLE public.invoice_invoice_entries

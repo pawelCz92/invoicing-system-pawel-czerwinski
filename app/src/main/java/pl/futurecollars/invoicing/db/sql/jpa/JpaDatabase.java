@@ -16,12 +16,12 @@ public class JpaDatabase implements Database {
     private final InvoiceRepository invoiceRepository;
 
     @Override
-    public int save(Invoice invoice) {
+    public Long save(Invoice invoice) {
         return invoiceRepository.save(invoice).getId();
     }
 
     @Override
-    public Optional<Invoice> getById(int id) {
+    public Optional<Invoice> getById(Long id) {
         return invoiceRepository.findById(id);
     }
 
@@ -33,7 +33,7 @@ public class JpaDatabase implements Database {
     }
 
     @Override
-    public void update(int id, Invoice updatedInvoice) {
+    public void update(Long id, Invoice updatedInvoice) {
         Optional<Invoice> invoiceOpt = getById(id);
 
         if (invoiceOpt.isPresent()) {
@@ -50,7 +50,7 @@ public class JpaDatabase implements Database {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Long id) {
         Optional<Invoice> invoice = getById(id);
         invoice.ifPresentOrElse(invoiceRepository::delete, () -> {
             String message = "There is no such id for delete invoice";

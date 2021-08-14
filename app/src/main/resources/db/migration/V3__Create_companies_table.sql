@@ -1,6 +1,6 @@
 CREATE TABLE public.companies
 (
-    id                        serial                 NOT NULL,
+    id                        bigserial                 NOT NULL,
     tax_identification_number character varying(20)  NOT NULL,
     address                   character varying(100) NOT NULL,
     name                      character varying(100) NOT NULL,

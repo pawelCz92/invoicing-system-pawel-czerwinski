@@ -4,10 +4,14 @@ import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -30,6 +34,7 @@ public class Invoice {
     private Long id;
 
     @ApiModelProperty(value = "Invoice number (assigned by user)", required = true, example = "2021/05/09/0000001")
+    @Column(name = "invoice_number")
     private String number;
 
     @ApiModelProperty(value = "Date invoice was created", required = true)
@@ -37,13 +42,16 @@ public class Invoice {
 
     @ApiModelProperty(value = "Company who bought the product/service", required = true)
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "buyer")
     private Company buyer;
 
     @ApiModelProperty(value = "Company who sold product/service", required = true)
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "seller")
     private Company seller;
 
     @ApiModelProperty(value = "List of products/service", required = true)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "invoice_invoice_entries", inverseJoinColumns = @JoinColumn(name = "invoice_entry_id"))
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<InvoiceEntry> invoiceEntries;
 }

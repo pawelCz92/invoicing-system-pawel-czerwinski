@@ -48,7 +48,7 @@ public class FileService {
         }
     }
 
-    public Optional<String> findLineById(Path filePath, int id) {
+    public Optional<String> findLineById(Path filePath, Long id) {
         List<String> searchResult;
         searchResult = readLinesToList(filePath).stream()
             .filter(line -> checkMatching(line, id))
@@ -64,7 +64,7 @@ public class FileService {
         return Optional.of(searchResult.get(0));
     }
 
-    private boolean checkMatching(String line, int id) {
+    private boolean checkMatching(String line, Long id) {
         Matcher matcher = PATTERN_FOR_SEARCH_BY_ID.matcher(line);
         if (matcher.matches()) {
             return matcher.group(1).equals(String.valueOf(id));
@@ -72,10 +72,10 @@ public class FileService {
         return false;
     }
 
-    public Optional<Integer> getLineNumberById(Path filePath, int id) {
+    public Optional<Integer> getLineNumberById(Path filePath, Long id) {
         List<String> lines = readLinesToList(filePath);
         int lineNumber = 0;
-        int foundedIdNumber = 0;
+        long foundedIdNumber = 0L;
 
         for (int i = 0; i < lines.size(); i++) {
             if (checkMatching(lines.get(i), id)) {
