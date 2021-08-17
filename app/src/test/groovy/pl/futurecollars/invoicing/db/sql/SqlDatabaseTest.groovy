@@ -38,7 +38,6 @@ class SqlDatabaseTest extends AbstractDatabaseTest {
         flyway.migrate()
 
         database = new SqlDatabase(jdbcTemplate)
-        database.getVatRatesMap()
 
         return database
     }

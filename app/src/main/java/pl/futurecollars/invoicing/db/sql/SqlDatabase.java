@@ -125,7 +125,7 @@ public class SqlDatabase implements Database {
 
     private void insertAssignationInvoiceEntryToInvoice(long invoiceId, long invoiceEntryId) {
         jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement("INSERT INTO invoices_invoice_entries VALUES (?, ?);");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO invoice_invoice_entries VALUES (?, ?);");
             ps.setLong(1, invoiceId);
             ps.setLong(2, invoiceEntryId);
             return ps;
@@ -238,7 +238,7 @@ public class SqlDatabase implements Database {
 
     private List<InvoiceEntry> getInvoiceEntriesFromInvoice(long invoiceId) {
         return jdbcTemplate.query(
-            "SELECT * FROM invoices_invoice_entries iie "
+            "SELECT * FROM invoice_invoice_entries iie "
                 + "INNER JOIN invoice_entries e ON iie.invoice_entry_id = e.id "
                 + "LEFT OUTER JOIN cars c ON e.expense_related_to_car = c.id "
                 + "WHERE iie.invoice_id = " + invoiceId, (rs, ignored) ->
@@ -279,7 +279,7 @@ public class SqlDatabase implements Database {
     }
 
     private void deleteInvoiceEntryAndCarByInvoiceId(long invoiceId) {
-        jdbcTemplate.update("DELETE FROM invoices_invoice_entries iie WHERE iie.invoice_id = " + invoiceId);
+        jdbcTemplate.update("DELETE FROM invoice_invoice_entries iie WHERE iie.invoice_id = " + invoiceId);
     }
 
     private void deleteInvoiceById(long id) {

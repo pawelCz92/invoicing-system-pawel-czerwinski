@@ -31,6 +31,7 @@ public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Exclude
+    @Column(name = "id")
     private Long id;
 
     @ApiModelProperty(value = "Invoice number (assigned by user)", required = true, example = "2021/05/09/0000001")
@@ -51,7 +52,9 @@ public class Invoice {
     private Company seller;
 
     @ApiModelProperty(value = "List of products/service", required = true)
-    @JoinTable(name = "invoice_invoice_entries", inverseJoinColumns = @JoinColumn(name = "invoice_entry_id"))
+    @JoinTable(name = "invoice_invoice_entries",
+        joinColumns = {@JoinColumn (name = "invoice_id")},
+        inverseJoinColumns = @JoinColumn(name = "invoice_entry_id"))
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<InvoiceEntry> invoiceEntries;
 }

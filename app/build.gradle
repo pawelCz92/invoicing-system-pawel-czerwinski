@@ -142,7 +142,12 @@ task testWithJpaDatabase(type: Test) {
     systemProperty 'spring.profiles.active', 'jpa'
 }
 
+task testWithJpaFlywayDatabase(type: Test) {
+    systemProperty 'spring.profiles.active', 'jpa-flyway'
+}
+
 check.dependsOn testWithFileDatabase
 check.dependsOn testWithMemoryDatabase
 check.dependsOn testWithSqlDatabase
 check.dependsOn testWithJpaDatabase
+check.dependsOn testWithJpaFlywayDatabase

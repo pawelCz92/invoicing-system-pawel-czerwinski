@@ -8,6 +8,3 @@ CREATE TABLE public.companies
     pension_insurance         numeric(10, 2)         NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
-
-ALTER TABLE public.companies
-    ADD CONSTRAINT tin_unique UNIQUE (tax_identification_number);
