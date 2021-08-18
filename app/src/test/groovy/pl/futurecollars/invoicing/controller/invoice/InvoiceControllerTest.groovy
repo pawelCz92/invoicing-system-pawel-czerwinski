@@ -94,7 +94,7 @@ class InvoiceControllerTest extends Specification {
                 .contentAsString
 
         then:
-        responseAsJson == invoiceAsJson
+        jsonService.stringToObject(responseAsJson, Invoice.class).toString() == invoice.toString()
     }
 
     def "should return notFound response when try to update invoice by not existing id"() {
