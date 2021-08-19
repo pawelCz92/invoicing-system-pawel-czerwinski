@@ -22,7 +22,7 @@ class TaxCalculatorServiceTest extends Specification {
 
     def saveSampleInvoicesToBase() {
         sampleInvoices = TestHelpers.getSampleInvoicesList()
-        sampleInvoices.forEach(invoice -> database.save(invoice))
+        sampleInvoices.forEach({ invoice -> database.save(invoice) })
     }
 
     def "should calculate taxes"() {

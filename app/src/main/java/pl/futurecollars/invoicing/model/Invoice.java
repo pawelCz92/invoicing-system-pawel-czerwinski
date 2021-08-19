@@ -55,6 +55,6 @@ public class Invoice {
     @JoinTable(name = "invoice_invoice_entries",
         joinColumns = {@JoinColumn (name = "invoice_id")},
         inverseJoinColumns = @JoinColumn(name = "invoice_entry_id"))
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<InvoiceEntry> invoiceEntries;
 }

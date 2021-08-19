@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import pl.futurecollars.invoicing.db.Database;
 import pl.futurecollars.invoicing.model.Invoice;
 
@@ -17,6 +18,9 @@ public class JpaDatabase implements Database {
 
     @Override
     public Long save(Invoice invoice) {
+        invoice.setId(null);
+        invoice.getBuyer().setId(null);
+        invoice.getSeller().setId(null);
         return invoiceRepository.save(invoice).getId();
     }
 

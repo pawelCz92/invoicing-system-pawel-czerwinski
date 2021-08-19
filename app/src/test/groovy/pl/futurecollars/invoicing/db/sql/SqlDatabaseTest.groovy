@@ -55,9 +55,9 @@ class SqlDatabaseTest extends AbstractDatabaseTest {
 
         then:
         invoiceAfterUpdate.date == database.getById(invoiceToUpdate.id).
-                map(inv -> inv.getDate()).orElse(null)
+                map({ inv -> inv.getDate() }).orElse(null)
         invoiceAfterUpdate.number == database.getById(invoiceToUpdate.id).
-                map(inv -> inv.getNumber()).orElse(null)
+                map({ inv -> inv.getNumber() }).orElse(null)
     }
 
     def "should update invoice buyer and seller for existing company"() {
@@ -93,11 +93,11 @@ class SqlDatabaseTest extends AbstractDatabaseTest {
                 new Company("888-88-888", "ul. Dluga Woclaw", "JVC",
                         BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
         int lastBuyerId = database.getAll().stream()
-                .map(inv -> inv.getBuyer().id)
-                .max(Integer::compare).orElse(0)
+                .map ({ inv -> inv.getBuyer().id })
+                .max( {x, y -> Integer.compare(x,y)}).orElse(0)
         int lastSellerId = database.getAll().stream()
-                .map(inv -> inv.getSeller().id)
-                .max(Integer::compare).orElse(0)
+                .map({ inv -> inv.getSeller().id })
+                .max({ x, y -> Integer.compare(x, y) }).orElse(0)
 
         int lastCompanyId = lastBuyerId > lastSellerId ? lastBuyerId : lastSellerId
 
