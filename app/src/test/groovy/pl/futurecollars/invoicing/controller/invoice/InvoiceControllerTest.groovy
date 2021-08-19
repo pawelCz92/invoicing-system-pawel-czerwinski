@@ -34,10 +34,10 @@ class InvoiceControllerTest extends Specification {
                 .response
                 .contentAsString
 
-        List<Invoice> invoices = (List<Invoice>) jsonService.stringToObject(addingResponse, List<Invoice>.class)
+        List<Invoice> invoices = jsonService.stringToObject(addingResponse, List.class)
 
         if (invoices.size() > 0) {
-            invoices.forEach(invoice -> {
+            invoices.forEach({ invoice ->
                 mockMvc.perform(delete(COLLECTION + invoice.id)).andExpect(status().isNoContent())
             }
             )
@@ -94,7 +94,7 @@ class InvoiceControllerTest extends Specification {
                 .contentAsString
 
         then:
-        jsonService.stringToObject(responseAsJson, Invoice.class).toString() == invoice.toString()
+        jsonService.stringToObject(responseAsJson, Invoice.class) == invoice
     }
 
     def "should return notFound response when try to update invoice by not existing id"() {
@@ -136,7 +136,7 @@ class InvoiceControllerTest extends Specification {
                 .contentAsString
 
         then:
-        updatedInvoiceAsString == updatedInvoiceFromBase
+        updatedInvoice == jsonService.stringToObject(updatedInvoiceFromBase, Invoice.class)
     }
 
     def "should delete invoice by id"() {
@@ -204,6 +204,6 @@ class InvoiceControllerTest extends Specification {
                 .contentAsString
 
         then:
-        jsonService.stringToObject(response, List<String>.class).size() == 2
+        jsonService.stringToObject(response, List.class).size() == 2
     }
 }

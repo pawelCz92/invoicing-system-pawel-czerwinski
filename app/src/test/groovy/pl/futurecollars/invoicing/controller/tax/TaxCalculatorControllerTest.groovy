@@ -56,8 +56,10 @@ class TaxCalculatorControllerTest extends Specification {
     def addInvoicesToBase() {
         setup:
         TestHelpers.getSampleInvoicesList()
-                .forEach(invoice -> mockMvc.perform(post("/invoices/").contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonService.objectToString(invoice))).andExpect(status().isOk()))
+                .forEach({ invoice ->
+                    mockMvc.perform(post("/invoices/").contentType(MediaType.APPLICATION_JSON)
+                            .content(jsonService.objectToString(invoice))).andExpect(status().isOk())
+                })
     }
 
     def "should return object with calculated taxes for existing TIN"() {

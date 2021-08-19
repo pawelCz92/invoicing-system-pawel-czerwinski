@@ -1,25 +1,23 @@
 buildscript {
     ext {
-        lombokVersion = '1.18.20'
+        flywayVersion = '7.6.0'
+        lombokVersion = '1.18.18'
         spockVersion = '1.3-groovy-2.5'
-        jacksonVersion = '2.11.1'
-        springBootVersion = '2.4.4'
-        springDependencyManagementVersion = '1.0.11.RELEASE'
+        springBootVersion = '2.4.2'
         springFoxStarterVersion = '3.0.0'
         springFoxUiVersion = '3.0.0'
-        flywayVersion = '7.11.3'
-        postgressqlVersion = '42.2.19'
-        h2Version = '1.4.200'
+        springDependencyManagementVersion = '1.0.11.RELEASE'
     }
 }
 
 plugins {
-    id 'groovy'
-    id 'application'
-    id 'checkstyle'
-    id 'jacoco'
     id 'org.springframework.boot' version "${springBootVersion}"
     id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+    id 'java'
+    id 'groovy'
+    id 'checkstyle'
+    id 'jacoco'
+  //  id 'codenarc'
 }
 
 repositories {
@@ -27,38 +25,70 @@ repositories {
 }
 
 dependencies {
-   // testImplementation 'org.codehaus.groovy:groovy:2.5.0'
-
-    testImplementation "org.spockframework:spock-core:${spockVersion}"
-    testImplementation "org.spockframework:spock-spring:${spockVersion}"
-
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    compile "org.flywaydb:flyway-core:${flywayVersion}"
+
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
-    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
 
-    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
-
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation "org.springframework.boot:spring-boot-starter-jdbc"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
     implementation "io.springfox:springfox-boot-starter:${springFoxStarterVersion}"
     implementation "io.springfox:springfox-swagger-ui:${springFoxUiVersion}"
 
-    runtimeOnly "org.postgresql:postgresql:${postgressqlVersion}"
-    runtimeOnly "com.h2database:h2:${h2Version}"
-    implementation "org.flywaydb:flyway-core:${flywayVersion}"
+    runtimeOnly 'com.h2database:h2:1.4.200'
+    runtimeOnly 'org.postgresql:postgresql:42.2.19'
 
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.spockframework:spock-core:${spockVersion}"
+    testImplementation "org.spockframework:spock-spring:${spockVersion}"
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'BRANCH'
+                minimum = 0.80
+            }
+        }
+        rule {
+            limit {
+                counter = 'LINE'
+                minimum = 0.85
+            }
+        }
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['pl/futurecollars/invoicing/App.class', 'pl/futurecollars/invoicing/db/DatabaseConfiguration.class'])
+        }))
+    }
 }
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(14)
+        languageVersion = JavaLanguageVersion.of(15)
         vendor = JvmVendorSpec.ADOPTOPENJDK
     }
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+check {
+    finalizedBy jacocoTestCoverageVerification
+}
+
+jacocoTestReport {
+    dependsOn test
 }
 
 checkstyle {
@@ -68,63 +98,12 @@ checkstyle {
     maxErrors = 0
 }
 
-test {
-    useJUnitPlatform()
-    finalizedBy jacocoTestReport
-    finalizedBy jacocoTestCoverageVerification
-}
-
-jacocoTestReport {
-    dependsOn test
-
-    reports {
-        html.destination layout.buildDirectory.dir('reports/jacoco').get().asFile
-    }
-}
-
-jacoco {
-    toolVersion = "0.8.6"
-}
-
-var jacocoExcludeList = [
-        'pl/futurecollars/invoicing/App.class'
-]
-
-jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                counter = 'BRANCH'
-                minimum = 0.8
-            }
-        }
-
-        rule {
-            limit {
-                counter = 'LINE'
-                minimum = 0.8
-            }
-        }
-    }
-    afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: jacocoExcludeList)
-        }))
-    }
-}
-
-jacocoTestReport {
-    afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: jacocoExcludeList)
-        }))
-    }
-}
-
-tasks.register('applicationCodeCoverageReport', JacocoReport) {
-    executionData run
-    sourceSets sourceSets.main
-}
+//codenarcTest {
+//    configFile = file('../config/codenarc/codenarc.groovy')
+//    maxPriority1Violations = 0
+//    maxPriority2Violations = 0
+//    maxPriority3Violations = 0
+//}
 
 task testWithFileDatabase(type: Test) {
     systemProperty 'spring.profiles.active', 'file'
@@ -146,8 +125,17 @@ task testWithJpaFlywayDatabase(type: Test) {
     systemProperty 'spring.profiles.active', 'jpa-flyway'
 }
 
+task testWithPostgreSqlDatabase(type: Test) {
+    systemProperty 'spring.profiles.active', 'sql-pg'
+}
+
 check.dependsOn testWithFileDatabase
 check.dependsOn testWithMemoryDatabase
 check.dependsOn testWithSqlDatabase
 check.dependsOn testWithJpaDatabase
 check.dependsOn testWithJpaFlywayDatabase
+
+String osName = System.getProperty("os.name").toLowerCase()
+if (osName.contains("mac")) {
+    check.dependsOn testWithPostgreSqlDatabase
+}

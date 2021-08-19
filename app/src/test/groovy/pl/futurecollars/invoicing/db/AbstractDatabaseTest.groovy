@@ -10,13 +10,20 @@ abstract class AbstractDatabaseTest extends Specification {
 
     List<Invoice> invoiceList = TestHelpers.getSampleInvoicesList()
 
-    Database database = getDatabaseInstance()
 
     abstract Database getDatabaseInstance()
 
+    Database database
+
+    def setup() {
+        database = getDatabaseInstance()
+        database.deleteAll()
+
+        assert database.getAll().isEmpty()
+    }
 
     def saveInvoices() {
-        invoiceList.forEach(database::save)
+        invoiceList.forEach({ invoice -> database.save(invoice) })
         invoiceList = database.getAll()
     }
 
@@ -80,7 +87,7 @@ abstract class AbstractDatabaseTest extends Specification {
         saveInvoices()
 
         when:
-        database.getAll().forEach(inv -> database.delete(inv.id))
+        database.getAll().forEach({ inv -> database.delete(inv.id) })
 
         then:
         database.getAll().isEmpty()

@@ -17,6 +17,9 @@ public class JpaDatabase implements Database {
 
     @Override
     public Long save(Invoice invoice) {
+        invoice.setId(null);
+        invoice.getBuyer().setId(null);
+        invoice.getSeller().setId(null);
         return invoiceRepository.save(invoice).getId();
     }
 
