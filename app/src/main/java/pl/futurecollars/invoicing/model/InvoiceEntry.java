@@ -50,7 +50,7 @@ public class InvoiceEntry {
     private Vat vatRate;
 
     @ApiModelProperty(value = "Car related", required = true)
-    @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "expense_related_to_car")
     private Car car;
 

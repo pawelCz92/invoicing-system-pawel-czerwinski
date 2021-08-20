@@ -16,11 +16,18 @@ public class JpaDatabase implements Database {
 
     private final InvoiceRepository invoiceRepository;
 
+    @Transactional
     @Override
     public Long save(Invoice invoice) {
         invoice.setId(null);
         invoice.getBuyer().setId(null);
         invoice.getSeller().setId(null);
+
+//        invoice.setInvoiceEntries(invoice.getInvoiceEntries().stream().map(ie -> {
+//            ie.setId(null);
+//        return ie;
+//        }).collect(Collectors.toList()));
+
         return invoiceRepository.save(invoice).getId();
     }
 

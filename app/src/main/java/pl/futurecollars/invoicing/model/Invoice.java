@@ -2,6 +2,7 @@ package pl.futurecollars.invoicing.model;
 
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -55,6 +56,19 @@ public class Invoice {
     @JoinTable(name = "invoice_invoice_entries",
         joinColumns = {@JoinColumn (name = "invoice_id")},
         inverseJoinColumns = @JoinColumn(name = "invoice_entry_id"))
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<InvoiceEntry> invoiceEntries;
+
+    public void addInvoiceEntry(InvoiceEntry invoiceEntry){
+        if(invoiceEntries == null){
+            invoiceEntries = new ArrayList<>();
+        }
+        invoiceEntries.add(invoiceEntry);
+    }
+
+    public void removeInvoiceEntry(InvoiceEntry invoiceEntry){
+        if(invoiceEntry != null){
+            invoiceEntries.remove(invoiceEntry);
+        }
+    }
 }
