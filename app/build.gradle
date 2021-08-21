@@ -17,7 +17,7 @@ plugins {
     id 'groovy'
     id 'checkstyle'
     id 'jacoco'
-  //  id 'codenarc'
+
 }
 
 repositories {
@@ -67,7 +67,13 @@ jacocoTestCoverageVerification {
 
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: ['pl/futurecollars/invoicing/App.class', 'pl/futurecollars/invoicing/db/DatabaseConfiguration.class'])
+            fileTree(dir: it, exclude:
+                    [
+                            'pl/futurecollars/invoicing/App.class',
+                            'pl/futurecollars/invoicing/db/DatabaseConfiguration.class',
+                            'pl/futurecollars/invoicing/model/*'
+
+                    ])
         }))
     }
 }
@@ -97,13 +103,6 @@ checkstyle {
     maxWarnings = 0
     maxErrors = 0
 }
-
-//codenarcTest {
-//    configFile = file('../config/codenarc/codenarc.groovy')
-//    maxPriority1Violations = 0
-//    maxPriority2Violations = 0
-//    maxPriority3Violations = 0
-//}
 
 task testWithFileDatabase(type: Test) {
     systemProperty 'spring.profiles.active', 'file'

@@ -2,12 +2,9 @@ package pl.futurecollars.invoicing.db.sql;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,22 +18,9 @@ import pl.futurecollars.invoicing.model.Vat;
 public class SqlDatabase implements Database {
 
     private final JdbcTemplate jdbcTemplate;
-    private final Map<Vat, Long> vatToId = new HashMap<>();
-    private final Map<Long, Vat> idToVat = new HashMap<>();
 
     public SqlDatabase(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    @PostConstruct
-    void getVatRatesMap() {
-        jdbcTemplate.query("SELECT * FROM vat",
-            rs -> {
-                Vat vat = Vat.valueOf("VAT_" + rs.getString("name"));
-                Long id = rs.getLong("id");
-                vatToId.put(vat, id);
-                idToVat.put(id, vat);
-            });
     }
 
     @Override
