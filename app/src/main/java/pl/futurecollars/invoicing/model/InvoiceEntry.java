@@ -3,6 +3,7 @@ package pl.futurecollars.invoicing.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,7 +18,6 @@ import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "invoice_entries")
@@ -73,16 +73,28 @@ public class InvoiceEntry {
         }
         InvoiceEntry that = (InvoiceEntry) o;
         boolean quantityCompare = false;
-        if (!Objects.isNull(this.quantity) && !Objects.isNull(that.quantity)){
-           quantityCompare = this.quantity.compareTo(that.quantity) == 0;
+        if (!Objects.isNull(this.quantity) && !Objects.isNull(that.quantity)) {
+            quantityCompare = this.quantity.compareTo(that.quantity) == 0;
         }
-        return Objects.equals(description, that.description) && quantityCompare &&
-            Objects.equals(price, that.price) && Objects.equals(vatValue, that.vatValue) && vatRate == that.vatRate &&
-            Objects.equals(car, that.car);
+        return Objects.equals(description, that.description) && quantityCompare
+            && Objects.equals(price, that.price) && Objects.equals(vatValue, that.vatValue) && vatRate == that.vatRate
+            && Objects.equals(car, that.car);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(description, quantity, price, vatValue, vatRate, car);
+    }
+
+    @Override
+    public String toString() {
+        return "InvoiceEntry{"
+            + "description='" + description + '\''
+            + ", quantity=" + quantity.setScale(2, RoundingMode.HALF_UP)
+            + ", price=" + price
+            + ", vatValue=" + vatValue
+            + ", vatRate=" + vatRate
+            + ", car=" + car
+            + '}';
     }
 }

@@ -2,6 +2,7 @@ package pl.futurecollars.invoicing.db
 
 import pl.futurecollars.invoicing.TestHelpers
 import pl.futurecollars.invoicing.model.Invoice
+import pl.futurecollars.invoicing.service.JsonService
 import spock.lang.Specification
 import spock.lang.Stepwise
 
@@ -9,6 +10,7 @@ import spock.lang.Stepwise
 abstract class AbstractDatabaseTest extends Specification {
 
     List<Invoice> invoiceList = TestHelpers.getSampleInvoicesList()
+    JsonService jsonService = new JsonService()
 
     abstract Database getDatabaseInstance()
 
@@ -22,8 +24,13 @@ abstract class AbstractDatabaseTest extends Specification {
     }
 
     def saveInvoices() {
-        invoiceList.forEach({ invoice -> database.save(invoice) })
-        invoiceList = database.getAll()
+        List<Invoice> invoicesToSave = List.of(
+                invoiceList.get(0),
+                invoiceList.get(4),
+                invoiceList.get(8)
+        )
+        invoicesToSave.forEach({ inv -> database.save(inv) })
+
     }
 
     def "should inject database instance"() {
@@ -43,42 +50,54 @@ abstract class AbstractDatabaseTest extends Specification {
 
     def "should return all saved invoices"() {
         setup:
-        saveInvoices()
+        List<Invoice> invoicesToSave = List.of(
+                invoiceList.get(0),
+                invoiceList.get(4),
+                invoiceList.get(8)
+        )
+        invoicesToSave.forEach({ inv -> database.save(inv) })
 
         when:
         List<Invoice> savedInvoices = database.getAll()
 
         then:
-        invoiceList.size() == savedInvoices.size()
-        invoiceList.containsAll(savedInvoices)
+        invoicesToSave.size() == savedInvoices.size()
+        jsonService.objectToString(invoicesToSave) == jsonService.objectToString(savedInvoices)
+
     }
 
     def "should return invoice by id"() {
-        given:
-        saveInvoices()
+        setup:
+        List<Invoice> invoicesToSave = List.of(
+                invoiceList.get(0),
+                invoiceList.get(4),
+                invoiceList.get(8)
+        )
+        invoicesToSave.forEach({ inv -> database.save(inv) })
         int id1 = invoiceList.get(0).id
-        int id2 = invoiceList.get(1).id
+        int id2 = invoiceList.get(8).id
 
         when:
         Invoice resultInvoice1 = database.getById(id1).get()
         Invoice resultInvoice2 = database.getById(id2).get()
 
         then:
-        resultInvoice1 == invoiceList.get(0)
-        resultInvoice2 == invoiceList.get(1)
+        jsonService.objectToString(resultInvoice1) == jsonService.objectToString(invoiceList.get(0))
+        jsonService.objectToString(resultInvoice2) == jsonService.objectToString(invoiceList.get(8))
     }
 
     def "should return invoices without deleted one"() {
         given:
         saveInvoices()
-        int idToDelete = 5
+        int invoicesNumberBeforeDelete = database.getAll().size()
+        int idToDelete = database.getAll().get(0).getId()
 
         when:
         database.delete(idToDelete)
 
         then:
-        database.getAll().size() == invoiceList.size() - 1
-        database.getById(5).isEmpty()
+        database.getAll().size() == invoicesNumberBeforeDelete - 1
+        database.getById(idToDelete).isEmpty()
     }
 
     def "can delete all invoices"() {
@@ -95,14 +114,15 @@ abstract class AbstractDatabaseTest extends Specification {
     def "should update invoice"() {
         setup:
         saveInvoices()
-        Invoice invoiceToUpdate = database.getById(5).get()
+        int invoiceId = database.getAll().get(1).getId();
+        Invoice invoiceToUpdate = database.getById(invoiceId).get()
         invoiceToUpdate.setNumber("xxxxxxxx")
 
         when:
         database.update(invoiceToUpdate.getId(), invoiceToUpdate)
 
         then:
-        invoiceToUpdate == database.getById(5).get()
+        jsonService.objectToString(invoiceToUpdate) == jsonService.objectToString(database.getById(invoiceId).get())
     }
 
     def "should throw illegalArgumentException if there is no id using update"() {
