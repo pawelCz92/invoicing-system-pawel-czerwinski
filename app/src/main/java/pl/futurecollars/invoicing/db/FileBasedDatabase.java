@@ -11,7 +11,7 @@ import pl.futurecollars.invoicing.service.file.FileService;
 import pl.futurecollars.invoicing.service.file.IdProvider;
 
 @Slf4j
-public class FileBasedDatabase implements Database {
+public class FileBasedDatabase implements Database<Invoice> {
 
     private final Path dbFilePath;
     private final IdProvider idProvider;
@@ -76,10 +76,5 @@ public class FileBasedDatabase implements Database {
                 .map(jsonService::objectToString)
                 .collect(Collectors.toList())
         );
-    }
-
-    public void deleteAll() {
-        fileServiceForData.truncateFile(dbFilePath);
-        idProvider.deleteAll();
     }
 }

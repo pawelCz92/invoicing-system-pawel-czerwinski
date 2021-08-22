@@ -137,7 +137,6 @@ class InvoiceControllerTest extends Specification {
 
         then:
         updatedInvoice == jsonService.stringToObject(updatedInvoiceFromBase, Invoice.class)
-
     }
 
     def "should delete invoice by id"() {

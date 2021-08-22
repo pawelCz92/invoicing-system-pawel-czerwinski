@@ -18,7 +18,7 @@ abstract class AbstractDatabaseTest extends Specification {
 
     def setup() {
         database = getDatabaseInstance()
-        database.deleteAll()
+        database.reset()
 
         assert database.getAll().isEmpty()
     }
@@ -63,7 +63,6 @@ abstract class AbstractDatabaseTest extends Specification {
         then:
         invoicesToSave.size() == savedInvoices.size()
         jsonService.objectToString(invoicesToSave) == jsonService.objectToString(savedInvoices)
-
     }
 
     def "should return invoice by id"() {

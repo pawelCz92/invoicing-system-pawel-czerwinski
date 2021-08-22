@@ -62,5 +62,4 @@ public class InvoiceEntry {
         this.vatRate = vatRate;
         this.car = car;
     }
-
 }

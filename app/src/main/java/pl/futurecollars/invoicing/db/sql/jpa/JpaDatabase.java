@@ -12,7 +12,7 @@ import pl.futurecollars.invoicing.model.Invoice;
 
 @RequiredArgsConstructor
 @Slf4j
-public class JpaDatabase implements Database {
+public class JpaDatabase implements Database<Invoice> {
 
     private final InvoiceRepository invoiceRepository;
 
@@ -61,10 +61,5 @@ public class JpaDatabase implements Database {
             log.error(message);
             throw new IllegalArgumentException(message);
         });
-    }
-
-    @Override
-    public void deleteAll() {
-        invoiceRepository.deleteAll(getAll());
     }
 }

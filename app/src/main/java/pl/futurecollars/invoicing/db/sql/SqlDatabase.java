@@ -15,7 +15,7 @@ import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.model.InvoiceEntry;
 import pl.futurecollars.invoicing.model.Vat;
 
-public class SqlDatabase implements Database {
+public class SqlDatabase implements Database<Invoice> {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -68,11 +68,6 @@ public class SqlDatabase implements Database {
     @Override
     public void delete(Long id) {
         deleteInvoiceById(id);
-    }
-
-    @Override
-    public void deleteAll() {
-        getAll().forEach(inv -> delete(inv.getId()));
     }
 
     private long insertInvoice(GeneratedKeyHolder keyHolder, Invoice invoice, long buyerId, long sellerId) {

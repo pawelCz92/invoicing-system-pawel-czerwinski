@@ -31,7 +31,7 @@ class TaxCalculatorControllerTest extends Specification {
 
 
     def setup() {
-        database.deleteAll()
+        database.reset()
 
         assert database.getAll().isEmpty()
     }

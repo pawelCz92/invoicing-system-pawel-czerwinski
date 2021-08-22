@@ -14,7 +14,7 @@ import spock.lang.Specification
 class TaxCalculatorServiceTest extends Specification {
 
     @Autowired
-    private Database database
+    private Database<Invoice> database
     @Autowired
     private TaxCalculatorService taxCalculatorService
     private static List<Invoice> sampleInvoices
@@ -27,7 +27,7 @@ class TaxCalculatorServiceTest extends Specification {
 
     def "should calculate taxes"() {
         setup:
-        database.deleteAll()
+        database.reset()
         saveSampleInvoicesToBase()
         Company company = new Company(tin, "any address x", "any name",
                 BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
@@ -68,7 +68,7 @@ class TaxCalculatorServiceTest extends Specification {
         incomeTax << [12191.92, -5418.42]
         pensionInsurance << [514.57, 514.57]
         healthInsurance << [319.94, 319.94]
-        reducedHealthInsurance << [275.5,275.5]
+        reducedHealthInsurance << [275.5, 275.5]
         incomeTaxMinusHealthInsurance << [11916.42, -5693.92]
         finalIncomeTax << [11916, -5694]
     }

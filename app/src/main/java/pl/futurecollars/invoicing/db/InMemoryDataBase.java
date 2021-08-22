@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import pl.futurecollars.invoicing.model.Invoice;
 
-public class InMemoryDataBase implements Database {
+public class InMemoryDataBase implements Database<Invoice> {
 
     private final HashMap<Long, Invoice> invoiceInMemoryDatabase = new HashMap<>();
     private Long index = 1L;
@@ -45,7 +45,6 @@ public class InMemoryDataBase implements Database {
         invoiceInMemoryDatabase.remove(id);
     }
 
-    @Override
     public void deleteAll() {
         invoiceInMemoryDatabase.clear();
     }
