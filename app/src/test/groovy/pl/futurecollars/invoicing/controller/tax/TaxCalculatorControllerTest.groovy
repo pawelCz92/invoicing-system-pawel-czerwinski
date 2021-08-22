@@ -6,13 +6,12 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.TestHelpers
+import pl.futurecollars.invoicing.db.Database
 import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.service.JsonService
 import pl.futurecollars.invoicing.service.taxcalculator.TaxCalculatorResult
 import spock.lang.Specification
 import spock.lang.Stepwise
-
-import java.nio.file.Path
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -26,7 +25,16 @@ class TaxCalculatorControllerTest extends Specification {
     private MockMvc mockMvc
     @Autowired
     private JsonService jsonService
+    @Autowired
+    Database database
     private static String COLLECTION = "/tax/"
+
+
+    def setup() {
+        database.deleteAll()
+
+        assert database.getAll().isEmpty()
+    }
 
     def "should return TaxCalculatorResult with values 0 for not existing TIN"() {
         setup:
@@ -56,12 +64,19 @@ class TaxCalculatorControllerTest extends Specification {
     def addInvoicesToBase() {
         setup:
         TestHelpers.getSampleInvoicesList()
-                .forEach(invoice -> mockMvc.perform(post("/invoices/").contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonService.objectToString(invoice))).andExpect(status().isOk()))
+                .forEach({ invoice ->
+                    mockMvc.perform(post("/invoices/").contentType(MediaType.APPLICATION_JSON)
+                            .content(jsonService.objectToString(invoice))).andExpect(status().isOk())
+                })
     }
 
     def "should return object with calculated taxes for existing TIN"() {
-        given:
+        setup:
+        List.of(
+                TestHelpers.getSampleInvoicesList().get(0),
+                TestHelpers.getSampleInvoicesList().get(4),
+                TestHelpers.getSampleInvoicesList().get(8)).forEach({ inv -> database.save(inv) })
+
         Company company = new Company(tin, "any address", "any name",
                 BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
 
@@ -97,19 +112,19 @@ class TaxCalculatorControllerTest extends Specification {
 
         where:
         tin << ["100-16-0000"]
-        income << [76011.62]
+        income << [0]
         costs << [11329.47]
-        earnings << [64682.15]
+        earnings << [-11329.47]
         incomingVat << [0]
-        outgoingVat << [0]
-        vatToReturn << [0]
-        earningsMinusPensionInsurance << [64167.58]
-        taxCalculationBase << [64168]
-        incomeTax << [12191.92]
+        outgoingVat << [0.00]
+        vatToReturn << [0.00]
+        earningsMinusPensionInsurance << [-11844.04]
+        taxCalculationBase << [-11844]
+        incomeTax << [-2250.36]
         pensionInsurance << [514.57]
         healthInsurance << [319.94]
         reducedHealthInsurance << [275.5]
-        incomeTaxMinusHealthInsurance << [11916.42]
-        finalIncomeTax << [11916]
+        incomeTaxMinusHealthInsurance << [-2525.86]
+        finalIncomeTax << [-2526]
     }
 }

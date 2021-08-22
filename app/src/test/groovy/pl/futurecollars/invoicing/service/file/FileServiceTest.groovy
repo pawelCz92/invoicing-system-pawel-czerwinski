@@ -32,7 +32,7 @@ class FileServiceTest extends Specification {
         List<String> lines = List.of("Test line 1", "Test line 2")
 
         when:
-        lines.forEach(line -> fileService.appendLine(tempFilePath, line))
+        lines.forEach({ line -> fileService.appendLine(tempFilePath, line) })
 
         then:
         Files.readAllLines(tempFilePath) == lines

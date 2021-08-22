@@ -58,7 +58,7 @@ class JsonServiceTest extends Specification {
                 .invoiceEntries(invoiceEntries)
                 .build()
 
-        jsonSample = "{\"id\":0,\"number\":null,\"date\":\"2020-01-20\",\"buyer\":{\"tax" +
+        jsonSample = "{\"id\":null,\"number\":null,\"date\":\"2020-01-20\",\"buyer\":{\"tax" +
                 "IdentificationNumber\":\"382-22-1584\",\"address\":\"377 Ohio Road Pulo\",\"name\":\"Micro" +
                 "soft\",\"healthInsurance\":319.94,\"pensionInsurance\":514.57},\"seller\":{\"tax" +
                 "IdentificationNumber\":\"677-31-4788\",\"address\":\"ul. Dluga Warszawa\",\"name\":\"JBL\",\"health" +

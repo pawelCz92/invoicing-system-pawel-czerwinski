@@ -133,124 +133,124 @@ INSERT INTO public.invoice_entries (id, description, quantity, net_price, vat_va
 VALUES (30, 'hdmi cable', 5, 250.00, 20.00, 2, null);
 
 
-INSERT INTO public.invoices (id, date, number, buyer, seller)
+INSERT INTO public.invoices (id, date, invoice_number, buyer, seller)
 VALUES (1, '2021-10-14', '14/10/2021/1234', 1, 2);
 
-INSERT INTO public.invoices (id, date, number, buyer, seller)
+INSERT INTO public.invoices (id, date, invoice_number, buyer, seller)
 VALUES (2, '2021-07-14', '14/07/2021/8568', 3, 4);
 
-INSERT INTO public.invoices (id, date, number, buyer, seller)
+INSERT INTO public.invoices (id, date, invoice_number, buyer, seller)
 VALUES (3, '2021-07-15', '15/07/2021/2387', 5, 6);
 
-INSERT INTO public.invoices (id, date, number, buyer, seller)
+INSERT INTO public.invoices (id, date, invoice_number, buyer, seller)
 VALUES (4, '2021-07-25', '25/07/2021/5685', 2, 5);
 
-INSERT INTO public.invoices (id, date, number, buyer, seller)
+INSERT INTO public.invoices (id, date, invoice_number, buyer, seller)
 VALUES (5, '2021-07-29', '29/07/2021/5899', 7, 8);
 
-INSERT INTO public.invoices (id, date, number, buyer, seller)
+INSERT INTO public.invoices (id, date, invoice_number, buyer, seller)
 VALUES (6, '2021-07-26', '26/07/2021/8525', 9, 10);
 
-INSERT INTO public.invoices (id, date, number, buyer, seller)
+INSERT INTO public.invoices (id, date, invoice_number, buyer, seller)
 VALUES (7, '2021-08-04', '04/08/2021/2358', 10, 9);
 
-INSERT INTO public.invoices (id, date, number, buyer, seller)
+INSERT INTO public.invoices (id, date, invoice_number, buyer, seller)
 VALUES (8, '2021-06-10', '10/06/2021/2568', 1, 10);
 
-INSERT INTO public.invoices (id, date, number, buyer, seller)
+INSERT INTO public.invoices (id, date, invoice_number, buyer, seller)
 VALUES (9, '2021-02-10', '10/02/2021/8956', 5, 10);
 
-INSERT INTO public.invoices (id, date, number, buyer, seller)
+INSERT INTO public.invoices (id, date, invoice_number, buyer, seller)
 VALUES (10, '2021-01-08', '08/01/2021/2563', 10, 2);
 
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (4, 1);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (3, 2);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (2, 3);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (2, 4);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (5, 5);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (6, 6);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (2, 7);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (2, 8);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (7, 9);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (7, 10);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (1, 11);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (7, 12);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (7, 13);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (7, 14);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (1, 15);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (8, 16);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (9, 17);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (9, 18);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (10, 19);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (10, 20);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (7, 21);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (1, 22);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (1, 23);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (1, 24);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (2, 25);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (2, 26);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (2, 27);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (4, 28);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (4, 29);
 
-INSERT INTO public.invoices_invoice_entries (invoice_id, invoice_entry_id)
+INSERT INTO public.invoice_invoice_entries (invoices_id, invoice_entry_id)
 VALUES (1, 30);
 

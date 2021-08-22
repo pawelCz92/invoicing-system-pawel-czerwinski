@@ -29,15 +29,15 @@ public class FileBasedDatabase implements Database {
     }
 
     @Override
-    public int save(Invoice invoice) {
-        int id = idProvider.getNextIdAndIncrement();
+    public Long save(Invoice invoice) {
+        Long id = idProvider.getNextIdAndIncrement();
         invoice.setId(id);
         fileServiceForData.appendLine(dbFilePath, jsonService.objectToString(invoice));
         return id;
     }
 
     @Override
-    public Optional<Invoice> getById(int id) {
+    public Optional<Invoice> getById(Long id) {
         Optional<String> founded = fileServiceForData.findLineById(dbFilePath, id);
         return founded.map(line -> jsonService.stringToObject(line, Invoice.class));
     }
@@ -50,11 +50,13 @@ public class FileBasedDatabase implements Database {
     }
 
     @Override
-    public void update(int id, Invoice updatedInvoice) {
+    public void update(Long id, Invoice updatedInvoice) {
         int lineNumber = fileServiceForData.getLineNumberById(dbFilePath, id)
             .orElseThrow(() -> new IllegalArgumentException("There is no id : " + id));
+
         List<Invoice> allInvoices = getAll();
         updatedInvoice.setId(id);
+
         allInvoices.set(lineNumber, updatedInvoice);
         fileServiceForData.rewriteFileByList(dbFilePath,
             allInvoices.stream()
@@ -64,7 +66,7 @@ public class FileBasedDatabase implements Database {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Long id) {
         int lineNumber = fileServiceForData.getLineNumberById(dbFilePath, id)
             .orElseThrow(() -> new IllegalArgumentException("There is no id : " + id));
         List<Invoice> allInvoices = getAll();
