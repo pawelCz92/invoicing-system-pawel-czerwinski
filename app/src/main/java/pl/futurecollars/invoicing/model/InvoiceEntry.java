@@ -18,6 +18,7 @@ import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "invoice_entries")
@@ -30,6 +31,7 @@ public class InvoiceEntry {
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Exclude
     private Long id;
 
     @ApiModelProperty(value = "Product/service description", required = true, example = "Fiat 126p")
@@ -63,38 +65,4 @@ public class InvoiceEntry {
         this.car = car;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        InvoiceEntry that = (InvoiceEntry) o;
-        boolean quantityCompare = false;
-        if (!Objects.isNull(this.quantity) && !Objects.isNull(that.quantity)) {
-            quantityCompare = this.quantity.compareTo(that.quantity) == 0;
-        }
-        return Objects.equals(description, that.description) && quantityCompare
-            && Objects.equals(price, that.price) && Objects.equals(vatValue, that.vatValue) && vatRate == that.vatRate
-            && Objects.equals(car, that.car);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(description, quantity, price, vatValue, vatRate, car);
-    }
-
-    @Override
-    public String toString() {
-        return "InvoiceEntry{"
-            + "description='" + description + '\''
-            + ", quantity=" + quantity.setScale(2, RoundingMode.HALF_UP)
-            + ", price=" + price
-            + ", vatValue=" + vatValue
-            + ", vatRate=" + vatRate
-            + ", car=" + car
-            + '}';
-    }
 }

@@ -53,7 +53,7 @@ class TestHelpers extends Specification {
                 /* 9*/ new InvoiceEntry("Table", BigDecimal.valueOf(1.00).setScale(2), 34.00, 7.82, Vat.VAT_23, null),
                 /*10*/ new InvoiceEntry("Sofa", BigDecimal.valueOf(1.00).setScale(2), 230.00, 0.00, Vat.VAT_0, null),
                 /*11*/ new InvoiceEntry("Printer", BigDecimal.valueOf(2.00).setScale(2), 300.00, 0.00, Vat.VAT_0, null),
-                /*12*/ new InvoiceEntry("Speackres", BigDecimal.valueOf(3.00), 50.00, 0.00, Vat.VAT_0, null),
+                /*12*/ new InvoiceEntry("Speackres", BigDecimal.valueOf(3.00).setScale(2), 50.00, 0.00, Vat.VAT_0, null),
                 /*13*/ new InvoiceEntry("Radiator", BigDecimal.valueOf(1.00).setScale(2), 80.00, 18.40, Vat.VAT_23, null),
                 /*14*/ new InvoiceEntry("Internet", BigDecimal.valueOf(1.00).setScale(2), 50.00, 0.00, Vat.VAT_0, null),
                 /*15*/ new InvoiceEntry("Door", BigDecimal.valueOf(1.00).setScale(2), 300.00, 24.00, Vat.VAT_8, null),
