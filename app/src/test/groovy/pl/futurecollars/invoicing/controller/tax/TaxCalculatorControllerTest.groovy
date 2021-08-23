@@ -8,6 +8,7 @@ import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.TestHelpers
 import pl.futurecollars.invoicing.db.Database
 import pl.futurecollars.invoicing.model.Company
+import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.service.JsonService
 import pl.futurecollars.invoicing.service.taxcalculator.TaxCalculatorResult
 import spock.lang.Specification
@@ -26,7 +27,7 @@ class TaxCalculatorControllerTest extends Specification {
     @Autowired
     private JsonService jsonService
     @Autowired
-    Database database
+    Database<Invoice> database
     private static String COLLECTION = "/tax/"
 
 

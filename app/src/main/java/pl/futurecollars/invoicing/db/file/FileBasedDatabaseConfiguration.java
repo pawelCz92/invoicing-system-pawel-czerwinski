@@ -33,13 +33,13 @@ public class FileBasedDatabaseConfiguration {
     FileBasedDatabase<Invoice> fileBasedDbForInvoice(
         FileService fileService,
         JsonService jsonService,
-        IdProvider idProvider,
+        IdProvider idProviderForInvoices,
         @Value("${invoicing-system.database.dbDirectory}") String dbDirectory,
         @Value("${invoicing-system.database.dataFileNameForInvoices}") String dbFileName
     ) throws IOException {
         Path dbFilePath = Files.createTempFile(dbDirectory, dbFileName);
         log.info("File based database is in use");
-        return new FileBasedDatabase<>(dbFilePath, idProvider, fileService, jsonService, Invoice.class);
+        return new FileBasedDatabase<>(dbFilePath, idProviderForInvoices, fileService, jsonService, Invoice.class);
     }
 
     @Bean
@@ -56,12 +56,12 @@ public class FileBasedDatabaseConfiguration {
     FileBasedDatabase<Company> fileBasedDbForCompany(
         FileService fileService,
         JsonService jsonService,
-        IdProvider idProvider,
+        IdProvider idProviderForCompany,
         @Value("${invoicing-system.database.dbDirectory}") String dbDirectory,
         @Value("${invoicing-system.database.dataFileNameForCompany}") String dbFileName
     ) throws IOException {
         Path dbFilePath = Files.createTempFile(dbDirectory, dbFileName);
         log.info("File based database is in use");
-        return new FileBasedDatabase<>(dbFilePath, idProvider, fileService, jsonService, Company.class);
+        return new FileBasedDatabase<>(dbFilePath, idProviderForCompany, fileService, jsonService, Company.class);
     }
 }

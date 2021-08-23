@@ -1,9 +1,11 @@
-package pl.futurecollars.invoicing.db;
+package pl.futurecollars.invoicing.db.memory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import pl.futurecollars.invoicing.db.Database;
+import pl.futurecollars.invoicing.db.WithId;
 
 public class InMemoryDataBase<T extends WithId> implements Database<T> {
 

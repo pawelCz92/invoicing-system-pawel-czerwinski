@@ -5,28 +5,28 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.futurecollars.invoicing.db.Database;
-import pl.futurecollars.invoicing.db.WithId;
+import pl.futurecollars.invoicing.model.Company;
 
 @Service
 @RequiredArgsConstructor
-public class ItemService<T extends WithId> {
+public class CompanyService {
 
-    private final Database<T> database;
+    private final Database<Company> database;
 
-    public Long save(T item) {
-        return database.save(item);
+    public Long save(Company company) {
+        return database.save(company);
     }
 
-    public Optional<T> getById(Long id) {
+    public Optional<Company> getById(Long id) {
         return database.getById(id);
     }
 
-    public List<T> getAll() {
+    public List<Company> getAll() {
         return database.getAll();
     }
 
-    public void update(Long id, T updatedItem) throws IllegalArgumentException {
-        database.update(id, updatedItem);
+    public void update(Long id, Company updatedCompany) throws IllegalArgumentException {
+        database.update(id, updatedCompany);
     }
 
     public void delete(Long id) {

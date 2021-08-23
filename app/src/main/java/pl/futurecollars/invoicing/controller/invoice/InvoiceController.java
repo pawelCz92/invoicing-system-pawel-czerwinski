@@ -7,23 +7,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.futurecollars.invoicing.model.Invoice;
-import pl.futurecollars.invoicing.service.ItemService;
+import pl.futurecollars.invoicing.service.InvoiceService;
 
 @RestController
 @AllArgsConstructor
 public class InvoiceController implements InvoiceApi {
 
-    private final ItemService<Invoice> itemService;
+    private final InvoiceService invoiceService;
 
     @Override
     public ResponseEntity<List<Invoice>> getAllInvoices() {
-        return ResponseEntity.ok().body(itemService.getAll());
+        return ResponseEntity.ok().body(invoiceService.getAll());
     }
 
     @Override
     public ResponseEntity<Long> saveInvoice(@RequestBody Invoice invoice) {
         try {
-            return ResponseEntity.ok(itemService.save(invoice));
+            return ResponseEntity.ok(invoiceService.save(invoice));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.notFound().build();
@@ -33,7 +33,7 @@ public class InvoiceController implements InvoiceApi {
     @Override
     public ResponseEntity<Invoice> getInvoiceById(@PathVariable Long id) {
         try {
-            return itemService.getById(id)
+            return invoiceService.getById(id)
                 .map(invoice -> ResponseEntity.ok().body(invoice))
                 .orElse(ResponseEntity.notFound().build());
         } catch (Exception e) {
@@ -44,7 +44,7 @@ public class InvoiceController implements InvoiceApi {
     @Override
     public ResponseEntity<?> updateById(@PathVariable Long id, @RequestBody Invoice invoice) {
         try {
-            itemService.update(id, invoice);
+            invoiceService.update(id, invoice);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
@@ -54,7 +54,7 @@ public class InvoiceController implements InvoiceApi {
     @Override
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
-            itemService.delete(id);
+            invoiceService.delete(id);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

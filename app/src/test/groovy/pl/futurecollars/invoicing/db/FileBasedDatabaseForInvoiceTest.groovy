@@ -1,7 +1,9 @@
 package pl.futurecollars.invoicing.db
 
+import org.springframework.test.annotation.IfProfileValue
 import pl.futurecollars.invoicing.TestHelpers
 import pl.futurecollars.invoicing.db.file.FileBasedDatabase
+import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.service.JsonService
 import pl.futurecollars.invoicing.service.file.FileService
 import pl.futurecollars.invoicing.service.file.IdProvider
@@ -9,9 +11,10 @@ import pl.futurecollars.invoicing.service.file.IdProvider
 import java.nio.file.Files
 import java.nio.file.Path
 
-class FileBasedDatabaseTest extends AbstractDatabaseTest {
+@IfProfileValue(name = "spring.profiles.active", value = "file")
+class FileBasedDatabaseForInvoiceTest extends AbstractDatabaseTest {
 
-    Path dbPath
+    private Path dbPath
 
     @Override
     Database getDatabaseInstance() {
@@ -21,8 +24,7 @@ class FileBasedDatabaseTest extends AbstractDatabaseTest {
         dbPath = Files.createTempFile("data", ".txt")
         IdProvider idProvider = new IdProvider(idPath, fileService)
 
-
-        return new FileBasedDatabase(dbPath, idProvider, fileService, new JsonService())
+        return new FileBasedDatabase<Invoice>(dbPath, idProvider, fileService, new JsonService(), Invoice.class)
     }
 
     def "should save data to right file"() {
