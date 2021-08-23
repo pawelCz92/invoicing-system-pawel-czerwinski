@@ -4,48 +4,43 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import pl.futurecollars.invoicing.model.Invoice;
 
-public class InMemoryDataBase implements Database<Invoice> {
+public class InMemoryDataBase<T extends WithId> implements Database<T> {
 
-    private final HashMap<Long, Invoice> invoiceInMemoryDatabase = new HashMap<>();
+    private final HashMap<Long, T> inMemoryDatabase = new HashMap<>();
     private Long index = 1L;
 
     @Override
-    public Long save(Invoice invoice) {
-        invoice.setId(index);
-        invoiceInMemoryDatabase.put(index, invoice);
+    public Long save(T item) {
+        item.setId(index);
+        inMemoryDatabase.put(index, item);
         return index++;
     }
 
     @Override
-    public Optional<Invoice> getById(Long id) {
-        return Optional.ofNullable(invoiceInMemoryDatabase.get(id));
+    public Optional<T> getById(Long id) {
+        return Optional.ofNullable(inMemoryDatabase.get(id));
     }
 
     @Override
-    public List<Invoice> getAll() {
-        return new ArrayList<>(invoiceInMemoryDatabase.values());
+    public List<T> getAll() {
+        return new ArrayList<>(inMemoryDatabase.values());
     }
 
     @Override
-    public void update(Long id, Invoice updatedInvoice) {
-        if (!invoiceInMemoryDatabase.containsKey(id)) {
+    public void update(Long id, T updatedItem) {
+        if (!inMemoryDatabase.containsKey(id)) {
             throw new IllegalArgumentException("Id " + id + " does not exists");
         }
-        updatedInvoice.setId(id);
-        invoiceInMemoryDatabase.put(id, updatedInvoice);
+        updatedItem.setId(id);
+        inMemoryDatabase.put(id, updatedItem);
     }
 
     @Override
     public void delete(Long id) {
-        if (!invoiceInMemoryDatabase.containsKey(id)) {
+        if (!inMemoryDatabase.containsKey(id)) {
             throw new IllegalArgumentException("Id " + id + " does not exists");
         }
-        invoiceInMemoryDatabase.remove(id);
-    }
-
-    public void deleteAll() {
-        invoiceInMemoryDatabase.clear();
+        inMemoryDatabase.remove(id);
     }
 }
