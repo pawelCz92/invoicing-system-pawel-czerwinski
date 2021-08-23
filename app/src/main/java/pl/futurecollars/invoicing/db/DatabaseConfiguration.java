@@ -20,30 +20,7 @@ import pl.futurecollars.invoicing.service.file.IdProvider;
 @Configuration
 public class DatabaseConfiguration {
 
-    @Bean
-    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
-    IdProvider idProvider(
-        FileService fileService,
-        @Value("${invoicing-system.database.dbDirectory}") String dbDirectory,
-        @Value("${invoicing-system.database.idFileName}") String idFileName
-    ) throws IOException {
-        Path idProviderPath = Files.createTempFile(dbDirectory, idFileName);
-        return new IdProvider(idProviderPath, fileService);
-    }
 
-    @Bean
-    @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "file")
-    FileBasedDatabase fileBasedDatabase(
-        FileService fileService,
-        JsonService jsonService,
-        IdProvider idProvider,
-        @Value("${invoicing-system.database.dbDirectory}") String dbDirectory,
-        @Value("${invoicing-system.database.dataFileName}") String dbFileName
-    ) throws IOException {
-        Path dbFilePath = Files.createTempFile(dbDirectory, dbFileName);
-        log.info("File based database is in use");
-        return new FileBasedDatabase(dbFilePath, idProvider, fileService, jsonService);
-    }
 
     @Bean
     @ConditionalOnProperty(name = "invoicing-system.database", havingValue = "memory")

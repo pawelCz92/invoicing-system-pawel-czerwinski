@@ -1,10 +1,9 @@
 package pl.futurecollars.invoicing.db
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import pl.futurecollars.invoicing.db.file.FileBasedDatabase
 import pl.futurecollars.invoicing.service.file.IdProvider
 import pl.futurecollars.invoicing.service.JsonService
 import spock.lang.Specification

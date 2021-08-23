@@ -1,65 +1,59 @@
-package pl.futurecollars.invoicing.db;
+package pl.futurecollars.invoicing.db.file;
 
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import pl.futurecollars.invoicing.model.Invoice;
+import pl.futurecollars.invoicing.db.Database;
+import pl.futurecollars.invoicing.db.WithId;
 import pl.futurecollars.invoicing.service.JsonService;
 import pl.futurecollars.invoicing.service.file.FileService;
 import pl.futurecollars.invoicing.service.file.IdProvider;
 
 @Slf4j
-public class FileBasedDatabase implements Database<Invoice> {
+@RequiredArgsConstructor
+public class FileBasedDatabase<T extends WithId> implements Database<T> {
 
     private final Path dbFilePath;
     private final IdProvider idProvider;
     private final FileService fileServiceForData;
     private final JsonService jsonService;
-
-    public FileBasedDatabase(Path dbFilePath,
-                             IdProvider idProvider,
-                             FileService fileService,
-                             JsonService jsonService) {
-        this.dbFilePath = dbFilePath;
-        this.idProvider = idProvider;
-        this.fileServiceForData = fileService;
-        this.jsonService = jsonService;
-    }
+    private final Class<T> clazz;
 
     @Override
-    public Long save(Invoice invoice) {
+    public Long save(T item) {
         Long id = idProvider.getNextIdAndIncrement();
-        invoice.setId(id);
-        fileServiceForData.appendLine(dbFilePath, jsonService.objectToString(invoice));
+        item.setId(id);
+        fileServiceForData.appendLine(dbFilePath, jsonService.objectToString(item));
         return id;
     }
 
     @Override
-    public Optional<Invoice> getById(Long id) {
+    public Optional<T> getById(Long id) {
         Optional<String> founded = fileServiceForData.findLineById(dbFilePath, id);
-        return founded.map(line -> jsonService.stringToObject(line, Invoice.class));
+        return founded.map(line -> jsonService.stringToObject(line, clazz));
     }
 
     @Override
-    public List<Invoice> getAll() {
+    public List<T> getAll() {
         return fileServiceForData.readLinesToList(dbFilePath).stream()
-            .map(line -> jsonService.stringToObject(line, Invoice.class))
+            .map(line -> jsonService.stringToObject(line, clazz))
             .collect(Collectors.toList());
     }
 
     @Override
-    public void update(Long id, Invoice updatedInvoice) {
+    public void update(Long id, T updatedItem) {
         int lineNumber = fileServiceForData.getLineNumberById(dbFilePath, id)
             .orElseThrow(() -> new IllegalArgumentException("There is no id : " + id));
 
-        List<Invoice> allInvoices = getAll();
-        updatedInvoice.setId(id);
+        List<T> allItems = getAll();
+        updatedItem.setId(id);
 
-        allInvoices.set(lineNumber, updatedInvoice);
+        allItems.set(lineNumber, updatedItem);
         fileServiceForData.rewriteFileByList(dbFilePath,
-            allInvoices.stream()
+            allItems.stream()
                 .map(jsonService::objectToString)
                 .collect(Collectors.toList())
         );
@@ -69,10 +63,10 @@ public class FileBasedDatabase implements Database<Invoice> {
     public void delete(Long id) {
         int lineNumber = fileServiceForData.getLineNumberById(dbFilePath, id)
             .orElseThrow(() -> new IllegalArgumentException("There is no id : " + id));
-        List<Invoice> allInvoices = getAll();
-        allInvoices.remove(lineNumber);
+        List<T> allItems = getAll();
+        allItems.remove(lineNumber);
         fileServiceForData.rewriteFileByList(dbFilePath,
-            allInvoices.stream()
+            allItems.stream()
                 .map(jsonService::objectToString)
                 .collect(Collectors.toList())
         );
