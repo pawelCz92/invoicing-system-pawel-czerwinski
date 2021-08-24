@@ -8,6 +8,7 @@ import java.time.LocalDate
 class TestHelpers extends Specification {
 
     private static List<InvoiceEntry> invoiceEntries
+    private static List<Company> sampleCompaniesList = getSampleCompaniesList()
 
     def "should return suitable values of Vat"() {
         expect:
@@ -16,29 +17,26 @@ class TestHelpers extends Specification {
         Vat.VAT_0.getRate() == 0
     }
 
-    static def getSampleInvoicesList() {
-        Company company1 =
+    static def getSampleCompaniesList() {
+        return List.of(
                 new Company("382-22-1584", "377 Ohio Road Pulo", "Microsoft",
-                        BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
-        Company company2 =
+                        BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57)),
                 new Company("677-31-4788", "ul. Dluga Warszawa", "JBL",
-                        BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
-        Company company3 =
+                        BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57)),
                 new Company("289-03-6711", "6 Stoughton Alley Plan de Ayala", "Voolith",
-                        BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
-        Company company4 =
+                        BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57)),
                 new Company("803-36-7695", "26 Claremont Street Borås", "Tazzy",
-                        BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
-        Company company5 =
+                        BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57)),
                 new Company("161-65-1354", "75 Saint Paul Alley Nangela", "Fivespan",
-                        BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
-        Company company6 =
+                        BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57)),
                 new Company("100-16-1976", "67 Nangela", "Samsung",
-                        BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
-        Company company7 =
+                        BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57)),
                 new Company("100-16-0000", "67 Nangela", "Test",
                         BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))
+        )
+    }
 
+    static def getSampleInvoicesList() {
         invoiceEntries = List.of(
                 /* 0*/ new InvoiceEntry("tv", BigDecimal.valueOf(1.00).setScale(2), 1000.00, 230.00, Vat.VAT_23, null),
                 /* 1*/ new InvoiceEntry("RadioX", BigDecimal.valueOf(1.00).setScale(2), 100.00, 23.00, Vat.VAT_23, null),
@@ -84,8 +82,8 @@ class TestHelpers extends Specification {
                 Invoice.builder()
                         .date(LocalDate.of(2000, 11, 23))
                         .number("2021/05/09/1289")
-                        .buyer(company1)
-                        .seller(company2)
+                        .buyer(sampleCompaniesList.get(0))
+                        .seller(sampleCompaniesList.get(1))
                         .invoiceEntries(List.of(
                                 invoiceEntries.get(1), invoiceEntries.get(3), invoiceEntries.get(9), invoiceEntries.get(10),
                                 invoiceEntries.get(26), invoiceEntries.get(20), invoiceEntries.get(17))
@@ -94,8 +92,8 @@ class TestHelpers extends Specification {
                 Invoice.builder()
                         .date(LocalDate.of(2005, 10, 25))
                         .number("2021/05/09/5675")
-                        .buyer(company3)
-                        .seller(company2)
+                        .buyer(sampleCompaniesList.get(2))
+                        .seller(sampleCompaniesList.get(1))
                         .invoiceEntries(List.of(
                                 invoiceEntries.get(15), invoiceEntries.get(4), invoiceEntries.get(18), invoiceEntries.get(12),
                                 invoiceEntries.get(11), invoiceEntries.get(22)))
@@ -103,8 +101,8 @@ class TestHelpers extends Specification {
                 Invoice.builder()
                         .date(LocalDate.of(2009, 1, 22))
                         .number("2021/05/09/3333")
-                        .buyer(company4)
-                        .seller(company1)
+                        .buyer(sampleCompaniesList.get(3))
+                        .seller(sampleCompaniesList.get(0))
                         .invoiceEntries(List.of(
                                 invoiceEntries.get(21), invoiceEntries.get(23), invoiceEntries.get(24), invoiceEntries.get(25),
                                 invoiceEntries.get(27), invoiceEntries.get(30)))
@@ -112,17 +110,17 @@ class TestHelpers extends Specification {
                 Invoice.builder()
                         .date(LocalDate.of(2010, 7, 22))
                         .number("2021/05/09/5555")
-                        .buyer(company2)
-                        .seller(company1)
+                        .buyer(sampleCompaniesList.get(1))
+                        .seller(sampleCompaniesList.get(0))
                         .invoiceEntries(List.of(
                                 invoiceEntries.get(31), invoiceEntries.get(33), invoiceEntries.get(10)))
                         .build(),
 
-                Invoice.builder()////
+                Invoice.builder()
                         .date(LocalDate.of(2010, 2, 22))
                         .number("2021/05/09/2222")
-                        .buyer(company4)
-                        .seller(company3)
+                        .buyer(sampleCompaniesList.get(3))
+                        .seller(sampleCompaniesList.get(2))
                         .invoiceEntries(List.of(
                                 invoiceEntries.get(2), invoiceEntries.get(5), invoiceEntries.get(6), invoiceEntries.get(7),
                                 invoiceEntries.get(8), invoiceEntries.get(13)))
@@ -130,8 +128,8 @@ class TestHelpers extends Specification {
                 Invoice.builder()
                         .date(LocalDate.of(2010, 2, 22))
                         .number("2021/05/09/1111")
-                        .buyer(company4)
-                        .seller(company5)
+                        .buyer(sampleCompaniesList.get(3))
+                        .seller(sampleCompaniesList.get(4))
                         .invoiceEntries(List.of(
                                 invoiceEntries.get(14), invoiceEntries.get(16), invoiceEntries.get(28)))
                         .build(),
@@ -139,24 +137,24 @@ class TestHelpers extends Specification {
                 Invoice.builder()
                         .date(LocalDate.of(2010, 2, 22))
                         .number("2021/05/09/9864")
-                        .buyer(company6)
-                        .seller(company4)
+                        .buyer(sampleCompaniesList.get(5))
+                        .seller(sampleCompaniesList.get(3))
                         .invoiceEntries(List.of(
                                 invoiceEntries.get(29), invoiceEntries.get(19)))
                         .build(),
                 Invoice.builder()
                         .date(LocalDate.of(2012, 2, 23))
                         .number("2021/05/09/3278")
-                        .buyer(company6)
-                        .seller(company7)
+                        .buyer(sampleCompaniesList.get(5))
+                        .seller(sampleCompaniesList.get(6))
                         .invoiceEntries(List.of(
                                 invoiceEntries.get(31)))
                         .build(),
                 Invoice.builder()
                         .date(LocalDate.of(2012, 2, 23))
                         .number("2021/05/09/3455")
-                        .buyer(company7)
-                        .seller(company6)
+                        .buyer(sampleCompaniesList.get(6))
+                        .seller(sampleCompaniesList.get(5))
                         .invoiceEntries(List.of(
                                 invoiceEntries.get(32)))
                         .build()

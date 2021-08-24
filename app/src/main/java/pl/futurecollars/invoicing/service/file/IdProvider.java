@@ -50,8 +50,4 @@ public class IdProvider {
     Path getFilePath() {
         return this.filePath;
     }
-
-    public void deleteAll() {
-        fileService.truncateFile(filePath);
-    }
 }

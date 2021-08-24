@@ -1,7 +1,6 @@
 package pl.futurecollars.invoicing.db
 
-import pl.futurecollars.invoicing.TestHelpers
-import pl.futurecollars.invoicing.model.Invoice
+
 import pl.futurecollars.invoicing.service.JsonService
 import spock.lang.Specification
 import spock.lang.Stepwise
@@ -9,28 +8,26 @@ import spock.lang.Stepwise
 @Stepwise
 abstract class AbstractDatabaseTest extends Specification {
 
-    List<Invoice> invoiceList = TestHelpers.getSampleInvoicesList()
+    List<WithId> itemList
     JsonService jsonService = new JsonService()
 
     abstract Database getDatabaseInstance()
 
-    Database database
+    abstract List<WithId> getItemsList()
+
+    Database<WithId> database
 
     def setup() {
         database = getDatabaseInstance()
+        itemList = getItemsList()
         database.reset()
 
         assert database.getAll().isEmpty()
     }
 
-    def saveInvoices() {
-        List<Invoice> invoicesToSave = List.of(
-                invoiceList.get(0),
-                invoiceList.get(4),
-                invoiceList.get(8)
-        )
-        invoicesToSave.forEach({ inv -> database.save(inv) })
-
+    def saveItems() {
+        itemList.forEach({ item -> database.save(item) })
+        itemList = database.getAll()
     }
 
     def "should inject database instance"() {
@@ -38,95 +35,77 @@ abstract class AbstractDatabaseTest extends Specification {
         database
     }
 
-    def "should return empty collection if there is no invoices in base"() {
+    def "should load items list"() {
+        expect:
+        itemList != null
+        !itemList.isEmpty()
+    }
+
+    def "should return empty collection if there is no items in base"() {
         expect:
         database.getAll().isEmpty()
     }
 
-    def "should return empty optional if there is no invoice with given id"() {
+    def "should return empty optional if there is no item with given id"() {
         expect:
         database.getById(1).isEmpty()
     }
 
-    def "should return all saved invoices"() {
+    def "should return all saved items"() {
         setup:
-        List<Invoice> invoicesToSave = List.of(
-                invoiceList.get(0),
-                invoiceList.get(4),
-                invoiceList.get(8)
-        )
-        invoicesToSave.forEach({ inv -> database.save(inv) })
+        saveItems()
 
         when:
-        List<Invoice> savedInvoices = database.getAll()
+        List<WithId> savedItems = database.getAll()
 
         then:
-        invoicesToSave.size() == savedInvoices.size()
-        jsonService.objectToString(invoicesToSave) == jsonService.objectToString(savedInvoices)
+        itemList.size() == savedItems.size()
+        jsonService.objectToString(itemList) == jsonService.objectToString(savedItems)
     }
 
-    def "should return invoice by id"() {
+    def "should return item by id"() {
         setup:
-        List<Invoice> invoicesToSave = List.of(
-                invoiceList.get(0),
-                invoiceList.get(4),
-                invoiceList.get(8)
-        )
-        invoicesToSave.forEach({ inv -> database.save(inv) })
-        int id1 = invoiceList.get(0).id
-        int id2 = invoiceList.get(8).id
+        saveItems()
+        Long id1 = itemList.get(0).getId()
+        Long id2 = itemList.get(itemList.size() - 1).getId()
 
         when:
-        Invoice resultInvoice1 = database.getById(id1).get()
-        Invoice resultInvoice2 = database.getById(id2).get()
+        WithId resultItem1 = database.getById(id1).get()
+        WithId resultItem2 = database.getById(id2).get()
 
         then:
-        jsonService.objectToString(resultInvoice1) == jsonService.objectToString(invoiceList.get(0))
-        jsonService.objectToString(resultInvoice2) == jsonService.objectToString(invoiceList.get(8))
+        jsonService.objectToString(resultItem1) == jsonService.objectToString(itemList.get(0))
+        jsonService.objectToString(resultItem2) == jsonService.objectToString(itemList.get(itemList.size() - 1))
     }
 
-    def "should return invoices without deleted one"() {
+    def "should return items without deleted one"() {
         given:
-        saveInvoices()
-        int invoicesNumberBeforeDelete = database.getAll().size()
-        int idToDelete = database.getAll().get(0).getId()
+        saveItems()
+        int itemsNumberBeforeDelete = database.getAll().size()
+        long idToDelete = database.getAll().get(0).getId()
 
         when:
         database.delete(idToDelete)
 
         then:
-        database.getAll().size() == invoicesNumberBeforeDelete - 1
+        database.getAll().size() == itemsNumberBeforeDelete - 1
         database.getById(idToDelete).isEmpty()
     }
 
-    def "can delete all invoices"() {
+    def "can delete all items"() {
         setup:
-        saveInvoices()
+        saveItems()
 
         when:
-        database.getAll().forEach({ inv -> database.delete(inv.id) })
+        database.getAll().forEach({ item -> database.delete(item.id) })
 
         then:
         database.getAll().isEmpty()
     }
 
-    def "should update invoice"() {
-        setup:
-        saveInvoices()
-        int invoiceId = database.getAll().get(1).getId();
-        Invoice invoiceToUpdate = database.getById(invoiceId).get()
-        invoiceToUpdate.setNumber("xxxxxxxx")
-
+    def "should throw illegalArgumentException if there is no id for update item"() {
         when:
-        database.update(invoiceToUpdate.getId(), invoiceToUpdate)
-
-        then:
-        jsonService.objectToString(invoiceToUpdate) == jsonService.objectToString(database.getById(invoiceId).get())
-    }
-
-    def "should throw illegalArgumentException if there is no id using update"() {
-        when:
-        database.update(999999, invoiceList.get(0))
+        database.update(999999, itemList.get(0))
 
         then:
         thrown(IllegalArgumentException)

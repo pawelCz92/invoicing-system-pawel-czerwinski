@@ -7,6 +7,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType
 import pl.futurecollars.invoicing.TestHelpers
 import pl.futurecollars.invoicing.db.AbstractDatabaseTest
 import pl.futurecollars.invoicing.db.Database
+import pl.futurecollars.invoicing.db.WithId
 import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
 
@@ -40,6 +41,11 @@ class SqlDatabaseTest extends AbstractDatabaseTest {
         database = new SqlDatabase(jdbcTemplate)
 
         return database
+    }
+
+    @Override
+    List<WithId> getItemsList() {
+        return TestHelpers.getSampleInvoicesList()
     }
 
     def "should update invoice date and number"() {
