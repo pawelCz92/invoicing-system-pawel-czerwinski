@@ -8,26 +8,27 @@ import spock.lang.Stepwise
 @Stepwise
 abstract class AbstractDatabaseTest extends Specification {
 
-    List<WithId> itemList
+    List<WithId> itemsList
     JsonService jsonService = new JsonService()
 
     abstract Database getDatabaseInstance()
 
     abstract List<WithId> getItemsList()
 
-    Database<WithId> database
+    Database<? extends WithId> database
 
     def setup() {
         database = getDatabaseInstance()
-        itemList = getItemsList()
+       // itemsList = getItemsList()
+        itemsList = new ArrayList<>(getItemsList())
         database.reset()
 
         assert database.getAll().isEmpty()
     }
 
     def saveItems() {
-        itemList.forEach({ item -> database.save(item) })
-        itemList = database.getAll()
+        itemsList.forEach({ item -> database.save(item) })
+        itemsList = database.getAll()
     }
 
     def "should inject database instance"() {
@@ -37,8 +38,8 @@ abstract class AbstractDatabaseTest extends Specification {
 
     def "should load items list"() {
         expect:
-        itemList != null
-        !itemList.isEmpty()
+        itemsList != null
+        !itemsList.isEmpty()
     }
 
     def "should return empty collection if there is no items in base"() {
@@ -53,29 +54,27 @@ abstract class AbstractDatabaseTest extends Specification {
 
     def "should return all saved items"() {
         setup:
+        assert database.getAll().isEmpty()
         saveItems()
 
-        when:
-        List<WithId> savedItems = database.getAll()
-
-        then:
-        itemList.size() == savedItems.size()
-        jsonService.objectToString(itemList) == jsonService.objectToString(savedItems)
+        expect:
+        database.getAll().size() == itemsList.size()
+        jsonService.objectToString(database.getAll()) == jsonService.objectToString(itemsList)
     }
 
     def "should return item by id"() {
         setup:
         saveItems()
-        Long id1 = itemList.get(0).getId()
-        Long id2 = itemList.get(itemList.size() - 1).getId()
+        Long id1 = itemsList.get(0).getId()
+        Long id2 = itemsList.get(itemsList.size() - 1).getId()
 
         when:
         WithId resultItem1 = database.getById(id1).get()
         WithId resultItem2 = database.getById(id2).get()
 
         then:
-        jsonService.objectToString(resultItem1) == jsonService.objectToString(itemList.get(0))
-        jsonService.objectToString(resultItem2) == jsonService.objectToString(itemList.get(itemList.size() - 1))
+        jsonService.objectToString(resultItem1) == jsonService.objectToString(itemsList.get(0))
+        jsonService.objectToString(resultItem2) == jsonService.objectToString(itemsList.get(itemsList.size() - 1))
     }
 
     def "should return items without deleted one"() {
@@ -105,7 +104,7 @@ abstract class AbstractDatabaseTest extends Specification {
 
     def "should throw illegalArgumentException if there is no id for update item"() {
         when:
-        database.update(999999, itemList.get(0))
+        database.update(999999, itemsList.get(0))
 
         then:
         thrown(IllegalArgumentException)

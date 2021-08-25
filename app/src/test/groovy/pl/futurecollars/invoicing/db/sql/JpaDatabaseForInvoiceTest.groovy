@@ -11,6 +11,8 @@ import pl.futurecollars.invoicing.db.sql.jpa.InvoiceRepository
 import pl.futurecollars.invoicing.db.sql.jpa.JpaDatabase
 import pl.futurecollars.invoicing.model.Invoice
 
+import java.util.stream.Collectors
+
 @DataJpaTest
 @IfProfileValue(name = "spring.profiles.active", value = "jpa")
 class JpaDatabaseForInvoiceTest extends AbstractDatabaseTest {
@@ -21,22 +23,27 @@ class JpaDatabaseForInvoiceTest extends AbstractDatabaseTest {
     @Override
     Database getDatabaseInstance() {
         assert invoiceRepository != null
-        return new JpaDatabase(invoiceRepository)
+        return new JpaDatabase<Invoice>(invoiceRepository)
     }
 
     @Override
     List<WithId> getItemsList() {
-        return List.of(
+        List<Invoice> invoices = List.of(
                 TestHelpers.getSampleInvoicesList().get(0),
                 TestHelpers.getSampleInvoicesList().get(4),
                 TestHelpers.getSampleInvoicesList().get(8)
         )
+        println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        invoices.stream().map({inv -> inv.getBuyer()}).forEach({com -> println(com)})
+        invoices.stream().map({inv -> inv.getSeller()}).forEach({com -> println(com)})
+        println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        return invoices
     }
 
     def "should update invoice"() {
         setup:
         saveItems()
-        long invoiceId = database.getAll().get(1).getId();
+        long invoiceId = database.getAll().get(1).getId()
         Invoice invoiceToUpdate = database.getById(invoiceId).get() as Invoice
         invoiceToUpdate.setNumber("xxxxxxxx")
 

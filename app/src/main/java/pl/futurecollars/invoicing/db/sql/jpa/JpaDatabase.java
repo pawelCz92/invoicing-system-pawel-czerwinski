@@ -21,7 +21,13 @@ public class JpaDatabase<T extends WithId> implements Database<T> {
     @Override
     public Long save(T item) {
         item.setId(null);
-        return repository.save(item).getId();
+        try {
+            return repository.save(item).getId();
+        } catch (Exception e) {
+            log.error("\n\n---->> <<<ERROR>>: \n" + item);
+        throw new IllegalArgumentException("Error ;) \n" + e.getMessage());
+        }
+
     }
 
     @Override

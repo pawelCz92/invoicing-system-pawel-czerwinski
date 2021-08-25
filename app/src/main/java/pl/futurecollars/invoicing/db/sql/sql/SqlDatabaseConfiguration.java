@@ -1,4 +1,4 @@
-package pl.futurecollars.invoicing.db.sql;
+package pl.futurecollars.invoicing.db.sql.sql;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import pl.futurecollars.invoicing.db.Database;
+import pl.futurecollars.invoicing.model.Company;
 import pl.futurecollars.invoicing.model.Invoice;
 
 @Slf4j
@@ -14,8 +15,14 @@ import pl.futurecollars.invoicing.model.Invoice;
 public class SqlDatabaseConfiguration {
 
     @Bean
-    public Database<Invoice> sqlDatabase(JdbcTemplate jdbcTemplate) {
+    public Database<Invoice> sqlDatabaseForInvoice(JdbcTemplate jdbcTemplate) {
         log.info("SQL database is in use");
-        return new SqlDatabase(jdbcTemplate);
+        return new SqlDatabaseForInvoice(jdbcTemplate);
+    }
+
+    @Bean
+    public Database<Company> sqlDatabaseForCompany(JdbcTemplate jdbcTemplate) {
+        log.info("SQL database is in use");
+        return new SqlDatabaseForCompany(jdbcTemplate);
     }
 }
