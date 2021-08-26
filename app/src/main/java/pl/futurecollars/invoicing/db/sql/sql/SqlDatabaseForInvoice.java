@@ -26,6 +26,8 @@ public class SqlDatabaseForInvoice extends AbstractSqlDatabase implements Databa
     public Long save(Invoice invoice) {
         try {
             GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+            invoice.getBuyer().setId(null);
+            invoice.getSeller().setId(null);
 
             Long buyerId = findCompanyByTin(invoice.getBuyer().getTaxIdentificationNumber())
                 .map(Company::getId)
@@ -226,14 +228,14 @@ public class SqlDatabaseForInvoice extends AbstractSqlDatabase implements Databa
 
     private void updateInvoice(long id, Invoice invoice) {
         if (findInvoiceById(id).isPresent()) {
-            jdbcTemplate.update("UPDATE invoices SET invoices.date = ? WHERE invoices.id = ?",
+            jdbcTemplate.update("UPDATE invoices SET date = ? WHERE id = ?",
                 invoice.getDate(), invoice.getId());
-            jdbcTemplate.update("UPDATE invoices SET invoices.invoice_number = ? WHERE invoices.id = ?",
+            jdbcTemplate.update("UPDATE invoices SET invoice_number = ? WHERE id = ?",
                 invoice.getNumber(), invoice.getId());
 
-            long buyerId = jdbcTemplate.query("SELECT i.buyer FROM invoices i WHERE i.id = " + id,
+            long buyerId = jdbcTemplate.query("SELECT buyer FROM invoices WHERE id = " + id,
                 (rs, rowNr) -> rs.getLong(1)).get(0);
-            long sellerId = jdbcTemplate.query("SELECT i.seller FROM invoices i WHERE i.id = " + id,
+            long sellerId = jdbcTemplate.query("SELECT seller FROM invoices WHERE id = " + id,
                 (rs, rowNr) -> rs.getLong(1)).get(0);
 
             Company actualBuyer = findCompanyById(buyerId).get();
@@ -253,11 +255,11 @@ public class SqlDatabaseForInvoice extends AbstractSqlDatabase implements Databa
                     .orElseGet(() -> insertCompany(invoice.getSeller()));
             }
             if (buyerId != newBuyerId) {
-                jdbcTemplate.update("UPDATE invoices SET invoices.buyer = ? WHERE invoices.id = ?",
+                jdbcTemplate.update("UPDATE invoices SET buyer = ? WHERE id = ?",
                     newBuyerId, invoice.getId());
             }
             if (sellerId != newSellerId) {
-                jdbcTemplate.update("UPDATE invoices SET invoices.seller = ? WHERE invoices.id = ?",
+                jdbcTemplate.update("UPDATE invoices SET seller = ? WHERE id = ?",
                     newSellerId, invoice.getId());
             }
             Invoice orginalInvoice = findInvoiceById(id).get();

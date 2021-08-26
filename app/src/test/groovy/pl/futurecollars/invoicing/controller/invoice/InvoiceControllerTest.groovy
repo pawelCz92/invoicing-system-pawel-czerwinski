@@ -84,7 +84,6 @@ class InvoiceControllerTest extends Specification {
         given:
         Invoice invoice = TestHelpers.getSampleInvoicesList().get(0)
         invoice.setId(lastId)
-        String invoiceAsJson = jsonService.objectToString(invoice)
 
         when:
         def responseAsJson = mockMvc.perform(get(COLLECTION + lastId))
