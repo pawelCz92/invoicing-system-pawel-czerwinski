@@ -1,7 +1,6 @@
 package pl.futurecollars.invoicing.controller.invoice;
 
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;

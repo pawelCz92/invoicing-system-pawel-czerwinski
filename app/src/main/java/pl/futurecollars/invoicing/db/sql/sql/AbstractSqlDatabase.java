@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import pl.futurecollars.invoicing.model.Company;
 
-
 public class AbstractSqlDatabase {
 
     JdbcTemplate jdbcTemplate;

@@ -28,15 +28,31 @@ class JpaDatabaseForInvoiceTest extends AbstractDatabaseTest {
 
     @Override
     List<WithId> getItemsList() {
-        List<Invoice> invoices = List.of(
+
+        List<Invoice> invoices = new ArrayList<>();
+        invoices.addAll(
                 TestHelpers.getSampleInvoicesList().get(0),
                 TestHelpers.getSampleInvoicesList().get(4),
                 TestHelpers.getSampleInvoicesList().get(8)
         )
-        println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-        invoices.stream().map({inv -> inv.getBuyer()}).forEach({com -> println(com)})
-        invoices.stream().map({inv -> inv.getSeller()}).forEach({com -> println(com)})
-        println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+
+        invoices.stream()
+                .map({ inv ->
+                    inv.getBuyer().setId(null)
+                    inv.getSeller().setId(null)
+                    return inv
+                })
+                .collect(Collectors.toList())
+
+        boolean isAnyNotNullCompanyIdInInvoices = invoices.stream().anyMatch({
+            inv -> inv.getBuyer().getId() != null || inv.getSeller().getId() != null
+        })
+        if (isAnyNotNullCompanyIdInInvoices) {
+            println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+            invoices.stream().map({ inv -> inv.getBuyer() }).forEach({ com -> println(com) })
+            invoices.stream().map({ inv -> inv.getSeller() }).forEach({ com -> println(com) })
+            println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        }
         return invoices
     }
 

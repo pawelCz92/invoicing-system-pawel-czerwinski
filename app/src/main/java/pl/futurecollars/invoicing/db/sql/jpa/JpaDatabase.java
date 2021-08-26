@@ -24,8 +24,8 @@ public class JpaDatabase<T extends WithId> implements Database<T> {
         try {
             return repository.save(item).getId();
         } catch (Exception e) {
-            log.error("\n\n---->> <<<ERROR>>: \n" + item);
-        throw new IllegalArgumentException("Error ;) \n" + e.getMessage());
+            log.error(e.getMessage() + "\n" + item);
+            throw new IllegalArgumentException(e.getMessage());
         }
 
     }

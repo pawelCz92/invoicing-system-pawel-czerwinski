@@ -19,8 +19,7 @@ abstract class AbstractDatabaseTest extends Specification {
 
     def setup() {
         database = getDatabaseInstance()
-       // itemsList = getItemsList()
-        itemsList = new ArrayList<>(getItemsList())
+        itemsList = getItemsList()
         database.reset()
 
         assert database.getAll().isEmpty()
@@ -28,7 +27,7 @@ abstract class AbstractDatabaseTest extends Specification {
 
     def saveItems() {
         itemsList.forEach({ item -> database.save(item) })
-        itemsList = database.getAll()
+        itemsList = new ArrayList<>(database.getAll())
     }
 
     def "should inject database instance"() {
@@ -52,19 +51,19 @@ abstract class AbstractDatabaseTest extends Specification {
         database.getById(1).isEmpty()
     }
 
-    def "should return all saved items"() {
+    def "should return number of all saved items"() {
         setup:
         assert database.getAll().isEmpty()
         saveItems()
 
         expect:
         database.getAll().size() == itemsList.size()
-        jsonService.objectToString(database.getAll()) == jsonService.objectToString(itemsList)
     }
 
     def "should return item by id"() {
         setup:
         saveItems()
+
         Long id1 = itemsList.get(0).getId()
         Long id2 = itemsList.get(itemsList.size() - 1).getId()
 
@@ -73,8 +72,8 @@ abstract class AbstractDatabaseTest extends Specification {
         WithId resultItem2 = database.getById(id2).get()
 
         then:
-        jsonService.objectToString(resultItem1) == jsonService.objectToString(itemsList.get(0))
-        jsonService.objectToString(resultItem2) == jsonService.objectToString(itemsList.get(itemsList.size() - 1))
+        resultItem1.toString() == itemsList.get(0).toString()
+        resultItem2.toString() == itemsList.get(itemsList.size() - 1).toString()
     }
 
     def "should return items without deleted one"() {
