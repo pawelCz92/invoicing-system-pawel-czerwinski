@@ -3,6 +3,7 @@ package pl.futurecollars.invoicing.service.taxcalculator;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class TaxCalculatorService {
     private static final BigDecimal HEALTH_INSURANCE_PERCENT = BigDecimal.valueOf(9);
     private static final BigDecimal MIN_PERCENT_TO_REDUCE_HEALTH_INSURANCE = BigDecimal.valueOf(7.75);
     private static final BigDecimal PERCENT_TO_CALCULATE_INCOME_TAX = BigDecimal.valueOf(19);
-    private final Database database;
+    private final Database<Invoice> database;
 
     private Predicate<Invoice> sellerPredicate(Company company) {
         return invoice -> invoice.getSeller().getTaxIdentificationNumber().equals(company.getTaxIdentificationNumber());
@@ -30,11 +31,11 @@ public class TaxCalculatorService {
     }
 
     private BigDecimal income(Company company) {
-        return database.visit(sellerPredicate(company), InvoiceEntry::getPrice);
+        return visit(sellerPredicate(company), InvoiceEntry::getPrice);
     }
 
     private BigDecimal costs(Company company) {
-        return database.visit(buyerPredicate(company), this::getPriceIncludingPersonalExpense);
+        return visit(buyerPredicate(company), this::getPriceIncludingPersonalExpense);
     }
 
     private BigDecimal getPriceIncludingPersonalExpense(InvoiceEntry invoiceEntry) {
@@ -42,11 +43,11 @@ public class TaxCalculatorService {
     }
 
     private BigDecimal incomingVat(Company company) {
-        return database.visit(sellerPredicate(company), InvoiceEntry::getVatValue);
+        return visit(sellerPredicate(company), InvoiceEntry::getVatValue);
     }
 
     private BigDecimal outgoingVat(Company company) {
-        return database.visit(buyerPredicate(company), this::getVatValueIncludingPersonalExpense);
+        return visit(buyerPredicate(company), this::getVatValueIncludingPersonalExpense);
     }
 
     private BigDecimal getVatValueIncludingPersonalExpense(InvoiceEntry invoiceEntry) {
@@ -97,5 +98,13 @@ public class TaxCalculatorService {
             .divide(HEALTH_INSURANCE_PERCENT, 3, RoundingMode.HALF_UP)
             .multiply(MIN_PERCENT_TO_REDUCE_HEALTH_INSURANCE)
             .setScale(1, RoundingMode.HALF_UP);
+    }
+
+    private BigDecimal visit(Predicate<Invoice> filterRules, Function<InvoiceEntry, BigDecimal> amountToSelect) {
+        return database.getAll().stream()
+            .filter(filterRules)
+            .flatMap(invoice -> invoice.getInvoiceEntries().stream())
+            .map(amountToSelect)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

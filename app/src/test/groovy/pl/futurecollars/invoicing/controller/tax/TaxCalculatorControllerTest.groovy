@@ -8,6 +8,7 @@ import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.TestHelpers
 import pl.futurecollars.invoicing.db.Database
 import pl.futurecollars.invoicing.model.Company
+import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.service.JsonService
 import pl.futurecollars.invoicing.service.taxcalculator.TaxCalculatorResult
 import spock.lang.Specification
@@ -26,12 +27,12 @@ class TaxCalculatorControllerTest extends Specification {
     @Autowired
     private JsonService jsonService
     @Autowired
-    Database database
+    Database<Invoice> database
     private static String COLLECTION = "/tax/"
 
 
     def setup() {
-        database.deleteAll()
+        database.reset()
 
         assert database.getAll().isEmpty()
     }
@@ -75,7 +76,16 @@ class TaxCalculatorControllerTest extends Specification {
         List.of(
                 TestHelpers.getSampleInvoicesList().get(0),
                 TestHelpers.getSampleInvoicesList().get(4),
-                TestHelpers.getSampleInvoicesList().get(8)).forEach({ inv -> database.save(inv) })
+                TestHelpers.getSampleInvoicesList().get(8))
+                .stream()
+                .map({
+                    inv ->
+                        inv.setId(null)
+                        inv.getBuyer().setId(null)
+                        inv.getSeller().setId(null)
+                        return inv
+                })
+                .forEach({ inv -> database.save(inv as Invoice) })
 
         Company company = new Company(tin, "any address", "any name",
                 BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))

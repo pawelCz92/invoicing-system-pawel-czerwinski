@@ -7,13 +7,15 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType
 import pl.futurecollars.invoicing.TestHelpers
 import pl.futurecollars.invoicing.db.AbstractDatabaseTest
 import pl.futurecollars.invoicing.db.Database
+import pl.futurecollars.invoicing.db.WithId
+import pl.futurecollars.invoicing.db.sql.sql.SqlDatabaseForInvoice
 import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
 
 import javax.sql.DataSource
 import java.time.LocalDate
 
-class SqlDatabaseTest extends AbstractDatabaseTest {
+class SqlDatabaseForInvoiceTest extends AbstractDatabaseTest {
 
     private Database database
     private Company company3 =
@@ -37,9 +39,14 @@ class SqlDatabaseTest extends AbstractDatabaseTest {
         flyway.clean()
         flyway.migrate()
 
-        database = new SqlDatabase(jdbcTemplate)
+        database = new SqlDatabaseForInvoice(jdbcTemplate)
 
         return database
+    }
+
+    @Override
+    List<WithId> getItemsList() {
+        return TestHelpers.getSampleInvoicesList()
     }
 
     def "should update invoice date and number"() {

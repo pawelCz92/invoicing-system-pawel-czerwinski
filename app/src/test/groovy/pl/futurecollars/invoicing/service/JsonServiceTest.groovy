@@ -58,9 +58,9 @@ class JsonServiceTest extends Specification {
                 .invoiceEntries(invoiceEntries)
                 .build()
 
-        jsonSample = "{\"id\":null,\"number\":null,\"date\":\"2020-01-20\",\"buyer\":{\"tax" +
+        jsonSample = "{\"id\":null,\"number\":null,\"date\":\"2020-01-20\",\"buyer\":{\"id\":null,\"tax" +
                 "IdentificationNumber\":\"382-22-1584\",\"address\":\"377 Ohio Road Pulo\",\"name\":\"Micro" +
-                "soft\",\"healthInsurance\":319.94,\"pensionInsurance\":514.57},\"seller\":{\"tax" +
+                "soft\",\"healthInsurance\":319.94,\"pensionInsurance\":514.57},\"seller\":{\"id\":null,\"tax" +
                 "IdentificationNumber\":\"677-31-4788\",\"address\":\"ul. Dluga Warszawa\",\"name\":\"JBL\",\"health" +
                 "Insurance\":319.94,\"pensionInsurance\":514.57},\"invoiceEntries\":[{\"de" +
                 "scription\":\"tv\",\"quantity\":1,\"price\":1000,\"vatValue\":230,\"vatRate\":\"VAT_" +
@@ -76,7 +76,7 @@ class JsonServiceTest extends Specification {
         then:
         verifyAll {
             resultForInvoice == jsonSample
-            resultForBuyer == "{\"taxIdentificationNumber\":\"382-22-1584\",\"address\":\"377 Ohio" +
+            resultForBuyer == "{\"id\":null,\"taxIdentificationNumber\":\"382-22-1584\",\"address\":\"377 Ohio" +
                     " Road Pulo\",\"name\":\"Microsoft\",\"healthInsurance\":319.94,\"pensionInsurance\":514.57}"
         }
 

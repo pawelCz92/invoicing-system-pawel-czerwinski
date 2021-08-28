@@ -1,4 +1,4 @@
-package pl.futurecollars.invoicing.db.sql;
+package pl.futurecollars.invoicing.db.sql.sql;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -15,12 +15,10 @@ import pl.futurecollars.invoicing.model.Invoice;
 import pl.futurecollars.invoicing.model.InvoiceEntry;
 import pl.futurecollars.invoicing.model.Vat;
 
-public class SqlDatabase implements Database {
+public class SqlDatabaseForInvoice extends AbstractSqlDatabase implements Database<Invoice> {
 
-    private final JdbcTemplate jdbcTemplate;
-
-    public SqlDatabase(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public SqlDatabaseForInvoice(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
     }
 
     @Override
@@ -28,6 +26,8 @@ public class SqlDatabase implements Database {
     public Long save(Invoice invoice) {
         try {
             GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+            invoice.getBuyer().setId(null);
+            invoice.getSeller().setId(null);
 
             Long buyerId = findCompanyByTin(invoice.getBuyer().getTaxIdentificationNumber())
                 .map(Company::getId)
@@ -70,11 +70,6 @@ public class SqlDatabase implements Database {
         deleteInvoiceById(id);
     }
 
-    @Override
-    public void deleteAll() {
-        getAll().forEach(inv -> delete(inv.getId()));
-    }
-
     private long insertInvoice(GeneratedKeyHolder keyHolder, Invoice invoice, long buyerId, long sellerId) {
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(
@@ -114,24 +109,6 @@ public class SqlDatabase implements Database {
             ps.setLong(2, invoiceEntryId);
             return ps;
         });
-    }
-
-    private Long insertCompany(Company company) {
-        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(
-                "INSERT INTO companies (name, address, tax_identification_number, health_insurance, pension_insurance) "
-                    + "VALUES (?, ?, ?, ?, ?);", new String[] {"id"});
-            ps.setString(1, company.getName());
-            ps.setString(2, company.getAddress());
-            ps.setString(3, company.getTaxIdentificationNumber());
-            ps.setBigDecimal(4, company.getHealthInsurance());
-            ps.setBigDecimal(5, company.getPensionInsurance());
-            return ps;
-        }, keyHolder);
-
-        return keyHolder.getKey().longValue();
     }
 
     private Long insertCar(Car car) {
@@ -207,19 +184,6 @@ public class SqlDatabase implements Database {
         return invoices.stream().findFirst();
     }
 
-    private Optional<Company> findCompanyById(long id) {
-        return jdbcTemplate.query(
-            "SELECT * FROM companies WHERE companies.id = " + id,
-            (rs, rowNum) -> Company.builder()
-                .id(rs.getLong("id"))
-                .taxIdentificationNumber(rs.getString("tax_identification_number"))
-                .address(rs.getString("address"))
-                .name(rs.getString("name"))
-                .healthInsurance(rs.getBigDecimal("health_insurance"))
-                .pensionInsurance(rs.getBigDecimal("pension_insurance"))
-                .build()).stream().findFirst();
-    }
-
     private List<InvoiceEntry> getInvoiceEntriesFromInvoice(long invoiceId) {
         return jdbcTemplate.query(
             "SELECT * FROM invoice_invoice_entries iie "
@@ -249,19 +213,6 @@ public class SqlDatabase implements Database {
                     .build()).stream().findFirst().orElse(null);
     }
 
-    private Optional<Company> findCompanyByTin(String taxIdentificationNumber) {
-        return jdbcTemplate.query(
-            ("SELECT * FROM companies WHERE companies.tax_identification_number = '" + taxIdentificationNumber) + "'", (rs, rowNum) ->
-                Company.builder()
-                    .id(rs.getLong("id"))
-                    .taxIdentificationNumber(rs.getString("tax_identification_number"))
-                    .address(rs.getString("address"))
-                    .name(rs.getString("name"))
-                    .healthInsurance(rs.getBigDecimal("health_insurance"))
-                    .pensionInsurance(rs.getBigDecimal("pension_insurance"))
-                    .build()).stream().findFirst();
-    }
-
     private void deleteInvoiceEntryAndCarByInvoiceId(long invoiceId) {
         jdbcTemplate.update("DELETE FROM invoice_invoice_entries iie WHERE iie.invoice_id = " + invoiceId);
     }
@@ -277,14 +228,14 @@ public class SqlDatabase implements Database {
 
     private void updateInvoice(long id, Invoice invoice) {
         if (findInvoiceById(id).isPresent()) {
-            jdbcTemplate.update("UPDATE invoices SET invoices.date = ? WHERE invoices.id = ?",
+            jdbcTemplate.update("UPDATE invoices SET date = ? WHERE id = ?",
                 invoice.getDate(), invoice.getId());
-            jdbcTemplate.update("UPDATE invoices SET invoices.invoice_number = ? WHERE invoices.id = ?",
+            jdbcTemplate.update("UPDATE invoices SET invoice_number = ? WHERE id = ?",
                 invoice.getNumber(), invoice.getId());
 
-            long buyerId = jdbcTemplate.query("SELECT i.buyer FROM invoices i WHERE i.id = " + id,
+            long buyerId = jdbcTemplate.query("SELECT buyer FROM invoices WHERE id = " + id,
                 (rs, rowNr) -> rs.getLong(1)).get(0);
-            long sellerId = jdbcTemplate.query("SELECT i.seller FROM invoices i WHERE i.id = " + id,
+            long sellerId = jdbcTemplate.query("SELECT seller FROM invoices WHERE id = " + id,
                 (rs, rowNr) -> rs.getLong(1)).get(0);
 
             Company actualBuyer = findCompanyById(buyerId).get();
@@ -304,11 +255,11 @@ public class SqlDatabase implements Database {
                     .orElseGet(() -> insertCompany(invoice.getSeller()));
             }
             if (buyerId != newBuyerId) {
-                jdbcTemplate.update("UPDATE invoices SET invoices.buyer = ? WHERE invoices.id = ?",
+                jdbcTemplate.update("UPDATE invoices SET buyer = ? WHERE id = ?",
                     newBuyerId, invoice.getId());
             }
             if (sellerId != newSellerId) {
-                jdbcTemplate.update("UPDATE invoices SET invoices.seller = ? WHERE invoices.id = ?",
+                jdbcTemplate.update("UPDATE invoices SET seller = ? WHERE id = ?",
                     newSellerId, invoice.getId());
             }
             Invoice orginalInvoice = findInvoiceById(id).get();

@@ -4,9 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
+import org.springframework.test.annotation.IfProfileValue
 import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.TestHelpers
-import pl.futurecollars.invoicing.model.Invoice
+import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.service.JsonService
 import spock.lang.Specification
 import spock.lang.Stepwise
@@ -17,13 +18,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 @Stepwise
-class InvoiceControllerTest extends Specification {
+@IfProfileValue(name = "spring.profiles.active", value = "memory")
+class CompanyControllerTest extends Specification {
 
     @Autowired
     private MockMvc mockMvc
     @Autowired
     private JsonService jsonService
-    private static String COLLECTION = "/invoices/"
+    private static String COLLECTION = "/companies/"
     private static lastId = -1
 
     def clearBase() {
@@ -34,17 +36,17 @@ class InvoiceControllerTest extends Specification {
                 .response
                 .contentAsString
 
-        List<Invoice> invoices = jsonService.stringToObject(addingResponse, List.class)
+        List<Company> companies = jsonService.stringToObject(addingResponse, List.class)
 
-        if (invoices.size() > 0) {
-            invoices.forEach({ invoice ->
-                mockMvc.perform(delete(COLLECTION + invoice.id)).andExpect(status().isNoContent())
+        if (companies.size() > 0) {
+            companies.forEach({ comp ->
+                mockMvc.perform(delete(COLLECTION + comp.id)).andExpect(status().isNoContent())
             }
             )
         }
     }
 
-    def "should return empty string if there is no invoices in base"() {
+    def "should return empty string if there is no companies in base"() {
         when:
         def response = mockMvc.perform(get(COLLECTION))
                 .andExpect(status().isOk())
@@ -56,20 +58,20 @@ class InvoiceControllerTest extends Specification {
         response == "[]"
     }
 
-    def "should return notFound response when try to get invoice by not existing id"() {
+    def "should return notFound response when try to get company by not existing id"() {
         expect:
         mockMvc.perform(get(COLLECTION + "1"))
                 .andExpect(status().isNotFound())
     }
 
-    def "should save invoice to base"() {
+    def "should save company to base"() {
         given:
-        Invoice invoice = TestHelpers.getSampleInvoicesList().get(0)
+        Company company = TestHelpers.getSampleInvoicesList().get(0).getSeller()
 
         when:
         lastId = Integer.parseInt(
                 mockMvc.perform(
-                        post(COLLECTION).content(jsonService.objectToString(invoice))
+                        post(COLLECTION).content(jsonService.objectToString(company))
                                 .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andReturn()
@@ -80,10 +82,10 @@ class InvoiceControllerTest extends Specification {
         lastId > 0
     }
 
-    def "should return invoice by existing id"() {
+    def "should return company by existing id"() {
         given:
-        Invoice invoice = TestHelpers.getSampleInvoicesList().get(0)
-        invoice.setId(lastId)
+        Company company = TestHelpers.getSampleInvoicesList().get(0).getSeller()
+        company.setId(lastId)
 
         when:
         def responseAsJson = mockMvc.perform(get(COLLECTION + lastId))
@@ -93,14 +95,14 @@ class InvoiceControllerTest extends Specification {
                 .contentAsString
 
         then:
-        jsonService.stringToObject(responseAsJson, Invoice.class) == invoice
+        jsonService.stringToObject(responseAsJson, Company.class) == company
     }
 
-    def "should return notFound response when try to update invoice by not existing id"() {
+    def "should return notFound response when try to update company by not existing id"() {
         given:
-        Invoice invoice = TestHelpers.sampleInvoicesList.get(0)
-        invoice.setId(1)
-        String invoiceAsJson = jsonService.objectToString(invoice)
+        Company company = TestHelpers.sampleInvoicesList.get(0).getBuyer()
+        company.setId(1)
+        String invoiceAsJson = jsonService.objectToString(company)
 
         expect:
         mockMvc.perform(put(COLLECTION + "99999").content(invoiceAsJson)
@@ -108,37 +110,38 @@ class InvoiceControllerTest extends Specification {
                 .andExpect(status().isNotFound())
     }
 
-    def "should update invoice by existing id"() {
+    def "should update company by existing id"() {
         given:
-        Invoice invoice = TestHelpers.sampleInvoicesList.get(0)
-        invoice.setId(lastId)
-        Invoice updatedInvoice = TestHelpers.sampleInvoicesList.get(1)
-        updatedInvoice.setId(lastId)
-        String updatedInvoiceAsString = jsonService.objectToString(updatedInvoice)
+        Company company = Company.copyOf(TestHelpers.getSampleCompaniesList().get(0), true)
+        company.setId(lastId)
+
+        Company updatedCompany = Company.copyOf(TestHelpers.getSampleCompaniesList().get(1), true)
+        updatedCompany.setId(lastId)
+        String updatedCompanyAsString = jsonService.objectToString(updatedCompany)
 
         when:
-        def invoicesNotEquals = invoice != updatedInvoice
+        def companiesNotEquals = updatedCompany != company
 
         then:
-        invoicesNotEquals
+        companiesNotEquals
 
         when:
-        mockMvc.perform(put(COLLECTION + lastId).content(updatedInvoiceAsString)
+        mockMvc.perform(put(COLLECTION + lastId).content(updatedCompanyAsString)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
 
         and:
-        def updatedInvoiceFromBase = mockMvc.perform(get(COLLECTION + lastId))
+        def updatedCompanyFromBase = mockMvc.perform(get(COLLECTION + lastId))
                 .andExpect(status().isOk())
                 .andReturn()
                 .response
                 .contentAsString
 
         then:
-        updatedInvoice == jsonService.stringToObject(updatedInvoiceFromBase, Invoice.class)
+        updatedCompany == jsonService.stringToObject(updatedCompanyFromBase, Company.class)
     }
 
-    def "should delete invoice by id"() {
+    def "should delete company by id"() {
         when:
         mockMvc.perform(delete(COLLECTION + lastId))
                 .andExpect(status().isNoContent())
@@ -154,28 +157,28 @@ class InvoiceControllerTest extends Specification {
         invoicesAfterDelete == ""
     }
 
-    def "should return notFound response when try to delete invoice by using not existing id"() {
+    def "should return notFound response when try to delete company by using not existing id"() {
         expect:
         mockMvc.perform(delete(COLLECTION + "99999"))
                 .andExpect(status().isNotFound())
     }
 
-    def "should delete one out of few invoices"() {
+    def "should delete one out of few companies"() {
         setup:
-        Invoice invoiceA = TestHelpers.sampleInvoicesList.get(0)
-        Invoice invoiceB = TestHelpers.sampleInvoicesList.get(1)
-        Invoice invoiceC = TestHelpers.sampleInvoicesList.get(2)
+        Company companyA = TestHelpers.sampleInvoicesList.get(0).getSeller()
+        Company companyB = TestHelpers.sampleInvoicesList.get(1).getSeller()
+        Company companyC = TestHelpers.sampleInvoicesList.get(2).getSeller()
 
         and: "saving sample three invoices to base"
         mockMvc.perform(post(COLLECTION)
-                .content(jsonService.objectToString(invoiceA))
+                .content(jsonService.objectToString(companyA))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
                 .response
                 .contentAsString
-        String idInvoiceB = mockMvc.perform(post(COLLECTION)
-                .content(jsonService.objectToString(invoiceB))
+        String idCompanyB = mockMvc.perform(post(COLLECTION)
+                .content(jsonService.objectToString(companyB))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -183,7 +186,7 @@ class InvoiceControllerTest extends Specification {
                 .contentAsString
         lastId = Integer.parseInt(
                 mockMvc.perform(post(COLLECTION)
-                        .content(jsonService.objectToString(invoiceC))
+                        .content(jsonService.objectToString(companyC))
                         .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andReturn()
@@ -192,7 +195,7 @@ class InvoiceControllerTest extends Specification {
         )
 
         when:
-        mockMvc.perform(delete((COLLECTION + idInvoiceB)))
+        mockMvc.perform(delete((COLLECTION + idCompanyB)))
                 .andExpect(status().isNoContent())
 
         and:

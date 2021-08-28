@@ -6,46 +6,45 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.repository.CrudRepository;
 import pl.futurecollars.invoicing.db.Database;
-import pl.futurecollars.invoicing.model.Invoice;
+import pl.futurecollars.invoicing.db.WithId;
 
 @RequiredArgsConstructor
 @Slf4j
-public class JpaDatabase implements Database {
+public class JpaDatabase<T extends WithId> implements Database<T> {
 
-    private final InvoiceRepository invoiceRepository;
+    private final CrudRepository<T, Long> repository;
 
-    @Transactional
     @Override
-    public Long save(Invoice invoice) {
-        invoice.setId(null);
-
-        return invoiceRepository.save(invoice).getId();
+    public Long save(T item) {
+        item.setId(null);
+        try {
+            return repository.save(item).getId();
+        } catch (Exception e) {
+            log.error(e.getMessage() + "\n" + item);
+            throw new IllegalArgumentException(e.getMessage());
+        }
     }
 
     @Override
-    public Optional<Invoice> getById(Long id) {
-        return invoiceRepository.findById(id);
+    public Optional<T> getById(Long id) {
+        return repository.findById(id);
     }
 
     @Override
-    public List<Invoice> getAll() {
+    public List<T> getAll() {
         return StreamSupport
-            .stream(invoiceRepository.findAll().spliterator(), false)
+            .stream(repository.findAll().spliterator(), false)
             .collect(Collectors.toList());
     }
 
     @Override
-    public void update(Long id, Invoice updatedInvoice) {
-        Optional<Invoice> invoiceOpt = getById(id);
+    public void update(Long id, T updatedItem) {
+        Optional<T> itemOpt = getById(id);
 
-        if (invoiceOpt.isPresent()) {
-            Invoice invoice = invoiceOpt.get();
-            updatedInvoice.setId(id);
-            updatedInvoice.getBuyer().setId(invoice.getBuyer().getId());
-            updatedInvoice.getSeller().setId(invoice.getSeller().getId());
-            invoiceRepository.save(updatedInvoice);
+        if (itemOpt.isPresent()) {
+            repository.save(updatedItem);
         } else {
             String message = "Id: " + id + " not found. Update impossible";
             log.error(message);
@@ -55,16 +54,11 @@ public class JpaDatabase implements Database {
 
     @Override
     public void delete(Long id) {
-        Optional<Invoice> invoice = getById(id);
-        invoice.ifPresentOrElse(invoiceRepository::delete, () -> {
-            String message = "There is no such id for delete invoice";
+        Optional<T> item = getById(id);
+        item.ifPresentOrElse(repository::delete, () -> {
+            String message = "There is no such id for delete item";
             log.error(message);
             throw new IllegalArgumentException(message);
         });
-    }
-
-    @Override
-    public void deleteAll() {
-        invoiceRepository.deleteAll(getAll());
     }
 }
