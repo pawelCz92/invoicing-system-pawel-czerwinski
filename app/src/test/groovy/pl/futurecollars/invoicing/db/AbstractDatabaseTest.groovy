@@ -27,7 +27,7 @@ abstract class AbstractDatabaseTest extends Specification {
 
     def saveItems() {
         itemsList.forEach({ item -> database.save(item) })
-        itemsList = new ArrayList<>(database.getAll())
+        itemsList = database.getAll()
     }
 
     def "should inject database instance"() {

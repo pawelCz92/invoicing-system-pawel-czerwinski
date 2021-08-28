@@ -4,6 +4,7 @@ import pl.futurecollars.invoicing.model.*
 import spock.lang.Specification
 
 import java.time.LocalDate
+import java.util.stream.Collectors
 
 class TestHelpers extends Specification {
 
@@ -37,7 +38,8 @@ class TestHelpers extends Specification {
     }
 
     static def getSampleInvoicesList() {
-        invoiceEntries = List.of(
+        invoiceEntries = new ArrayList<>()
+        invoiceEntries.addAll(List.of(
                 /* 0*/ new InvoiceEntry("tv", BigDecimal.valueOf(1.00).setScale(2), 1000.00, 230.00, Vat.VAT_23, null),
                 /* 1*/ new InvoiceEntry("RadioX", BigDecimal.valueOf(1.00).setScale(2), 100.00, 23.00, Vat.VAT_23, null),
                 /* 2*/ new InvoiceEntry("RadioY", BigDecimal.valueOf(1.00).setScale(2), 100.00, 23.00, Vat.VAT_23, null),
@@ -76,7 +78,7 @@ class TestHelpers extends Specification {
                 /*31*/ new InvoiceEntry("testIn", BigDecimal.valueOf(1.00).setScale(2), 76_011.62, 0.00, Vat.VAT_23, null),
                 /*32*/ new InvoiceEntry("testOut", BigDecimal.valueOf(1.00).setScale(2), 11_329.47, 0.00, Vat.VAT_0, null),
                 /*33*/ new InvoiceEntry("hdmi cable", BigDecimal.valueOf(5.00).setScale(2), 250.00, 20.00, Vat.VAT_8, null)
-        )
+        ))
 
         return List.of(
                 Invoice.builder()
@@ -84,54 +86,58 @@ class TestHelpers extends Specification {
                         .number("2021/05/09/1289")
                         .buyer(sampleCompaniesList.get(0))
                         .seller(sampleCompaniesList.get(1))
-                        .invoiceEntries(List.of(
-                                invoiceEntries.get(1), invoiceEntries.get(3), invoiceEntries.get(9), invoiceEntries.get(10),
-                                invoiceEntries.get(26), invoiceEntries.get(20), invoiceEntries.get(17))
-                        )
+                        .invoiceEntries(convertToMutableList(List.of(
+                                invoiceEntries.get(1), invoiceEntries.get(3), invoiceEntries.get(9),
+                                invoiceEntries.get(10), invoiceEntries.get(26), invoiceEntries.get(20),
+                                invoiceEntries.get(17))) as List<InvoiceEntry>)
                         .build(),
                 Invoice.builder()
                         .date(LocalDate.of(2005, 10, 25))
                         .number("2021/05/09/5675")
                         .buyer(sampleCompaniesList.get(2))
                         .seller(sampleCompaniesList.get(1))
-                        .invoiceEntries(List.of(
-                                invoiceEntries.get(15), invoiceEntries.get(4), invoiceEntries.get(18), invoiceEntries.get(12),
-                                invoiceEntries.get(11), invoiceEntries.get(22)))
+                        .invoiceEntries(convertToMutableList(List.of(
+                                invoiceEntries.get(15), invoiceEntries.get(4), invoiceEntries.get(18),
+                                invoiceEntries.get(12), invoiceEntries.get(11), invoiceEntries.get(22)
+                        )) as List<InvoiceEntry>)
                         .build(),
                 Invoice.builder()
                         .date(LocalDate.of(2009, 1, 22))
                         .number("2021/05/09/3333")
                         .buyer(sampleCompaniesList.get(3))
                         .seller(sampleCompaniesList.get(0))
-                        .invoiceEntries(List.of(
-                                invoiceEntries.get(21), invoiceEntries.get(23), invoiceEntries.get(24), invoiceEntries.get(25),
-                                invoiceEntries.get(27), invoiceEntries.get(30)))
+                        .invoiceEntries(convertToMutableList(List.of(
+                                invoiceEntries.get(21), invoiceEntries.get(23), invoiceEntries.get(24),
+                                invoiceEntries.get(25), invoiceEntries.get(27),
+                                invoiceEntries.get(30))) as List<InvoiceEntry>)
                         .build(),
                 Invoice.builder()
                         .date(LocalDate.of(2010, 7, 22))
                         .number("2021/05/09/5555")
                         .buyer(sampleCompaniesList.get(1))
                         .seller(sampleCompaniesList.get(0))
-                        .invoiceEntries(List.of(
-                                invoiceEntries.get(31), invoiceEntries.get(33), invoiceEntries.get(10)))
+                        .invoiceEntries(convertToMutableList(List.of(
+                                invoiceEntries.get(31), invoiceEntries.get(33),
+                                invoiceEntries.get(10))) as List<InvoiceEntry>)
                         .build(),
-
                 Invoice.builder()
                         .date(LocalDate.of(2010, 2, 22))
                         .number("2021/05/09/2222")
                         .buyer(sampleCompaniesList.get(3))
                         .seller(sampleCompaniesList.get(2))
-                        .invoiceEntries(List.of(
-                                invoiceEntries.get(2), invoiceEntries.get(5), invoiceEntries.get(6), invoiceEntries.get(7),
-                                invoiceEntries.get(8), invoiceEntries.get(13)))
+                        .invoiceEntries(convertToMutableList(List.of(
+                                invoiceEntries.get(2), invoiceEntries.get(5),
+                                invoiceEntries.get(6), invoiceEntries.get(7),
+                                invoiceEntries.get(8), invoiceEntries.get(13))) as List<InvoiceEntry>)
                         .build(),
                 Invoice.builder()
                         .date(LocalDate.of(2010, 2, 22))
                         .number("2021/05/09/1111")
                         .buyer(sampleCompaniesList.get(3))
                         .seller(sampleCompaniesList.get(4))
-                        .invoiceEntries(List.of(
-                                invoiceEntries.get(14), invoiceEntries.get(16), invoiceEntries.get(28)))
+                        .invoiceEntries(convertToMutableList(List.of(
+                                invoiceEntries.get(14), invoiceEntries.get(16),
+                                invoiceEntries.get(28))) as List<InvoiceEntry>)
                         .build(),
 
                 Invoice.builder()
@@ -139,25 +145,29 @@ class TestHelpers extends Specification {
                         .number("2021/05/09/9864")
                         .buyer(sampleCompaniesList.get(5))
                         .seller(sampleCompaniesList.get(3))
-                        .invoiceEntries(List.of(
-                                invoiceEntries.get(29), invoiceEntries.get(19)))
+                        .invoiceEntries(convertToMutableList(List.of(
+                                invoiceEntries.get(29), invoiceEntries.get(19))) as List<InvoiceEntry>)
                         .build(),
                 Invoice.builder()
                         .date(LocalDate.of(2012, 2, 23))
                         .number("2021/05/09/3278")
                         .buyer(sampleCompaniesList.get(5))
                         .seller(sampleCompaniesList.get(6))
-                        .invoiceEntries(List.of(
-                                invoiceEntries.get(31)))
+                        .invoiceEntries(convertToMutableList(List.of(
+                                invoiceEntries.get(31))) as List<InvoiceEntry>)
                         .build(),
                 Invoice.builder()
                         .date(LocalDate.of(2012, 2, 23))
                         .number("2021/05/09/3455")
                         .buyer(sampleCompaniesList.get(6))
                         .seller(sampleCompaniesList.get(5))
-                        .invoiceEntries(List.of(
-                                invoiceEntries.get(32)))
+                        .invoiceEntries(convertToMutableList(List.of(
+                                invoiceEntries.get(32))) as List<InvoiceEntry>)
                         .build()
         )
+    }
+
+    static List<?> convertToMutableList(List<?> list) {
+        return list.stream().collect(Collectors.toList())
     }
 }

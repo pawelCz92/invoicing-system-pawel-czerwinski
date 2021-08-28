@@ -10,7 +10,6 @@ import pl.futurecollars.invoicing.db.WithId
 import pl.futurecollars.invoicing.db.sql.jpa.InvoiceRepository
 import pl.futurecollars.invoicing.db.sql.jpa.JpaDatabase
 import pl.futurecollars.invoicing.model.Invoice
-import spock.lang.Ignore
 
 import java.util.stream.Collectors
 
@@ -31,47 +30,30 @@ class JpaDatabaseForInvoiceTest extends AbstractDatabaseTest {
     List<WithId> getItemsList() {
 
         List<Invoice> invoices = new ArrayList<>()
+
         invoices.addAll(
                 TestHelpers.getSampleInvoicesList().get(0),
                 TestHelpers.getSampleInvoicesList().get(4),
                 TestHelpers.getSampleInvoicesList().get(8)
         )
-
-        invoices.stream()
+Arrays.asList()
+        invoices = invoices.stream()
                 .map({ inv ->
                     inv.getBuyer().setId(null)
                     inv.getSeller().setId(null)
                     return inv
                 })
                 .collect(Collectors.toList())
-
-        boolean isAnyNotNullCompanyIdInInvoices = invoices.stream().anyMatch({
-            inv -> inv.getBuyer().getId() != null || inv.getSeller().getId() != null
-        })
-        if (isAnyNotNullCompanyIdInInvoices) {
-            println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-            invoices.stream().map({ inv -> inv.getBuyer() }).forEach({ com -> println(com) })
-            invoices.stream().map({ inv -> inv.getSeller() }).forEach({ com -> println(com) })
-            println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-        }
         return invoices
     }
 
-    @Ignore
     def "should update invoice"() {
         setup:
-        database.reset()
         saveItems()
-        long invoiceId = database.getAll().get(1).getId()
-        String invoiceByJson = jsonService.objectToString(database.getById(invoiceId).get())
-        Invoice invoiceToUpdate = jsonService.stringToObject(invoiceByJson, Invoice.class)
-        invoiceToUpdate.setNumber("xxxxxxxx")
 
-        println("---------------------------------------------------------------------")
-        println(database.getById(invoiceId).get())
-        println(invoiceToUpdate)
-        println(database.getById(invoiceId).get())
-        println("---------------------------------------------------------------------")
+        long invoiceId = database.getAll().get(1).getId()
+        Invoice invoiceToUpdate = database.getById(invoiceId).get() as Invoice
+        invoiceToUpdate.setNumber("xxxxxxxx")
 
         when:
         database.update(invoiceToUpdate.getId(), invoiceToUpdate)

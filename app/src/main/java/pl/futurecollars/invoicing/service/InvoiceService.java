@@ -29,6 +29,7 @@ public class InvoiceService {
     }
 
     public void update(Long id, Invoice updatedInvoice) throws IllegalArgumentException {
+        updatedInvoice.setId(id);
         database.update(id, updatedInvoice);
     }
 

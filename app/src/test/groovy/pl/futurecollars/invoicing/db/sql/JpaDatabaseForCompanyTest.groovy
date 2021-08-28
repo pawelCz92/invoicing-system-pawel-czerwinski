@@ -28,7 +28,7 @@ class JpaDatabaseForCompanyTest extends AbstractDatabaseTest {
 
     @Override
     List<WithId> getItemsList() {
-        return TestHelpers.sampleCompaniesList
+        return TestHelpers.getSampleCompaniesList()
     }
 
     def "should update company"() {

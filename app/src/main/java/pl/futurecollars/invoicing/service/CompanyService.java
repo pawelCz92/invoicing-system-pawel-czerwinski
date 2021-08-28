@@ -26,6 +26,7 @@ public class CompanyService {
     }
 
     public void update(Long id, Company updatedCompany) throws IllegalArgumentException {
+        updatedCompany.setId(id);
         database.update(id, updatedCompany);
     }
 
