@@ -51,4 +51,15 @@ public class Company implements WithId {
         this.healthInsurance = healthInsurance;
         this.pensionInsurance = pensionInsurance;
     }
+
+    public static Company copyOf(Company company, boolean idNull) {
+        return Company.builder()
+            .id(idNull ? null : company.getId())
+            .taxIdentificationNumber(company.getTaxIdentificationNumber())
+            .address(company.getAddress())
+            .name(company.getName())
+            .healthInsurance(company.getHealthInsurance())
+            .pensionInsurance(company.getPensionInsurance())
+            .build();
+    }
 }

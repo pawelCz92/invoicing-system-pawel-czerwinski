@@ -14,6 +14,9 @@ public class InvoiceService {
     private final Database<Invoice> database;
 
     public Long save(Invoice invoice) {
+        invoice.setId(null);
+        invoice.getBuyer().setId(null);
+        invoice.getSeller().setId(null);
         return database.save(invoice);
     }
 

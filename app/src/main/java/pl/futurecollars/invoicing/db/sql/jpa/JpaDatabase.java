@@ -7,7 +7,6 @@ import java.util.stream.StreamSupport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.transaction.annotation.Transactional;
 import pl.futurecollars.invoicing.db.Database;
 import pl.futurecollars.invoicing.db.WithId;
 
@@ -17,7 +16,6 @@ public class JpaDatabase<T extends WithId> implements Database<T> {
 
     private final CrudRepository<T, Long> repository;
 
-    @Transactional
     @Override
     public Long save(T item) {
         item.setId(null);
@@ -27,7 +25,6 @@ public class JpaDatabase<T extends WithId> implements Database<T> {
             log.error(e.getMessage() + "\n" + item);
             throw new IllegalArgumentException(e.getMessage());
         }
-
     }
 
     @Override
@@ -47,7 +44,6 @@ public class JpaDatabase<T extends WithId> implements Database<T> {
         Optional<T> itemOpt = getById(id);
 
         if (itemOpt.isPresent()) {
-            updatedItem.setId(id);
             repository.save(updatedItem);
         } else {
             String message = "Id: " + id + " not found. Update impossible";

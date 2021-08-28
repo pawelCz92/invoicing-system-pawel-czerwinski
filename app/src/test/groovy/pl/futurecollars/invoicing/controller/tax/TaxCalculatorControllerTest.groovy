@@ -76,7 +76,16 @@ class TaxCalculatorControllerTest extends Specification {
         List.of(
                 TestHelpers.getSampleInvoicesList().get(0),
                 TestHelpers.getSampleInvoicesList().get(4),
-                TestHelpers.getSampleInvoicesList().get(8)).forEach({ inv -> database.save(inv) })
+                TestHelpers.getSampleInvoicesList().get(8))
+                .stream()
+                .map({
+                    inv ->
+                        inv.setId(null)
+                        inv.getBuyer().setId(null)
+                        inv.getSeller().setId(null)
+                        return inv
+                })
+                .forEach({ inv -> database.save(inv as Invoice) })
 
         Company company = new Company(tin, "any address", "any name",
                 BigDecimal.valueOf(319.94), BigDecimal.valueOf(514.57))

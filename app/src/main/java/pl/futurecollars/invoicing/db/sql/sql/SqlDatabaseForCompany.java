@@ -76,6 +76,10 @@ public class SqlDatabaseForCompany extends AbstractSqlDatabase implements Databa
 
                 return ps;
             });
+        } else {
+            String message = "There is no company with id = " + id;
+            log.error(message);
+            throw new IllegalArgumentException(message);
         }
     }
 
