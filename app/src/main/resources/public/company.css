@@ -1,8 +1,10 @@
-table, th, td {
+table,
+th,
+td {
     border: 1px solid black;
     border-collapse: collapse;
 }
 
-form{
-padding: 10px 10px 30px 10px;
+form {
+    padding: 10px 10px 30px 10px;
 }
