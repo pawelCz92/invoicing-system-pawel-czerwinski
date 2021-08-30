@@ -1,0 +1,25 @@
+.data-container {
+  background-color: rgb(255, 255, 255);
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.titleHeader {
+  margin-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 50px;
+  font-weight: 700;
+}
+
+table {
+  min-width: 80%;
+  width: auto;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.numberInput {
+  min-width: 120px;
+  width: auto;
+}
