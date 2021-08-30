@@ -7,6 +7,7 @@ buildscript {
         springFoxStarterVersion = '3.0.0'
         springFoxUiVersion = '3.0.0'
         springDependencyManagementVersion = '1.0.11.RELEASE'
+        mongoVersion = '3.12.8'
     }
 }
 
@@ -39,6 +40,7 @@ dependencies {
 
     runtimeOnly 'com.h2database:h2:1.4.200'
     runtimeOnly 'org.postgresql:postgresql:42.2.19'
+    implementation "org.mongodb:mongo-java-driver:${mongoVersion}"
 
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
