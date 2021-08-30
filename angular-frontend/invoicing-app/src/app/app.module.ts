@@ -6,6 +6,7 @@ import { CompanyComponent } from './company/company/company.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule} from '@angular/common/http'
+import { CompanyService } from './company/company/companyService';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,7 @@ import { HttpClientModule} from '@angular/common/http'
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [CompanyService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
