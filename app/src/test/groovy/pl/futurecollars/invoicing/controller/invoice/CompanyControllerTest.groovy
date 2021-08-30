@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 @Stepwise
-@IfProfileValue(name = "spring.profiles.active", value = "memory")
+//TODO @IfProfileValue(name = "spring.profiles.active", value = "memory")
 class CompanyControllerTest extends Specification {
 
     @Autowired
