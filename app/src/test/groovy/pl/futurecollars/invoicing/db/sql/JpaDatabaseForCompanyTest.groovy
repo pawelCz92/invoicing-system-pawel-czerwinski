@@ -14,7 +14,6 @@ import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
 
 @DataJpaTest
-//@IfProfileValue(name = "spring.profiles.active", value = "jpa")
 class JpaDatabaseForCompanyTest extends AbstractDatabaseTest {
 
     @Autowired
