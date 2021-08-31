@@ -1,4 +1,4 @@
-package pl.futurecollars.invoicing.db.sql.mongo;
+package pl.futurecollars.invoicing.db.mongo;
 
 import com.mongodb.client.MongoCollection;
 import javax.annotation.PostConstruct;

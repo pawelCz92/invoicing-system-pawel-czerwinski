@@ -72,7 +72,6 @@ jacocoTestCoverageVerification {
             fileTree(dir: it, exclude:
                     [
                             'pl/futurecollars/invoicing/App.class',
-                            'pl/futurecollars/invoicing/db/DatabaseConfiguration.class',
                             'pl/futurecollars/invoicing/model/*'
 
                     ])

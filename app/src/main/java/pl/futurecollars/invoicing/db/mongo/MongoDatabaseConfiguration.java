@@ -1,4 +1,4 @@
-package pl.futurecollars.invoicing.db.sql.mongo;
+package pl.futurecollars.invoicing.db.mongo;
 
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
