@@ -9,7 +9,7 @@ import { CompanyService } from './companyService';
 })
 export class CompanyComponent implements OnInit {
 
-  newCompany: Company = new Company(0, "", "", "", 0, 0);
+  newCompany: Company = new Company(0, '', '', '', 0, 0);
 
   constructor(
     private companiesService: CompanyService
