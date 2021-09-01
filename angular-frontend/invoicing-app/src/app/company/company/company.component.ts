@@ -15,25 +15,7 @@ export class CompanyComponent implements OnInit {
     private companiesService: CompanyService
   ) { }
 
-  companies: Company[] = [
-
-    new Company(
-      0,
-      "421-896-78-55",
-      "18674 West Avenue",
-      "JPL",
-      435,
-      332
-    ),
-    new Company(
-      0,
-      "333-896-78-22",
-      "377 Ohio Road Pulo",
-      "Voolith",
-      800,
-      400
-    )
-  ]
+  companies: Company[] = [];
 
   ngOnInit(): void {
     this.companiesService.getCompanies()
