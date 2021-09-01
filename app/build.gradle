@@ -7,6 +7,7 @@ buildscript {
         springFoxStarterVersion = '3.0.0'
         springFoxUiVersion = '3.0.0'
         springDependencyManagementVersion = '1.0.11.RELEASE'
+        mongoVersion = '3.12.8'
     }
 }
 
@@ -39,6 +40,7 @@ dependencies {
 
     runtimeOnly 'com.h2database:h2:1.4.200'
     runtimeOnly 'org.postgresql:postgresql:42.2.19'
+    implementation "org.mongodb:mongo-java-driver:${mongoVersion}"
 
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
@@ -70,7 +72,6 @@ jacocoTestCoverageVerification {
             fileTree(dir: it, exclude:
                     [
                             'pl/futurecollars/invoicing/App.class',
-                            'pl/futurecollars/invoicing/db/DatabaseConfiguration.class',
                             'pl/futurecollars/invoicing/model/*'
 
                     ])
@@ -128,11 +129,16 @@ task testWithPostgreSqlDatabase(type: Test) {
     systemProperty 'spring.profiles.active', 'sql-pg'
 }
 
+task testWithMongoDatabase(type: Test) {
+    systemProperty 'spring.profiles.active', 'mongo'
+}
+
 check.dependsOn testWithFileDatabase
 check.dependsOn testWithMemoryDatabase
 check.dependsOn testWithSqlDatabase
 check.dependsOn testWithJpaDatabase
 check.dependsOn testWithJpaFlywayDatabase
+check.dependsOn testWithMongoDatabase
 
 String osName = System.getProperty("os.name").toLowerCase()
 if (osName.contains("mac")) {
