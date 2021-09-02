@@ -21,25 +21,25 @@
           <th></th>
         </tr>
 
-        <tr *ngFor="let company of companies">
-          <td *ngIf="!company.editMode">{{company.taxIdentificationNumber}}</td>
+        <tr class="companyRow" *ngFor="let company of companies">
+          <td *ngIf="!company.editMode" id="taxId">{{company.taxIdentificationNumber}}</td>
           <td *ngIf="company.editMode"><input [(ngModel)]="company.editedCompany.taxIdentificationNumber" type="text"
                                               class="form-control" name="taxIdentificationNumber"></td>
 
-          <td *ngIf="!company.editMode">{{company.address}}</td>
+          <td *ngIf="!company.editMode"  id="address">{{company.address}}</td>
           <td *ngIf="company.editMode"><input [(ngModel)]="company.editedCompany.address" type="text"
                                               class="form-control" name="address"></td>
 
-          <td *ngIf="!company.editMode">{{company.name}}</td>
+          <td *ngIf="!company.editMode" id="name">{{company.name}}</td>
           <td *ngIf="company.editMode"><input [(ngModel)]="company.editedCompany.name" type="text" class="form-control"
                                               name="name"></td>
 
-          <td *ngIf="!company.editMode">{{company.pensionInsurance}}</td>
+          <td *ngIf="!company.editMode" id="pensionInsurance">{{company.pensionInsurance}}</td>
           <td *ngIf="company.editMode">
             <input [(ngModel)]="company.editedCompany.pensionInsurance" type="number" class="numberInput form-control"
                    name="pensionInsurance" min="0"></td>
 
-          <td *ngIf="!company.editMode">{{company.healthInsurance}}</td>
+          <td *ngIf="!company.editMode" id="healthInsurance">{{company.healthInsurance}}</td>
           <td *ngIf="company.editMode">
             <input [(ngModel)]="company.editedCompany.healthInsurance" type="number" class="numberInput form-control"
                    name="healthInsurance" min="0"></td>
