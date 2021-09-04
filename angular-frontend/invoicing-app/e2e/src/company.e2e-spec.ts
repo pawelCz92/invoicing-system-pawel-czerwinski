@@ -6,7 +6,6 @@ describe('Company page E2E test', () => {
 
   beforeEach(async () => {
     page = new CompanyPage();
-
     await page.navigateTo();
 
     await page.companyRows()
@@ -47,7 +46,6 @@ describe('Company page E2E test', () => {
         expect(rowsAfterDelete.length).toEqual(1);
         await new CompanyRow(rowsAfterDelete[0]).assertRowValues('456', '456 Inc.',
           '456 Wall Street', '5678', '567');
-
       });
     });
   });
@@ -59,6 +57,12 @@ describe('Company page E2E test', () => {
       const companyRow = new CompanyRow(rows[0]);
       await companyRow.updateCompany('456', '456 Inc.', '456 Wall Street', 5678, 567);
       await companyRow.assertRowValues('456', '456 Inc.', '456 Wall Street', '5678', '567');
+
+      await page.companyRows().then(async rowsAfterUpdate => {
+        expect(rowsAfterUpdate.length).toEqual(1);
+        await new CompanyRow(rowsAfterUpdate[0]).assertRowValues('456', '456 Inc.',
+          '456 Wall Street', '5678', '567');
+      });
     });
   });
 });

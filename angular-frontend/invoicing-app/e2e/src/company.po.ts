@@ -29,10 +29,6 @@ export class CompanyPage {
     return element.all(by.css('.companyRow'));
   }
 
-  anyCompanyRow(): ElementFinder {
-    return element(by.css('.companyRow'));
-  }
-
   deleteBtn(row: ElementFinder): WebElement {
     return row.element(by.css('.btn-danger'));
   }
