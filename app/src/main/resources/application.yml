@@ -16,3 +16,7 @@ spring:
     active: mongo
   flyway:
     enabled: false
+  security:
+    user:
+      name: pawel
+      password: 1234

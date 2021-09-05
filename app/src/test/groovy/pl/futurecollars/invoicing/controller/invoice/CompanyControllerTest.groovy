@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.annotation.IfProfileValue
 import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.TestHelpers
@@ -12,9 +13,11 @@ import pl.futurecollars.invoicing.service.JsonService
 import spock.lang.Specification
 import spock.lang.Stepwise
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
+@WithMockUser
 @AutoConfigureMockMvc
 @SpringBootTest
 @Stepwise
@@ -40,7 +43,7 @@ class CompanyControllerTest extends Specification {
 
         if (companies.size() > 0) {
             companies.forEach({ comp ->
-                mockMvc.perform(delete(COLLECTION + comp.id)).andExpect(status().isNoContent())
+                mockMvc.perform(delete(COLLECTION + comp.id).with(csrf())).andExpect(status().isNoContent())
             }
             )
         }
@@ -72,7 +75,8 @@ class CompanyControllerTest extends Specification {
         lastId = Integer.parseInt(
                 mockMvc.perform(
                         post(COLLECTION).content(jsonService.objectToString(company))
-                                .contentType(MediaType.APPLICATION_JSON))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .with(csrf()))
                         .andExpect(status().isOk())
                         .andReturn()
                         .response
@@ -106,7 +110,8 @@ class CompanyControllerTest extends Specification {
 
         expect:
         mockMvc.perform(put(COLLECTION + "99999").content(invoiceAsJson)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf()))
                 .andExpect(status().isNotFound())
     }
 
@@ -127,7 +132,8 @@ class CompanyControllerTest extends Specification {
 
         when:
         mockMvc.perform(put(COLLECTION + lastId).content(updatedCompanyAsString)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf()))
                 .andExpect(status().isNoContent())
 
         and:
@@ -143,7 +149,8 @@ class CompanyControllerTest extends Specification {
 
     def "should delete company by id"() {
         when:
-        mockMvc.perform(delete(COLLECTION + lastId))
+        mockMvc.perform(delete(COLLECTION + lastId)
+                .with(csrf()))
                 .andExpect(status().isNoContent())
 
         and:
@@ -159,7 +166,8 @@ class CompanyControllerTest extends Specification {
 
     def "should return notFound response when try to delete company by using not existing id"() {
         expect:
-        mockMvc.perform(delete(COLLECTION + "99999"))
+        mockMvc.perform(delete(COLLECTION + "99999")
+                .with(csrf()))
                 .andExpect(status().isNotFound())
     }
 
@@ -172,14 +180,16 @@ class CompanyControllerTest extends Specification {
         and: "saving sample three invoices to base"
         mockMvc.perform(post(COLLECTION)
                 .content(jsonService.objectToString(companyA))
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .response
                 .contentAsString
         String idCompanyB = mockMvc.perform(post(COLLECTION)
                 .content(jsonService.objectToString(companyB))
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .response
@@ -187,7 +197,8 @@ class CompanyControllerTest extends Specification {
         lastId = Integer.parseInt(
                 mockMvc.perform(post(COLLECTION)
                         .content(jsonService.objectToString(companyC))
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf()))
                         .andExpect(status().isOk())
                         .andReturn()
                         .response
@@ -195,7 +206,7 @@ class CompanyControllerTest extends Specification {
         )
 
         when:
-        mockMvc.perform(delete((COLLECTION + idCompanyB)))
+        mockMvc.perform(delete((COLLECTION + idCompanyB)).with(csrf()))
                 .andExpect(status().isNoContent())
 
         and:
