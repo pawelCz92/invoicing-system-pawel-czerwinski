@@ -19,4 +19,9 @@ spring:
   security:
     user:
       name: pawel
-      password: 1234
+      password: xxx1234
+
+invoicing-system:
+  allowedOrigins: http://localhost:4200
+  csrf:
+    disable: true

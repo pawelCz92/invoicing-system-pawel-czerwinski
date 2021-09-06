@@ -75,7 +75,6 @@ jacocoTestCoverageVerification {
                     [
                             'pl/futurecollars/invoicing/App.class',
                             'pl/futurecollars/invoicing/model/*'
-
                     ])
         }))
     }
