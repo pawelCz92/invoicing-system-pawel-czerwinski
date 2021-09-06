@@ -1,16 +1,11 @@
-import { AppPage } from './app.po';
+import { CompanyPage } from './company.po';
 import { browser, logging } from 'protractor';
 
 describe('workspace-project App', () => {
-  let page: AppPage;
+  let page: CompanyPage;
 
   beforeEach(() => {
-    page = new AppPage();
-  });
-
-  it('should display welcome message', async () => {
-    await page.navigateTo();
-    expect(await page.getTitleText()).toEqual('invoicing-app app is running!');
+    page = new CompanyPage();
   });
 
   afterEach(async () => {
