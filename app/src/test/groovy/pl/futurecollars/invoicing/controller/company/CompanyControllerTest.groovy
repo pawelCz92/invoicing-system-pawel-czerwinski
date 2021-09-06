@@ -1,4 +1,4 @@
-package pl.futurecollars.invoicing.controller.invoice
+package pl.futurecollars.invoicing.controller.company
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -41,8 +41,10 @@ class CompanyControllerTest extends Specification {
         List<Company> companies = jsonService.stringToObject(addingResponse, List.class)
 
         if (companies.size() > 0) {
-            companies.forEach({ Company comp ->
-                mockMvc.perform(delete(COLLECTION + comp.getId()).with(csrf())).andExpect(status().isNoContent())
+            companies.forEach({ comp ->
+                mockMvc.perform(delete(COLLECTION + comp.id)
+                        .with(csrf()))
+                        .andExpect(status().isNoContent())
             }
             )
         }
