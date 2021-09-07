@@ -8,6 +8,7 @@ import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.MockMvc
 import pl.futurecollars.invoicing.TestHelpers
 import pl.futurecollars.invoicing.model.Company
+import pl.futurecollars.invoicing.model.Invoice
 import pl.futurecollars.invoicing.service.JsonService
 import spock.lang.Specification
 import spock.lang.Stepwise
@@ -20,7 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 @Stepwise
-//@IfProfileValue(name = "spring.profiles.active", value = "memory")
 class CompanyControllerTest extends Specification {
 
     @Autowired
@@ -32,13 +32,30 @@ class CompanyControllerTest extends Specification {
 
     def clearBase() {
         setup:
-        String addingResponse = mockMvc.perform(get(COLLECTION))
+        String response = mockMvc.perform(get("/invoices/"))
                 .andExpect(status().isOk())
                 .andReturn()
                 .response
                 .contentAsString
 
-        List<Company> companies = jsonService.stringToObject(addingResponse, List.class)
+        List<Invoice> invoices = jsonService.stringToObject(response, List.class)
+
+        if (invoices.size() > 0) {
+            invoices.forEach({ inv ->
+                mockMvc.perform(delete("/invoices/" + inv.id)
+                        .with(csrf()))
+                        .andExpect(status().isNoContent())
+            }
+            )
+        }
+
+        response = mockMvc.perform(get(COLLECTION))
+                .andExpect(status().isOk())
+                .andReturn()
+                .response
+                .contentAsString
+
+        List<Company> companies = jsonService.stringToObject(response, List.class)
 
         if (companies.size() > 0) {
             companies.forEach({ comp ->

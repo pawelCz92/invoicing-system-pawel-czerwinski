@@ -20,7 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 @Stepwise
-//@IfProfileValue(name = "spring.profiles.active", value = "memory")
 class InvoiceControllerTest extends Specification {
 
     @Autowired
